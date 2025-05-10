@@ -5,9 +5,10 @@ services:
     container_name: dokploy-app
     ports:
       - "3000:3000"  # Web Interface
-      - "3001:22"    # SSH for tunneling
+      - "3001:22"    # SSH for tunneling/maintenance/upgrades
       - "8080:8080"  # Production
       - "8081:8081"  # Development
+      - "8082:8082"  # Database
     privileged: true
     restart: always
     deploy:
