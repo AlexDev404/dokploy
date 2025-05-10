@@ -27,7 +27,7 @@ jobs:
             file: ./Dockerfile
             push: true
             tags: |
-              alexdev404/dokploy-containerized:latest
+              alexdev404/dokploy-containerized:${{ github.ref_name == 'main' && 'latest' || 'canary' }}
             platforms: linux/amd64
         - name: Build and tag registry image
           uses: docker/build-push-action@v4
