@@ -1,4 +1,4 @@
-FROM dokploy-containerized:latest
+FROM alexdev404/dokploy-containerized:latest
 
 # Install Docker CLI and prepare for Docker installation
 RUN for pkg in docker.io docker-doc docker-compose podman-docker containerd runc; do apt-get remove -y $pkg; done && \
