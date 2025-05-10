@@ -13,4 +13,4 @@ services:
     deploy:
       restart_policy:
         delay: 1m
-        condition: on-failure
+        condition: any
