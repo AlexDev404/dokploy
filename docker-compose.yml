@@ -9,7 +9,7 @@ services:
       - "8080:8080"  # Production
       - "8081:8081"  # Development
     privileged: true
-    restart: on-failure
+    restart: always
     deploy:
       restart_policy:
         delay: 1m
