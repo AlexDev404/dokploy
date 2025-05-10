@@ -53,7 +53,7 @@ while true; do\n \
     # Remove the restart flag\n \
     rm -f /app/restart.txt\n \
     # Stop Docker\n \
-    kill -TERM $(cat /var/run/daemon.pid)\n \
+    kill -TERM $(cat /var/run/docker.pid)\n \
     # exit the container - exit code is optional\n \
     exit 3010\n \
   fi\n \
