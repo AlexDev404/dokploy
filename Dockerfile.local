@@ -45,7 +45,21 @@ while ! docker info > /dev/null 2>&1; do\n \
   sleep 1\n \
 done\n \
 docker swarm init\n \
-pnpm start" > /app/dockerd-entrypoint.sh && chmod +x /app/dockerd-entrypoint.sh
+pnpm start &\n \
+# Wait for a signal to restart\n \
+while true; do\n \
+  if [ -f /app/restart.txt ]; then\n \
+    echo "Restarting container..."\n \
+    # Remove the restart flag\n \
+    rm -f /app/restart.txt\n \
+    # Stop Docker\n \
+    kill -TERM $(cat /var/run/daemon.pid)\n \
+    # exit the container - exit code is optional\n \
+    exit 3010\n \
+  fi\n \
+  sleep 5\n \
+done\n \
+" > /app/dockerd-entrypoint.sh && chmod +x /app/dockerd-entrypoint.sh
 
 # Expose SSH port and Docker (if needed)
 EXPOSE 22
