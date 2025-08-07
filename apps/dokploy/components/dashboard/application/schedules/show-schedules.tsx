@@ -1,14 +1,6 @@
+import { DialogAction } from "@/components/shared/dialog-action";
+import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { api } from "@/utils/api";
-import { HandleSchedules } from "./handle-schedules";
-import {
-	Clock,
-	Play,
-	Terminal,
-	Trash2,
-	ClipboardList,
-	Loader2,
-} from "lucide-react";
 import {
 	Card,
 	CardContent,
@@ -16,16 +8,24 @@ import {
 	CardHeader,
 	CardTitle,
 } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { toast } from "sonner";
 import {
 	Tooltip,
 	TooltipContent,
 	TooltipProvider,
 	TooltipTrigger,
 } from "@/components/ui/tooltip";
-import { DialogAction } from "@/components/shared/dialog-action";
+import { api } from "@/utils/api";
+import {
+	ClipboardList,
+	Clock,
+	Loader2,
+	Play,
+	Terminal,
+	Trash2,
+} from "lucide-react";
+import { toast } from "sonner";
 import { ShowDeploymentsModal } from "../deployments/show-deployments-modal";
+import { HandleSchedules } from "./handle-schedules";
 
 interface Props {
 	id: string;
@@ -91,7 +91,7 @@ export const ShowSchedules = ({ id, scheduleType = "application" }: Props) => {
 							return (
 								<div
 									key={schedule.scheduleId}
-									className=" flex items-center justify-between rounded-lg border p-3 transition-colors bg-muted/50"
+									className="flex items-center justify-between rounded-lg border p-3 transition-colors bg-muted/50"
 								>
 									<div className="flex items-start gap-3">
 										<div className="flex h-9 w-9 items-center justify-center rounded-full bg-primary/5">
@@ -166,12 +166,16 @@ export const ShowSchedules = ({ id, scheduleType = "application" }: Props) => {
 
 															await runManually({
 																scheduleId: schedule.scheduleId,
-															}).then(async () => {
-																await new Promise((resolve) =>
-																	setTimeout(resolve, 1500),
-																);
-																refetchSchedules();
-															});
+															})
+																.then(async () => {
+																	await new Promise((resolve) =>
+																		setTimeout(resolve, 1500),
+																	);
+																	refetchSchedules();
+																})
+																.catch(() => {
+																	toast.error("Error running schedule");
+																});
 														}}
 													>
 														<Play className="size-4  transition-colors" />

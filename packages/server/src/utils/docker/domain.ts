@@ -117,7 +117,7 @@ export const loadDockerComposeRemote = async (
 		if (!stdout) return null;
 		const parsedConfig = load(stdout) as ComposeSpecification;
 		return parsedConfig;
-	} catch (_err) {
+	} catch {
 		return null;
 	}
 };
@@ -202,6 +202,7 @@ export const addDomainToCompose = async (
 	if (compose.isolatedDeployment) {
 		const randomized = randomizeDeployableSpecificationFile(
 			result,
+			compose.isolatedDeploymentsVolume,
 			compose.suffix || compose.appName,
 		);
 		result = randomized;
@@ -301,6 +302,8 @@ export const createDomainLabels = (
 		certificateType,
 		path,
 		customCertResolver,
+		stripPath,
+		internalPath,
 	} = domain;
 	const routerName = `${appName}-${uniqueConfigKey}-${entrypoint}`;
 	const labels = [
@@ -310,12 +313,46 @@ export const createDomainLabels = (
 		`traefik.http.routers.${routerName}.service=${routerName}`,
 	];
 
+	// Collect middlewares for this router
+	const middlewares: string[] = [];
+
+	// Add HTTPS redirect for web entrypoint (must be first)
 	if (entrypoint === "web" && https) {
+		middlewares.push("redirect-to-https@file");
+	}
+
+	// Add stripPath middleware if needed
+	if (stripPath && path && path !== "/") {
+		const middlewareName = `stripprefix-${appName}-${uniqueConfigKey}`;
+		// Only define middleware once (on web entrypoint)
+		if (entrypoint === "web") {
+			labels.push(
+				`traefik.http.middlewares.${middlewareName}.stripprefix.prefixes=${path}`,
+			);
+		}
+		middlewares.push(middlewareName);
+	}
+
+	// Add internalPath middleware if needed
+	if (internalPath && internalPath !== "/" && internalPath.startsWith("/")) {
+		const middlewareName = `addprefix-${appName}-${uniqueConfigKey}`;
+		// Only define middleware once (on web entrypoint)
+		if (entrypoint === "web") {
+			labels.push(
+				`traefik.http.middlewares.${middlewareName}.addprefix.prefix=${internalPath}`,
+			);
+		}
+		middlewares.push(middlewareName);
+	}
+
+	// Apply middlewares to router if any exist
+	if (middlewares.length > 0) {
 		labels.push(
-			`traefik.http.routers.${routerName}.middlewares=redirect-to-https@file`,
+			`traefik.http.routers.${routerName}.middlewares=${middlewares.join(",")}`,
 		);
 	}
 
+	// Add TLS configuration for websecure
 	if (entrypoint === "websecure") {
 		if (certificateType === "letsencrypt") {
 			labels.push(

@@ -1,25 +1,24 @@
+import { AlertBlock } from "@/components/shared/alert-block";
+import { CodeEditor } from "@/components/shared/code-editor";
 import { Button } from "@/components/ui/button";
+import {
+	Dialog,
+	DialogContent,
+	DialogDescription,
+	DialogHeader,
+	DialogTitle,
+	DialogTrigger,
+} from "@/components/ui/dialog";
 import {
 	Form,
 	FormControl,
+	FormDescription,
 	FormField,
 	FormItem,
 	FormLabel,
 	FormMessage,
-	FormDescription,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { api } from "@/utils/api";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
-import { z } from "zod";
-import {
-	Info,
-	PlusCircle,
-	PenBoxIcon,
-	RefreshCw,
-	DatabaseZap,
-} from "lucide-react";
 import {
 	Select,
 	SelectContent,
@@ -27,25 +26,27 @@ import {
 	SelectTrigger,
 	SelectValue,
 } from "@/components/ui/select";
+import { Switch } from "@/components/ui/switch";
 import {
 	Tooltip,
 	TooltipContent,
 	TooltipProvider,
 	TooltipTrigger,
 } from "@/components/ui/tooltip";
-import { Switch } from "@/components/ui/switch";
-import { useEffect, useState } from "react";
-import {
-	Dialog,
-	DialogContent,
-	DialogHeader,
-	DialogTitle,
-	DialogTrigger,
-} from "@/components/ui/dialog";
-import { toast } from "sonner";
-import { AlertBlock } from "@/components/shared/alert-block";
-import { CodeEditor } from "@/components/shared/code-editor";
 import { cn } from "@/lib/utils";
+import { api } from "@/utils/api";
+import { zodResolver } from "@hookform/resolvers/zod";
+import {
+	DatabaseZap,
+	Info,
+	PenBoxIcon,
+	PlusCircle,
+	RefreshCw,
+} from "lucide-react";
+import { useEffect, useState } from "react";
+import { useForm } from "react-hook-form";
+import { toast } from "sonner";
+import { z } from "zod";
 import type { CacheType } from "../domains/handle-domain";
 
 export const commonCronExpressions = [
@@ -232,14 +233,17 @@ export const HandleSchedules = ({ id, scheduleId, scheduleType }: Props) => {
 			</DialogTrigger>
 			<DialogContent
 				className={cn(
-					"max-h-screen overflow-y-auto",
 					scheduleTypeForm === "dokploy-server" || scheduleTypeForm === "server"
-						? "max-h-[95vh] sm:max-w-2xl"
-						: " sm:max-w-lg",
+						? "sm:max-w-2xl"
+						: "sm:max-w-lg",
 				)}
 			>
 				<DialogHeader>
 					<DialogTitle>{scheduleId ? "Edit" : "Create"} Schedule</DialogTitle>
+					<DialogDescription>
+						{scheduleId ? "Manage" : "Create"} a schedule to run a task at a
+						specific time or interval.
+					</DialogDescription>
 				</DialogHeader>
 				<Form {...form}>
 					<form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">

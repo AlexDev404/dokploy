@@ -199,7 +199,7 @@ export const StepTwo = ({ templateInfo, setTemplateInfo }: StepProps) => {
 				<p className="text-muted-foreground">
 					Generating template suggestions based on your input...
 				</p>
-				<pre>{templateInfo.userInput}</pre>
+				<pre className="whitespace-normal">{templateInfo.userInput}</pre>
 			</div>
 		);
 	}
@@ -259,7 +259,7 @@ export const StepTwo = ({ templateInfo, setTemplateInfo }: StepProps) => {
 									<AccordionItem value="description">
 										<AccordionTrigger>Description</AccordionTrigger>
 										<AccordionContent>
-											<ScrollArea className=" w-full rounded-md border p-4">
+											<ScrollArea className="w-full rounded-md border p-4">
 												<ReactMarkdown className="text-muted-foreground text-sm">
 													{selectedVariant?.description}
 												</ReactMarkdown>
@@ -289,7 +289,7 @@ export const StepTwo = ({ templateInfo, setTemplateInfo }: StepProps) => {
 									<AccordionItem value="env-variables">
 										<AccordionTrigger>Environment Variables</AccordionTrigger>
 										<AccordionContent>
-											<ScrollArea className=" w-full rounded-md border">
+											<ScrollArea className="w-full rounded-md border">
 												<div className="p-4 space-y-4">
 													{selectedVariant?.envVariables.map((env, index) => (
 														<div
@@ -364,7 +364,7 @@ export const StepTwo = ({ templateInfo, setTemplateInfo }: StepProps) => {
 									<AccordionItem value="domains">
 										<AccordionTrigger>Domains</AccordionTrigger>
 										<AccordionContent>
-											<ScrollArea className=" w-full rounded-md border">
+											<ScrollArea className="w-full rounded-md border">
 												<div className="p-4 space-y-4">
 													{selectedVariant?.domains.map((domain, index) => (
 														<div

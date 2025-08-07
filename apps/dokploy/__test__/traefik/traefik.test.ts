@@ -1,10 +1,10 @@
-import type { Domain } from "@dokploy/server";
-import type { Redirect } from "@dokploy/server";
-import type { ApplicationNested } from "@dokploy/server";
+import type { ApplicationNested, Domain, Redirect } from "@dokploy/server";
 import { createRouterConfig } from "@dokploy/server";
 import { expect, test } from "vitest";
 
 const baseApp: ApplicationNested = {
+	railpackVersion: "0.2.2",
+	rollbackActive: false,
 	applicationId: "",
 	herokuVersion: "",
 	giteaRepository: "",
@@ -17,6 +17,7 @@ const baseApp: ApplicationNested = {
 	appName: "",
 	autoDeploy: true,
 	enableSubmodules: false,
+	previewRequireCollaboratorPermissions: false,
 	serverId: "",
 	branch: null,
 	dockerBuildStage: "",
@@ -85,6 +86,7 @@ const baseApp: ApplicationNested = {
 	ports: [],
 	projectId: "",
 	publishDirectory: null,
+	isStaticSpa: null,
 	redirects: [],
 	refreshToken: "",
 	registry: null,
@@ -117,6 +119,8 @@ const baseDomain: Domain = {
 	domainType: "application",
 	uniqueConfigKey: 1,
 	previewDeploymentId: "",
+	internalPath: "/",
+	stripPath: false,
 };
 
 const baseRedirect: Redirect = {

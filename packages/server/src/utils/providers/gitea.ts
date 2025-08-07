@@ -3,8 +3,8 @@ import { join } from "node:path";
 import { paths } from "@dokploy/server/constants";
 import type { Compose } from "@dokploy/server/services/compose";
 import {
-	type Gitea,
 	findGiteaById,
+	type Gitea,
 	updateGitea,
 } from "@dokploy/server/services/gitea";
 import type { InferResultType } from "@dokploy/server/types/with";
@@ -118,7 +118,6 @@ export const getGiteaCloneCommand = async (
 		giteaOwner,
 		giteaRepository,
 		serverId,
-		gitea,
 		enableSubmodules,
 	} = entity;
 
@@ -145,6 +144,7 @@ export const getGiteaCloneCommand = async (
 	// Use paths(true) for remote operations
 	const { COMPOSE_PATH, APPLICATIONS_PATH } = paths(true);
 	await refreshGiteaToken(giteaId);
+	const gitea = await findGiteaById(giteaId);
 	const basePath = isCompose ? COMPOSE_PATH : APPLICATIONS_PATH;
 	const outputPath = join(basePath, appName, "code");
 
@@ -155,7 +155,7 @@ export const getGiteaCloneCommand = async (
 	const cloneCommand = `
     rm -rf ${outputPath};
     mkdir -p ${outputPath};
-    
+
     if ! git clone --branch ${giteaBranch} --depth 1 ${enableSubmodules ? "--recurse-submodules" : ""} ${cloneUrl} ${outputPath} >> ${logPath} 2>&1; then
       echo "❌ [ERROR] Failed to clone the repository ${repoClone}" >> ${logPath};
       exit 1;
@@ -232,7 +232,7 @@ export const cloneGiteaRepository = async (
 		);
 		writeStream.write(`\nCloned ${repoClone}: ✅\n`);
 	} catch (error) {
-		writeStream.write(`ERROR Clonning: ${error}: ❌`);
+		writeStream.write(`ERROR Cloning: ${error}: ❌`);
 		throw error;
 	} finally {
 		writeStream.end();

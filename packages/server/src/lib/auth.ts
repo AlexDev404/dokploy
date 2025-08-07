@@ -3,7 +3,7 @@ import * as bcrypt from "bcrypt";
 import { betterAuth } from "better-auth";
 import { drizzleAdapter } from "better-auth/adapters/drizzle";
 import { APIError } from "better-auth/api";
-import { apiKey, organization, twoFactor, admin } from "better-auth/plugins";
+import { admin, apiKey, organization, twoFactor } from "better-auth/plugins";
 import { and, desc, eq } from "drizzle-orm";
 import { IS_CLOUD } from "../constants";
 import { db } from "../db";
@@ -18,9 +18,6 @@ const { handler, api } = betterAuth({
 		provider: "pg",
 		schema: schema,
 	}),
-	logger: {
-		disabled: process.env.NODE_ENV === "production",
-	},
 	appName: "Dokploy",
 	socialProviders: {
 		github: {
@@ -31,6 +28,9 @@ const { handler, api } = betterAuth({
 			clientId: process.env.GOOGLE_CLIENT_ID as string,
 			clientSecret: process.env.GOOGLE_CLIENT_SECRET as string,
 		},
+	},
+	logger: {
+		disabled: process.env.NODE_ENV === "production",
 	},
 	...(!IS_CLOUD && {
 		async trustedOrigins() {
@@ -301,11 +301,7 @@ export const validateRequest = async (request: IncomingMessage) => {
 
 			const mockSession = {
 				session: {
-					user: {
-						id: apiKeyRecord.user.id,
-						email: apiKeyRecord.user.email,
-						name: apiKeyRecord.user.name,
-					},
+					userId: apiKeyRecord.user.id,
 					activeOrganizationId: organizationId || "",
 				},
 				user: {
