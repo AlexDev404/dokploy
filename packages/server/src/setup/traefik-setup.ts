@@ -117,7 +117,7 @@ export const initializeStandaloneTraefik = async ({
     const container = docker.getContainer(containerName);
     try {
       const inspect = await container.inspect();
-      if (inspect.State.Status === "running" && !force) {
+      if (inspect.State.Status === "running") {
         console.log("Traefik already running");
         return;
       }

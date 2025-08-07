@@ -13,7 +13,7 @@ import {
   initializePostgres,
   initializeRedis,
   initializeSwarm,
-  initializeTraefik,
+  initializeStandaloneTraefik as initializeTraefik,
 } from "@dokploy/server/index";
 import { config } from "dotenv";
 import next from "next";
