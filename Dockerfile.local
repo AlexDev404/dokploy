@@ -3,16 +3,24 @@ FROM alexdev404/dokploy-containerized:latest
 # Install Docker CLI and prepare for Docker installation
 RUN for pkg in docker.io docker-doc docker-compose podman-docker containerd runc; do apt-get remove -y $pkg; done && \
     apt-get update && \
-    apt-get install -y ca-certificates openssh-server && \
+    apt-get install -y ca-certificates openssh-server nano htop wget curl iputils-ping && \
     rm -rf /var/lib/apt/lists/* && \
     install -m 0755 -d /etc/apt/keyrings
+
+# Install Cloudflared
+ADD https://github.com/cloudflare/cloudflared/releases/latest/download/cloudflared-linux-amd64.deb /tmp/cloudflared-linux-amd64.deb
+RUN dpkg -i /tmp/cloudflared-linux-amd64.deb
 
 # Set up SSH server
 RUN mkdir /var/run/sshd && \
     echo 'root:password' | chpasswd && \
     sed -i 's/#PermitRootLogin prohibit-password/PermitRootLogin yes/' /etc/ssh/sshd_config && \
     sed -i 's/#PasswordAuthentication yes/PasswordAuthentication yes/' /etc/ssh/sshd_config && \
+    sed -i 's/#AllowTcpForwarding yes/AllowTcpForwarding yes/' /etc/ssh/sshd_config && \
     sed -i 's@session\s*required\s*pam_loginuid.so@session optional pam_loginuid.so@g' /etc/pam.d/sshd && \
+    touch /root/.ssh/authorized_keys && \
+    chmod 700 /root/.ssh && \
+    chmod 600 /root/.ssh/authorized_keys && \
     echo "export VISIBLE=now" >> /etc/profile
 
 # Add Docker's GPG key using ADD instruction
@@ -53,7 +61,7 @@ while true; do\n \
     # Remove the restart flag\n \
     rm -f /app/restart.txt\n \
     # Stop Docker\n \
-    kill -TERM $(cat /var/run/daemon.pid)\n \
+    kill -TERM \$(cat /var/run/docker.pid)\n \
     # exit the container - exit code is optional\n \
     exit 3010\n \
   fi\n \
