@@ -1,11 +1,14 @@
 import { migration } from "@/server/db/migration";
 import {
-  IS_CLOUD,
   createDefaultMiddlewares,
   createDefaultServerTraefikConfig,
   createDefaultTraefikConfig,
+  initCancelDeployments,
   initCronJobs,
   initializeNetwork,
+  initSchedules,
+  initVolumeBackupsCronJobs,
+  IS_CLOUD,
   sendDokployRestartNotifications,
   setupDirectories,
 } from "@dokploy/server";
@@ -79,6 +82,9 @@ app.prepare().then(async () => {
         console.log("Cron Jobs Initialized");
       });
       await sendDokployRestartNotifications();
+      await initSchedules();
+      await initCancelDeployments();
+      await initVolumeBackupsCronJobs();
     }
 
     if (IS_CLOUD && process.env.NODE_ENV === "production") {

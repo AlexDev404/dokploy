@@ -316,7 +316,7 @@ export const getGitlabBranches = async (input: {
 
 	while (true) {
 		const branchesResponse = await fetch(
-			`https://gitlab.com/api/v4/projects/${input.id}/repository/branches?page=${page}&per_page=${perPage}`,
+			`${gitlabProvider.gitlabUrl}/api/v4/projects/${input.id}/repository/branches?page=${page}&per_page=${perPage}`,
 			{
 				headers: {
 					Authorization: `Bearer ${gitlabProvider.accessToken}`,
@@ -401,7 +401,7 @@ export const cloneRawGitlabRepositoryRemote = async (compose: Compose) => {
 	const {
 		appName,
 		gitlabPathNamespace,
-		branch,
+		gitlabBranch,
 		gitlabId,
 		serverId,
 		enableSubmodules,
@@ -429,7 +429,7 @@ export const cloneRawGitlabRepositoryRemote = async (compose: Compose) => {
 	try {
 		const command = `
 			rm -rf ${outputPath};
-			git clone --branch ${branch} --depth 1 ${enableSubmodules ? "--recurse-submodules" : ""} ${cloneUrl} ${outputPath}
+			git clone --branch ${gitlabBranch} --depth 1 ${enableSubmodules ? "--recurse-submodules" : ""} ${cloneUrl} ${outputPath}
 		`;
 		await execAsyncRemote(serverId, command);
 	} catch (error) {
