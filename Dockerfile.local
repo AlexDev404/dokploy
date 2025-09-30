@@ -3,9 +3,13 @@ FROM alexdev404/dokploy-containerized:latest
 # Install Docker CLI and prepare for Docker installation
 RUN for pkg in docker.io docker-doc docker-compose podman-docker containerd runc; do apt-get remove -y $pkg; done && \
     apt-get update && \
-    apt-get install -y ca-certificates openssh-server nano htop && \
+    apt-get install -y ca-certificates openssh-server nano htop wget curl && \
     rm -rf /var/lib/apt/lists/* && \
     install -m 0755 -d /etc/apt/keyrings
+
+# Install Cloudflared
+ADD https://github.com/cloudflare/cloudflared/releases/latest/download/cloudflared-linux-amd64.deb /tmp/cloudflared-linux-amd64.deb
+RUN dpkg -i /tmp/cloudflared-linux-amd64.deb
 
 # Set up SSH server
 RUN mkdir /var/run/sshd && \
