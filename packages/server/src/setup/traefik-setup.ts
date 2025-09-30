@@ -1,10 +1,16 @@
 import type { ContainerCreateOptions, CreateServiceOptions } from "dockerode";
-import { dump } from "js-yaml";
-import { chmodSync, existsSync, mkdirSync, writeFileSync } from "node:fs";
+import {
+  chmodSync,
+  existsSync,
+  mkdirSync,
+  rmSync,
+  statSync,
+  writeFileSync,
+} from "node:fs";
 import path from "node:path";
+import { stringify } from "yaml";
 import { paths } from "../constants";
 
-import { pullImage } from "../utils/docker/utils";
 import { getRemoteDocker } from "../utils/servers/remote-docker";
 import type { FileConfig } from "../utils/traefik/file-types";
 import type { MainTraefikConfig } from "../utils/traefik/types";
@@ -15,7 +21,7 @@ export const TRAEFIK_PORT =
   Number.parseInt(process.env.TRAEFIK_PORT!, 10) || 80;
 export const TRAEFIK_HTTP3_PORT =
   Number.parseInt(process.env.TRAEFIK_HTTP3_PORT!, 10) || 443;
-export const TRAEFIK_VERSION = process.env.TRAEFIK_VERSION || "3.1.2";
+export const TRAEFIK_VERSION = process.env.TRAEFIK_VERSION || "3.5.0";
 
 export interface TraefikOptions {
   env?: string[];
@@ -90,64 +96,25 @@ export const initializeStandaloneTraefik = async ({
 
   const docker = await getRemoteDocker(serverId);
   try {
-    await pullImage(imageName);
-    console.log("Traefik image pulled successfully");
-    const service = docker.getService(containerName);
-
-    await service?.remove({ force: true }).catch(() => {
-      console.log("No existing service to remove");
-    });
-
-    let attempts = 0;
-    const maxAttempts = 5;
-    while (attempts < maxAttempts) {
-      try {
-        await docker.listServices({
-          filters: { name: [containerName] },
-        });
-        console.log("Waiting for service cleanup...");
-        await new Promise((resolve) => setTimeout(resolve, 5000));
-        attempts++;
-      } catch {
-        console.log("No existing service to remove");
-      }
-    }
-
-    // Then try to remove any existing container
-    const container = docker.getContainer(containerName);
-    try {
-      const inspect = await container.inspect();
-      if (inspect.State.Status === "running") {
-        console.log("Traefik already running");
-        return;
-      }
-
-      await container.remove({ force: true });
-      await new Promise((resolve) => setTimeout(resolve, 5000));
-    } catch (_err) {
-      console.log("No existing container to remove");
-    }
-
-    // Create and start the new container
-    try {
-      await docker.createContainer(settings);
-      const newContainer = docker.getContainer(containerName);
-      await newContainer.start();
-      console.log("Traefik container started successfully");
-    } catch (error: any) {
-      if (error?.json?.message?.includes("port is already allocated")) {
-        console.log("Ports still in use, waiting longer for cleanup...");
-        await new Promise((resolve) => setTimeout(resolve, 10000));
-        // Try one more time
-        await docker.createContainer(settings);
-        const newContainer = docker.getContainer(containerName);
-        await newContainer.start();
-        console.log("Traefik container started successfully after retry");
-      }
-    }
+    await docker.pull(imageName);
+    await new Promise((resolve) => setTimeout(resolve, 3000));
+    console.log("Traefik Image Pulled ✅");
   } catch (error) {
-    console.error("Failed to initialize Traefik:", error);
-    throw error;
+    console.log("Traefik Image Not Found: Pulling ", error);
+  }
+  try {
+    const container = docker.getContainer(containerName);
+    await container.remove({ force: true });
+    await new Promise((resolve) => setTimeout(resolve, 5000));
+  } catch {}
+
+  try {
+    await docker.createContainer(settings);
+    const newContainer = docker.getContainer(containerName);
+    await newContainer.start();
+    console.log("Traefik Started ✅");
+  } catch (error) {
+    console.log("Traefik Not Found: Starting ", error);
   }
 };
 
@@ -275,7 +242,7 @@ export const createDefaultServerTraefikConfig = () => {
     },
   };
 
-  const yamlStr = dump(config);
+  const yamlStr = stringify(config);
   mkdirSync(DYNAMIC_TRAEFIK_PATH, { recursive: true });
   writeFileSync(
     path.join(DYNAMIC_TRAEFIK_PATH, `${appName}.yml`),
@@ -349,7 +316,7 @@ export const getDefaultTraefikConfig = () => {
     }),
   };
 
-  const yamlStr = dump(configObject);
+  const yamlStr = stringify(configObject);
 
   return yamlStr;
 };
@@ -403,7 +370,7 @@ export const getDefaultServerTraefikConfig = () => {
     },
   };
 
-  const yamlStr = dump(configObject);
+  const yamlStr = stringify(configObject);
 
   return yamlStr;
 };
@@ -416,13 +383,26 @@ export const createDefaultTraefikConfig = () => {
   if (existsSync(acmeJsonPath)) {
     chmodSync(acmeJsonPath, "600");
   }
-  if (existsSync(mainConfig)) {
-    console.log("Main config already exists");
-    return;
-  }
-  const yamlStr = getDefaultTraefikConfig();
+
+  // Create the traefik directory first
   mkdirSync(MAIN_TRAEFIK_PATH, { recursive: true });
+
+  // Check if traefik.yml exists and handle the case where it might be a directory
+  if (existsSync(mainConfig)) {
+    const stats = statSync(mainConfig);
+    if (stats.isDirectory()) {
+      // If traefik.yml is a directory, remove it
+      console.log("Found traefik.yml as directory, removing it...");
+      rmSync(mainConfig, { recursive: true, force: true });
+    } else if (stats.isFile()) {
+      console.log("Main config already exists");
+      return;
+    }
+  }
+
+  const yamlStr = getDefaultTraefikConfig();
   writeFileSync(mainConfig, yamlStr, "utf8");
+  console.log("Traefik config created successfully");
 };
 
 export const getDefaultMiddlewares = () => {
@@ -438,7 +418,7 @@ export const getDefaultMiddlewares = () => {
       },
     },
   };
-  const yamlStr = dump(defaultMiddlewares);
+  const yamlStr = stringify(defaultMiddlewares);
   return yamlStr;
 };
 export const createDefaultMiddlewares = () => {
