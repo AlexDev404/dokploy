@@ -7,7 +7,7 @@ export const getPostgresRestoreCommand = (
 	database: string,
 	databaseUser: string,
 ) => {
-	return `docker exec -i $CONTAINER_ID sh -c "pg_restore -U ${databaseUser} -d ${database} --clean --if-exists"`;
+	return `docker exec -i $CONTAINER_ID sh -c "pg_restore -U ${databaseUser} -d ${database} -O --clean --if-exists"`;
 };
 
 export const getMariadbRestoreCommand = (
@@ -81,7 +81,7 @@ const getMongoSpecificCommand = (
 	backupFile: string,
 ): string => {
 	const tempDir = "/tmp/dokploy-restore";
-	const fileName = backupFile.split("/").pop() || "backup.dump.gz";
+	const fileName = backupFile.split("/").pop() || "backup.sql.gz";
 	const decompressedName = fileName.replace(".gz", "");
 	return `
 rm -rf ${tempDir} && \

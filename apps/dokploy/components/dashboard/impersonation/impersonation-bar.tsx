@@ -1,24 +1,28 @@
 "use client";
 
-import { authClient } from "@/lib/auth-client";
-import { useEffect, useState } from "react";
-import { Button } from "@/components/ui/button";
+import copy from "copy-to-clipboard";
+import { format } from "date-fns";
 import {
+	Building2,
+	Calendar,
 	CheckIcon,
 	ChevronsUpDown,
+	Copy,
+	CreditCard,
+	Fingerprint,
+	Key,
+	Server,
 	Settings2,
+	Shield,
 	UserIcon,
 	XIcon,
-	Shield,
-	Calendar,
-	Key,
-	Copy,
-	Fingerprint,
-	Building2,
-	CreditCard,
-	Server,
 } from "lucide-react";
+import { useEffect, useState } from "react";
 import { toast } from "sonner";
+import { Logo } from "@/components/shared/logo";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import {
 	Command,
 	CommandEmpty,
@@ -32,18 +36,14 @@ import {
 	PopoverContent,
 	PopoverTrigger,
 } from "@/components/ui/popover";
-import { cn } from "@/lib/utils";
-import { Logo } from "@/components/shared/logo";
-import { Badge } from "@/components/ui/badge";
 import {
 	Tooltip,
 	TooltipContent,
-	TooltipTrigger,
 	TooltipProvider,
+	TooltipTrigger,
 } from "@/components/ui/tooltip";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { format } from "date-fns";
-import copy from "copy-to-clipboard";
+import { authClient } from "@/lib/auth-client";
+import { cn } from "@/lib/utils";
 import { api } from "@/utils/api";
 
 type User = typeof authClient.$Infer.Session.user;

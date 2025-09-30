@@ -6,17 +6,16 @@ import {
 } from "@dokploy/server/services/deployment";
 import { findServerById } from "@dokploy/server/services/server";
 import {
+	getDefaultMiddlewares,
+	getDefaultServerTraefikConfig,
 	TRAEFIK_HTTP3_PORT,
 	TRAEFIK_PORT,
 	TRAEFIK_SSL_PORT,
 	TRAEFIK_VERSION,
-	getDefaultMiddlewares,
-	getDefaultServerTraefikConfig,
 } from "@dokploy/server/setup/traefik-setup";
+import slug from "slugify";
 import { Client } from "ssh2";
 import { recreateDirectory } from "../utils/filesystem/directory";
-
-import slug from "slugify";
 
 export const slugify = (text: string | undefined) => {
 	if (!text) {
@@ -116,7 +115,7 @@ if [ "$OS_TYPE" = 'amzn' ]; then
 fi
 
 case "$OS_TYPE" in
-arch | ubuntu | debian | raspbian | centos | fedora | rhel | ol | rocky | sles | opensuse-leap | opensuse-tumbleweed | almalinux | amzn | alpine) ;;
+arch | ubuntu | debian | raspbian | centos | fedora | rhel | ol | rocky | sles | opensuse-leap | opensuse-tumbleweed | almalinux | opencloudos | amzn | alpine) ;;
 *)
 	echo "This script only supports Debian, Redhat, Arch Linux, Alpine Linux, or SLES based operating systems for now."
 	exit
@@ -356,20 +355,20 @@ const installUtilities = () => `
 
 	case "$OS_TYPE" in
 	arch)
-		pacman -Sy --noconfirm --needed curl wget git jq openssl >/dev/null || true
+		pacman -Sy --noconfirm --needed curl wget git git-lfs jq openssl >/dev/null || true
 		;;
 	alpine)
 		sed -i '/^#.*\/community/s/^#//' /etc/apk/repositories
 		apk update >/dev/null
-		apk add curl wget git jq openssl sudo unzip tar >/dev/null
+		apk add curl wget git git-lfs jq openssl sudo unzip tar >/dev/null
 		;;
 	ubuntu | debian | raspbian)
 		DEBIAN_FRONTEND=noninteractive apt-get update -y >/dev/null
-		DEBIAN_FRONTEND=noninteractive apt-get install -y unzip curl wget git jq openssl >/dev/null
+		DEBIAN_FRONTEND=noninteractive apt-get install -y unzip curl wget git git-lfs jq openssl >/dev/null
 		;;
-	centos | fedora | rhel | ol | rocky | almalinux | amzn)
+	centos | fedora | rhel | ol | rocky | almalinux | opencloudos | amzn)
 		if [ "$OS_TYPE" = "amzn" ]; then
-			dnf install -y wget git jq openssl >/dev/null
+			dnf install -y wget git git-lfs jq openssl >/dev/null
 		else
 			if ! command -v dnf >/dev/null; then
 				yum install -y dnf >/dev/null
@@ -377,12 +376,12 @@ const installUtilities = () => `
 			if ! command -v curl >/dev/null; then
 				dnf install -y curl >/dev/null
 			fi
-			dnf install -y wget git jq openssl unzip >/dev/null
+			dnf install -y wget git git-lfs jq openssl unzip >/dev/null
 		fi
 		;;
 	sles | opensuse-leap | opensuse-tumbleweed)
 		zypper refresh >/dev/null
-		zypper install -y curl wget git jq openssl >/dev/null
+		zypper install -y curl wget git git-lfs jq openssl >/dev/null
 		;;
 	*)
 		echo "This script only supports Debian, Redhat, Arch Linux, or SLES based operating systems for now."
@@ -417,6 +416,28 @@ if ! [ -x "$(command -v docker)" ]; then
             fi
             systemctl start docker >/dev/null 2>&1
             systemctl enable docker >/dev/null 2>&1
+            ;;
+	"opencloudos")
+            # Special handling for OpenCloud OS
+            echo " - Installing Docker for OpenCloud OS..."
+            dnf install -y docker >/dev/null 2>&1
+            if ! [ -x "$(command -v docker)" ]; then
+                echo " - Docker could not be installed automatically. Please visit https://docs.docker.com/engine/install/ and install Docker manually to continue."
+                exit 1
+            fi
+            
+            # Remove --live-restore parameter from Docker configuration if it exists
+            if [ -f "/etc/sysconfig/docker" ]; then
+                echo " - Removing --live-restore parameter from Docker configuration..."
+                sed -i 's/--live-restore[^[:space:]]*//' /etc/sysconfig/docker >/dev/null 2>&1
+                sed -i 's/--live-restore//' /etc/sysconfig/docker >/dev/null 2>&1
+                # Clean up any double spaces that might be left
+                sed -i 's/  */ /g' /etc/sysconfig/docker >/dev/null 2>&1
+            fi
+            
+            systemctl enable docker >/dev/null 2>&1
+            systemctl start docker >/dev/null 2>&1
+            echo " - Docker configured for OpenCloud OS"
             ;;
         "alpine")
             apk add docker docker-cli-compose >/dev/null 2>&1
@@ -557,8 +578,7 @@ export const createTraefikInstance = () => {
 			TRAEFIK_VERSION=${TRAEFIK_VERSION}
 			docker run -d \
 				--name dokploy-traefik \
-				--network dokploy-network \
-				--restart unless-stopped \
+				--restart always \
 				-v /etc/dokploy/traefik/traefik.yml:/etc/traefik/traefik.yml \
 				-v /etc/dokploy/traefik/dynamic:/etc/dokploy/traefik/dynamic \
 				-v /var/run/docker.sock:/var/run/docker.sock \
@@ -566,6 +586,8 @@ export const createTraefikInstance = () => {
 				-p ${TRAEFIK_PORT}:${TRAEFIK_PORT} \
 				-p ${TRAEFIK_HTTP3_PORT}:${TRAEFIK_HTTP3_PORT}/udp \
 				traefik:v$TRAEFIK_VERSION
+
+			docker network connect dokploy-network dokploy-traefik;
 			echo "Traefik version $TRAEFIK_VERSION installed ✅"
 		fi
 	`;
@@ -577,7 +599,7 @@ const installNixpacks = () => `
 	if command_exists nixpacks; then
 		echo "Nixpacks already installed ✅"
 	else
-	    export NIXPACKS_VERSION=1.35.0
+	    export NIXPACKS_VERSION=1.39.0
         bash -c "$(curl -fsSL https://nixpacks.com/install.sh)"
 		echo "Nixpacks version $NIXPACKS_VERSION installed ✅"
 	fi
@@ -587,7 +609,7 @@ const installRailpack = () => `
 	if command_exists railpack; then
 		echo "Railpack already installed ✅"
 	else
-	    export RAILPACK_VERSION=0.0.64
+	    export RAILPACK_VERSION=0.2.2
 		bash -c "$(curl -fsSL https://railpack.com/install.sh)"
 		echo "Railpack version $RAILPACK_VERSION installed ✅"
 	fi

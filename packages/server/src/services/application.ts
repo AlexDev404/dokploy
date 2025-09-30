@@ -60,6 +60,7 @@ import {
 	updatePreviewDeployment,
 } from "./preview-deployment";
 import { validUniqueServerAppName } from "./project";
+import { createRollback } from "./rollbacks";
 export type Application = typeof applications.$inferSelect;
 
 export const createApplication = async (
@@ -104,7 +105,11 @@ export const findApplicationById = async (applicationId: string) => {
 	const application = await db.query.applications.findFirst({
 		where: eq(applications.applicationId, applicationId),
 		with: {
-			project: true,
+			environment: {
+				with: {
+					project: true,
+				},
+			},
 			domains: true,
 			deployments: true,
 			mounts: true,
@@ -179,7 +184,7 @@ export const deployApplication = async ({
 }) => {
 	const application = await findApplicationById(applicationId);
 
-	const buildLink = `${await getDokployUrl()}/dashboard/project/${application.projectId}/services/application/${application.applicationId}?tab=deployments`;
+	const buildLink = `${await getDokployUrl()}/dashboard/project/${application.environment.projectId}/environment/${application.environmentId}/services/application/${application.applicationId}?tab=deployments`;
 	const deployment = await createDeployment({
 		applicationId: applicationId,
 		title: titleLog,
@@ -214,25 +219,37 @@ export const deployApplication = async ({
 		await updateDeploymentStatus(deployment.deploymentId, "done");
 		await updateApplicationStatus(applicationId, "done");
 
+		if (application.rollbackActive) {
+			const tagImage =
+				application.sourceType === "docker"
+					? application.dockerImage
+					: application.appName;
+			await createRollback({
+				appName: tagImage || "",
+				deploymentId: deployment.deploymentId,
+			});
+		}
+
 		await sendBuildSuccessNotifications({
-			projectName: application.project.name,
+			projectName: application.environment.project.name,
 			applicationName: application.name,
 			applicationType: "application",
 			buildLink,
-			organizationId: application.project.organizationId,
+			organizationId: application.environment.project.organizationId,
 			domains: application.domains,
 		});
 	} catch (error) {
 		await updateDeploymentStatus(deployment.deploymentId, "error");
 		await updateApplicationStatus(applicationId, "error");
+
 		await sendBuildErrorNotifications({
-			projectName: application.project.name,
+			projectName: application.environment.project.name,
 			applicationName: application.name,
 			applicationType: "application",
 			// @ts-ignore
 			errorMessage: error?.message || "Error building",
 			buildLink,
-			organizationId: application.project.organizationId,
+			organizationId: application.environment.project.organizationId,
 		});
 
 		throw error;
@@ -294,7 +311,7 @@ export const deployRemoteApplication = async ({
 }) => {
 	const application = await findApplicationById(applicationId);
 
-	const buildLink = `${await getDokployUrl()}/dashboard/project/${application.projectId}/services/application/${application.applicationId}?tab=deployments`;
+	const buildLink = `${await getDokployUrl()}/dashboard/project/${application.environment.projectId}/environment/${application.environmentId}/services/application/${application.applicationId}?tab=deployments`;
 	const deployment = await createDeployment({
 		applicationId: applicationId,
 		title: titleLog,
@@ -338,17 +355,29 @@ export const deployRemoteApplication = async ({
 		await updateDeploymentStatus(deployment.deploymentId, "done");
 		await updateApplicationStatus(applicationId, "done");
 
+		if (application.rollbackActive) {
+			const tagImage =
+				application.sourceType === "docker"
+					? application.dockerImage
+					: application.appName;
+			await createRollback({
+				appName: tagImage || "",
+				deploymentId: deployment.deploymentId,
+			});
+		}
+
 		await sendBuildSuccessNotifications({
-			projectName: application.project.name,
+			projectName: application.environment.project.name,
 			applicationName: application.name,
 			applicationType: "application",
 			buildLink,
-			organizationId: application.project.organizationId,
+			organizationId: application.environment.project.organizationId,
 			domains: application.domains,
 		});
 	} catch (error) {
-		// @ts-ignore
-		const encodedContent = encodeBase64(error?.message);
+		const errorMessage = error instanceof Error ? error.message : String(error);
+
+		const encodedContent = encodeBase64(errorMessage);
 
 		await execAsyncRemote(
 			application.serverId,
@@ -360,14 +389,14 @@ export const deployRemoteApplication = async ({
 
 		await updateDeploymentStatus(deployment.deploymentId, "error");
 		await updateApplicationStatus(applicationId, "error");
+
 		await sendBuildErrorNotifications({
-			projectName: application.project.name,
+			projectName: application.environment.project.name,
 			applicationName: application.name,
 			applicationType: "application",
-			// @ts-ignore
-			errorMessage: error?.message || "Error building",
+			errorMessage: `Please check the logs for details: ${errorMessage}`,
 			buildLink,
-			organizationId: application.project.organizationId,
+			organizationId: application.environment.project.organizationId,
 		});
 
 		throw error;

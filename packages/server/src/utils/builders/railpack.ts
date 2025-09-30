@@ -1,11 +1,14 @@
 import { createHash } from "node:crypto";
 import type { WriteStream } from "node:fs";
 import { nanoid } from "nanoid";
-import type { ApplicationNested } from ".";
-import { prepareEnvironmentVariables } from "../docker/utils";
+import {
+	parseEnvironmentKeyValuePair,
+	prepareEnvironmentVariables,
+} from "../docker/utils";
 import { getBuildAppDirectory } from "../filesystem/directory";
 import { execAsync } from "../process/execAsync";
 import { spawnAsync } from "../process/spawnAsync";
+import type { ApplicationNested } from ".";
 
 const calculateSecretsHash = (envVariables: string[]): string => {
 	const hash = createHash("sha256");
@@ -23,7 +26,8 @@ export const buildRailpack = async (
 	const buildAppDirectory = getBuildAppDirectory(application);
 	const envVariables = prepareEnvironmentVariables(
 		env,
-		application.project.env,
+		application.environment.project.env,
+		application.environment.env,
 	);
 
 	try {
@@ -72,7 +76,7 @@ export const buildRailpack = async (
 					]
 				: []),
 			"--build-arg",
-			"BUILDKIT_SYNTAX=ghcr.io/railwayapp/railpack-frontend:v0.0.64",
+			`BUILDKIT_SYNTAX=ghcr.io/railwayapp/railpack-frontend:v${application.railpackVersion}`,
 			"-f",
 			`${buildAppDirectory}/railpack-plan.json`,
 			"--output",
@@ -81,10 +85,10 @@ export const buildRailpack = async (
 
 		// Add secrets properly formatted
 		const env: { [key: string]: string } = {};
-		for (const envVar of envVariables) {
-			const [key, value] = envVar.split("=");
+		for (const pair of envVariables) {
+			const [key, value] = parseEnvironmentKeyValuePair(pair);
 			if (key && value) {
-				buildArgs.push("--secret", `id=${key},env='${key}'`);
+				buildArgs.push("--secret", `id=${key},env=${key}`);
 				env[key] = value;
 			}
 		}
@@ -107,6 +111,8 @@ export const buildRailpack = async (
 		return true;
 	} catch (e) {
 		throw e;
+	} finally {
+		await execAsync("docker buildx rm builder-containerd");
 	}
 };
 
@@ -118,7 +124,8 @@ export const getRailpackCommand = (
 	const buildAppDirectory = getBuildAppDirectory(application);
 	const envVariables = prepareEnvironmentVariables(
 		env,
-		application.project.env,
+		application.environment.project.env,
+		application.environment.env,
 	);
 
 	// Prepare command
@@ -152,7 +159,7 @@ export const getRailpackCommand = (
 				]
 			: []),
 		"--build-arg",
-		"BUILDKIT_SYNTAX=ghcr.io/railwayapp/railpack-frontend:v0.0.64",
+		`BUILDKIT_SYNTAX=ghcr.io/railwayapp/railpack-frontend:v${application.railpackVersion}`,
 		"-f",
 		`${buildAppDirectory}/railpack-plan.json`,
 		"--output",
@@ -161,11 +168,11 @@ export const getRailpackCommand = (
 
 	// Add secrets properly formatted
 	const exportEnvs = [];
-	for (const envVar of envVariables) {
-		const [key, value] = envVar.split("=");
+	for (const pair of envVariables) {
+		const [key, value] = parseEnvironmentKeyValuePair(pair);
 		if (key && value) {
-			buildArgs.push("--secret", `id=${key},env='${key}'`);
-			exportEnvs.push(`export ${key}=${value}`);
+			buildArgs.push("--secret", `id=${key},env=${key}`);
+			exportEnvs.push(`export ${key}='${value}'`);
 		}
 	}
 
@@ -191,6 +198,7 @@ docker ${buildArgs.join(" ")} >> ${logPath} 2>> ${logPath} || {
 	exit 1;
 }
 echo "✅ Railpack build completed." >> ${logPath};
+docker buildx rm builder-containerd
 `;
 
 	return bashCommand;
