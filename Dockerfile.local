@@ -62,7 +62,7 @@ while true; do\n \
     rm -f /app/restart.txt\n \
     # Stop Docker\n \
     docker stop $(docker ps -q)\n \
-    kill -TERM \$(cat /var/run/docker.pid)\n \
+    kill -s SIGINT \$(cat /var/run/docker.pid)\n \
     # exit the container - exit code is optional\n \
     exit 3010\n \
   fi\n \
