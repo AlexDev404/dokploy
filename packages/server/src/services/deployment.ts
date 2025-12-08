@@ -850,7 +850,7 @@ export const clearOldDeploymentsByApplicationId = async (
 	// If there's an active deployment, keep it and remove all others
 	// If there's no active deployment, keep the most recent one and remove the rest
 	let deploymentsToKeep: string[] = [];
-	
+
 	if (activeDeployment) {
 		deploymentsToKeep.push(activeDeployment.deploymentId);
 	} else if (deploymentsList.length > 0) {
@@ -867,7 +867,7 @@ export const clearOldDeploymentsByApplicationId = async (
 		if (deployment.rollbackId) {
 			await removeRollbackById(deployment.rollbackId);
 		}
-		
+
 		// Remove log file if it exists
 		const logPath = deployment.logPath;
 		if (logPath && logPath !== "." && existsSync(logPath)) {
@@ -877,7 +877,7 @@ export const clearOldDeploymentsByApplicationId = async (
 				console.error(`Error removing log file ${logPath}:`, error);
 			}
 		}
-		
+
 		// Delete deployment from database
 		await removeDeployment(deployment.deploymentId);
 	}
@@ -903,7 +903,7 @@ export const clearOldDeploymentsByComposeId = async (composeId: string) => {
 	// If there's an active deployment, keep it and remove all others
 	// If there's no active deployment, keep the most recent one and remove the rest
 	let deploymentsToKeep: string[] = [];
-	
+
 	if (activeDeployment) {
 		deploymentsToKeep.push(activeDeployment.deploymentId);
 	} else if (deploymentsList.length > 0) {
@@ -920,7 +920,7 @@ export const clearOldDeploymentsByComposeId = async (composeId: string) => {
 		if (deployment.rollbackId) {
 			await removeRollbackById(deployment.rollbackId);
 		}
-		
+
 		// Remove log file if it exists
 		const logPath = deployment.logPath;
 		if (logPath && logPath !== "." && existsSync(logPath)) {
@@ -930,7 +930,7 @@ export const clearOldDeploymentsByComposeId = async (composeId: string) => {
 				console.error(`Error removing log file ${logPath}:`, error);
 			}
 		}
-		
+
 		// Delete deployment from database
 		await removeDeployment(deployment.deploymentId);
 	}
