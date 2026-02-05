@@ -21,7 +21,7 @@ export const TRAEFIK_PORT =
   Number.parseInt(process.env.TRAEFIK_PORT!, 10) || 80;
 export const TRAEFIK_HTTP3_PORT =
   Number.parseInt(process.env.TRAEFIK_HTTP3_PORT!, 10) || 443;
-export const TRAEFIK_VERSION = process.env.TRAEFIK_VERSION || "3.5.0";
+export const TRAEFIK_VERSION = process.env.TRAEFIK_VERSION || "3.6.4";
 
 export interface TraefikOptions {
   env?: string[];
@@ -57,7 +57,7 @@ export const initializeStandaloneTraefik = async ({
   };
 
   const enableDashboard = additionalPorts.some(
-    (port) => port.targetPort === 8080
+    (port) => port.targetPort === 8080,
   );
 
   if (enableDashboard) {
@@ -247,7 +247,7 @@ export const createDefaultServerTraefikConfig = () => {
   writeFileSync(
     path.join(DYNAMIC_TRAEFIK_PATH, `${appName}.yml`),
     yamlStr,
-    "utf8"
+    "utf8",
   );
 };
 

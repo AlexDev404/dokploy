@@ -5,6 +5,7 @@ import {
   createDefaultTraefikConfig,
   initCancelDeployments,
   initCronJobs,
+  initEnterpriseBackupCronJobs,
   initializeNetwork,
   initSchedules,
   initVolumeBackupsCronJobs,
@@ -20,7 +21,7 @@ import {
 } from "@dokploy/server/index";
 import { config } from "dotenv";
 import next from "next";
-import http from "node:http";
+import packageInfo from "../package.json";
 import { setupDockerContainerLogsWebSocketServer } from "./wss/docker-container-logs";
 import { setupDockerContainerTerminalWebSocketServer } from "./wss/docker-container-terminal";
 import { setupDockerStatsMonitoringSocketServer } from "./wss/docker-stats";
@@ -32,10 +33,21 @@ config({ path: ".env" });
 const PORT = Number.parseInt(process.env.PORT ?? "3000", 10);
 const HOST = process.env.HOST || "0.0.0.0";
 const dev = process.env.NODE_ENV !== "production";
+
+// Initialize critical directories and Traefik config BEFORE Next.js starts
+// This prevents race conditions with the install script
+if (process.env.NODE_ENV === "production" && !IS_CLOUD) {
+  setupDirectories();
+  createDefaultTraefikConfig();
+  createDefaultServerTraefikConfig();
+  console.log("✅ initialization complete");
+}
+
 const app = next({ dev, turbopack: process.env.TURBOPACK === "1" });
 const handle = app.getRequestHandler();
-app.prepare().then(async () => {
+void app.prepare().then(async () => {
   try {
+    console.log("Running DokployVersion: ", packageInfo.version);
     const server = http.createServer((req, res) => {
       handle(req, res);
     });
@@ -62,12 +74,14 @@ app.prepare().then(async () => {
         console.log("Redis Initialized");
         if (!IS_CLOUD) {
           console.log("Starting Deployment Worker");
-          const { deploymentWorker } = await import(
-            "./queues/deployments-queue"
+          const { deploymentWorker } =
+            await import("./queues/deployments-queue");
+          setTimeout(
+            async () => {
+              await deploymentWorker.run();
+            },
+            1000 * 60 * 5,
           );
-          setTimeout(async () => {
-            await deploymentWorker.run();
-          }, 1000 * 60 * 5);
           console.log("Redis Worker Initialized");
         }
       });
@@ -85,14 +99,24 @@ app.prepare().then(async () => {
       await initSchedules();
       await initCancelDeployments();
       await initVolumeBackupsCronJobs();
+      await initCronJobs();
+      await initSchedules();
+      await initCancelDeployments();
+      await initVolumeBackupsCronJobs();
     }
 
     if (IS_CLOUD && process.env.NODE_ENV === "production") {
       await migration();
     }
+    server.listen(PORT, HOST);
+    console.log(`Server Started on: http://${HOST}:${PORT}`);
+    await initEnterpriseBackupCronJobs();
 
-    server.listen(PORT);
-    console.log("Server Started:", PORT);
+    if (!IS_CLOUD) {
+      console.log("Starting Deployment Worker");
+      const { deploymentWorker } = await import("./queues/deployments-queue");
+      await deploymentWorker.run();
+    }
   } catch (e) {
     console.error("Main Server Error", e);
   }

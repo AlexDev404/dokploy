@@ -1,12 +1,13 @@
 import {
 	addNewService,
+	checkPortInUse,
 	checkServiceAccess,
 	createMongo,
 	createMount,
 	deployMongo,
 	findBackupsByDbId,
-	findMongoById,
 	findEnvironmentById,
+	findMongoById,
 	findProjectById,
 	IS_CLOUD,
 	rebuildDatabase,
@@ -87,7 +88,7 @@ export const mongoRouter = createTRPCRouter({
 					type: "volume",
 				});
 
-				return true;
+				return newMongo;
 			} catch (error) {
 				if (error instanceof TRPCError) {
 					throw error;
@@ -189,6 +190,20 @@ export const mongoRouter = createTRPCRouter({
 					message: "You are not authorized to save this external port",
 				});
 			}
+
+			if (input.externalPort) {
+				const portCheck = await checkPortInUse(
+					input.externalPort,
+					mongo.serverId || undefined,
+				);
+				if (portCheck.isInUse) {
+					throw new TRPCError({
+						code: "CONFLICT",
+						message: `Port ${input.externalPort} is already in use by ${portCheck.conflictingContainer}`,
+					});
+				}
+			}
+
 			await updateMongoById(input.mongoId, {
 				externalPort: input.externalPort,
 			});

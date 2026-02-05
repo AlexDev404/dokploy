@@ -14,7 +14,7 @@ export const initializeRedis = async () => {
         Mounts: [
           {
             Type: "volume",
-            Source: "redis-data-volume",
+            Source: "dokploy-redis",
             Target: "/data",
           },
         ],
@@ -29,16 +29,18 @@ export const initializeRedis = async () => {
         Replicas: 1,
       },
     },
-    EndpointSpec: {
-      Ports: [
-        {
-          TargetPort: 6379,
-          PublishedPort: 6379,
-          Protocol: "tcp",
-          PublishMode: "host",
-        },
-      ],
-    },
+    ...(process.env.NODE_ENV === "development" && {
+      EndpointSpec: {
+        Ports: [
+          {
+            TargetPort: 6379,
+            PublishedPort: 6379,
+            Protocol: "tcp",
+            PublishMode: "host",
+          },
+        ],
+      },
+    }),
   };
   try {
     await pullImage(imageName);

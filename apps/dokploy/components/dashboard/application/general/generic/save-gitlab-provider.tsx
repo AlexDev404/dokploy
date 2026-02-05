@@ -167,7 +167,7 @@ export const SaveGitlabProvider = ({ applicationId }: Props) => {
 			enableSubmodules: data.enableSubmodules,
 		})
 			.then(async () => {
-				toast.success("Service Provided Saved");
+				toast.success("Service Provider Saved");
 				await refetch();
 			})
 			.catch(() => {
@@ -232,9 +232,9 @@ export const SaveGitlabProvider = ({ applicationId }: Props) => {
 								<FormItem className="md:col-span-2 flex flex-col">
 									<div className="flex items-center justify-between">
 										<FormLabel>Repository</FormLabel>
-										{field.value.owner && field.value.repo && (
+										{field.value.gitlabPathNamespace && (
 											<Link
-												href={`${gitlabUrl}/${field.value.owner}/${field.value.repo}`}
+												href={`${gitlabUrl}/${field.value.gitlabPathNamespace}`}
 												target="_blank"
 												rel="noopener noreferrer"
 												className="flex items-center gap-1 text-sm text-muted-foreground hover:text-primary"

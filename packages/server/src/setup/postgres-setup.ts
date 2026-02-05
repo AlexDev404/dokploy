@@ -17,7 +17,7 @@ export const initializePostgres = async () => {
         Mounts: [
           {
             Type: "volume",
-            Source: "dokploy-postgres-database",
+            Source: "dokploy-postgres",
             Target: "/var/lib/postgresql/data",
           },
         ],
@@ -32,16 +32,18 @@ export const initializePostgres = async () => {
         Replicas: 1,
       },
     },
-    EndpointSpec: {
-      Ports: [
-        {
-          TargetPort: 5432,
-          PublishedPort: 5432,
-          Protocol: "tcp",
-          PublishMode: "host",
-        },
-      ],
-    },
+    ...(process.env.NODE_ENV === "development" && {
+      EndpointSpec: {
+        Ports: [
+          {
+            TargetPort: 5432,
+            PublishedPort: 5432,
+            Protocol: "tcp",
+            PublishMode: "host",
+          },
+        ],
+      },
+    }),
   };
   try {
     await pullImage(imageName);

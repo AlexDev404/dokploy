@@ -3,18 +3,28 @@ import { createRouterConfig } from "@dokploy/server";
 import { expect, test } from "vitest";
 
 const baseApp: ApplicationNested = {
-	railpackVersion: "0.2.2",
+	railpackVersion: "0.15.4",
 	rollbackActive: false,
 	applicationId: "",
 	previewLabels: [],
+	createEnvFile: true,
+	bitbucketRepositorySlug: "",
 	herokuVersion: "",
 	giteaRepository: "",
 	giteaOwner: "",
 	giteaBranch: "",
+	buildServerId: "",
+	buildRegistryId: "",
+	buildRegistry: null,
 	giteaBuildPath: "",
 	giteaId: "",
+	args: [],
+	rollbackRegistryId: "",
+	rollbackRegistry: null,
+	deployments: [],
 	cleanCache: false,
 	applicationStatus: "done",
+	endpointSpecSwarm: null,
 	appName: "",
 	autoDeploy: true,
 	enableSubmodules: false,
@@ -25,8 +35,10 @@ const baseApp: ApplicationNested = {
 	registryUrl: "",
 	watchPaths: [],
 	buildArgs: null,
+	buildSecrets: null,
 	isPreviewDeploymentsActive: false,
 	previewBuildArgs: null,
+	previewBuildSecrets: null,
 	triggerType: "push",
 	previewCertificateType: "none",
 	previewEnv: null,
@@ -39,6 +51,7 @@ const baseApp: ApplicationNested = {
 	environmentId: "",
 	environment: {
 		env: "",
+		isDefault: false,
 		environmentId: "",
 		name: "",
 		createdAt: "",
@@ -111,6 +124,7 @@ const baseApp: ApplicationNested = {
 	updateConfigSwarm: null,
 	username: null,
 	dockerContextPath: null,
+	stopGracePeriodSwarm: null,
 };
 
 const baseDomain: Domain = {

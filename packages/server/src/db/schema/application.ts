@@ -1,5 +1,6 @@
 import { relations } from "drizzle-orm";
 import {
+	bigint,
 	boolean,
 	integer,
 	json,
@@ -20,7 +21,6 @@ import { gitlab } from "./gitlab";
 import { mounts } from "./mount";
 import { ports } from "./port";
 import { previewDeployments } from "./preview-deployments";
-import { projects } from "./project";
 import { redirects } from "./redirects";
 import { registry } from "./registry";
 import { security } from "./security";
@@ -28,6 +28,8 @@ import { server } from "./server";
 import {
 	applicationStatus,
 	certificateType,
+	type EndpointSpecSwarm,
+	EndpointSpecSwarmSchema,
 	type HealthCheckSwarm,
 	HealthCheckSwarmSchema,
 	type LabelsSwarm,
@@ -45,7 +47,7 @@ import {
 	UpdateConfigSwarmSchema,
 } from "./shared";
 import { sshKeys } from "./ssh-key";
-import { generateAppName } from "./utils";
+import { APP_NAME_MESSAGE, APP_NAME_REGEX, generateAppName } from "./utils";
 export const sourceType = pgEnum("sourceType", [
 	"docker",
 	"git",
@@ -80,6 +82,7 @@ export const applications = pgTable("application", {
 	previewEnv: text("previewEnv"),
 	watchPaths: text("watchPaths").array(),
 	previewBuildArgs: text("previewBuildArgs"),
+	previewBuildSecrets: text("previewBuildSecrets"),
 	previewLabels: text("previewLabels").array(),
 	previewWildcard: text("previewWildcard"),
 	previewPort: integer("previewPort").default(3000),
@@ -99,6 +102,7 @@ export const applications = pgTable("application", {
 	).default(true),
 	rollbackActive: boolean("rollbackActive").default(false),
 	buildArgs: text("buildArgs"),
+	buildSecrets: text("buildSecrets"),
 	memoryReservation: text("memoryReservation"),
 	memoryLimit: text("memoryLimit"),
 	cpuReservation: text("cpuReservation"),
@@ -107,6 +111,7 @@ export const applications = pgTable("application", {
 	enabled: boolean("enabled"),
 	subtitle: text("subtitle"),
 	command: text("command"),
+	args: text("args").array(),
 	refreshToken: text("refreshToken").$defaultFn(() => nanoid()),
 	sourceType: sourceType("sourceType").notNull().default("github"),
 	cleanCache: boolean("cleanCache").default(false),
@@ -131,6 +136,7 @@ export const applications = pgTable("application", {
 	giteaBuildPath: text("giteaBuildPath").default("/"),
 	// Bitbucket
 	bitbucketRepository: text("bitbucketRepository"),
+	bitbucketRepositorySlug: text("bitbucketRepositorySlug"),
 	bitbucketOwner: text("bitbucketOwner"),
 	bitbucketBranch: text("bitbucketBranch"),
 	bitbucketBuildPath: text("bitbucketBuildPath").default("/"),
@@ -164,22 +170,31 @@ export const applications = pgTable("application", {
 	modeSwarm: json("modeSwarm").$type<ServiceModeSwarm>(),
 	labelsSwarm: json("labelsSwarm").$type<LabelsSwarm>(),
 	networkSwarm: json("networkSwarm").$type<NetworkSwarm[]>(),
+	stopGracePeriodSwarm: bigint("stopGracePeriodSwarm", { mode: "bigint" }),
+	endpointSpecSwarm: json("endpointSpecSwarm").$type<EndpointSpecSwarm>(),
 	//
 	replicas: integer("replicas").default(1).notNull(),
 	applicationStatus: applicationStatus("applicationStatus")
 		.notNull()
 		.default("idle"),
 	buildType: buildType("buildType").notNull().default("nixpacks"),
-	railpackVersion: text("railpackVersion").default("0.2.2"),
+	railpackVersion: text("railpackVersion").default("0.15.4"),
 	herokuVersion: text("herokuVersion").default("24"),
 	publishDirectory: text("publishDirectory"),
 	isStaticSpa: boolean("isStaticSpa"),
+	createEnvFile: boolean("createEnvFile").notNull().default(true),
 	createdAt: text("createdAt")
 		.notNull()
 		.$defaultFn(() => new Date().toISOString()),
 	registryId: text("registryId").references(() => registry.registryId, {
 		onDelete: "set null",
 	}),
+	rollbackRegistryId: text("rollbackRegistryId").references(
+		() => registry.registryId,
+		{
+			onDelete: "set null",
+		},
+	),
 	environmentId: text("environmentId")
 		.notNull()
 		.references(() => environments.environmentId, { onDelete: "cascade" }),
@@ -198,6 +213,15 @@ export const applications = pgTable("application", {
 	serverId: text("serverId").references(() => server.serverId, {
 		onDelete: "cascade",
 	}),
+	buildServerId: text("buildServerId").references(() => server.serverId, {
+		onDelete: "set null",
+	}),
+	buildRegistryId: text("buildRegistryId").references(
+		() => registry.registryId,
+		{
+			onDelete: "set null",
+		},
+	),
 });
 
 export const applicationsRelations = relations(
@@ -220,6 +244,7 @@ export const applicationsRelations = relations(
 		registry: one(registry, {
 			fields: [applications.registryId],
 			references: [registry.registryId],
+			relationName: "applicationRegistry",
 		}),
 		github: one(github, {
 			fields: [applications.githubId],
@@ -240,18 +265,40 @@ export const applicationsRelations = relations(
 		server: one(server, {
 			fields: [applications.serverId],
 			references: [server.serverId],
+			relationName: "applicationServer",
+		}),
+		buildServer: one(server, {
+			fields: [applications.buildServerId],
+			references: [server.serverId],
+			relationName: "applicationBuildServer",
+		}),
+		buildRegistry: one(registry, {
+			fields: [applications.buildRegistryId],
+			references: [registry.registryId],
+			relationName: "applicationBuildRegistry",
 		}),
 		previewDeployments: many(previewDeployments),
+		rollbackRegistry: one(registry, {
+			fields: [applications.rollbackRegistryId],
+			references: [registry.registryId],
+			relationName: "applicationRollbackRegistry",
+		}),
 	}),
 );
 
 const createSchema = createInsertSchema(applications, {
-	appName: z.string(),
+	appName: z
+		.string()
+		.min(1)
+		.max(63)
+		.regex(APP_NAME_REGEX, APP_NAME_MESSAGE)
+		.optional(),
 	createdAt: z.string(),
 	applicationId: z.string(),
 	autoDeploy: z.boolean(),
 	env: z.string().optional(),
 	buildArgs: z.string().optional(),
+	buildSecrets: z.string().optional(),
 	name: z.string().min(1),
 	description: z.string().optional(),
 	memoryReservation: z.string().optional(),
@@ -265,6 +312,7 @@ const createSchema = createInsertSchema(applications, {
 	username: z.string().optional(),
 	isPreviewDeploymentsActive: z.boolean().optional(),
 	password: z.string().optional(),
+	args: z.array(z.string()).optional(),
 	registryUrl: z.string().optional(),
 	customGitSSHKeyId: z.string().optional(),
 	repository: z.string().optional(),
@@ -291,6 +339,7 @@ const createSchema = createInsertSchema(applications, {
 	herokuVersion: z.string().optional(),
 	publishDirectory: z.string().optional(),
 	isStaticSpa: z.boolean().optional(),
+	createEnvFile: z.boolean().optional(),
 	owner: z.string(),
 	healthCheckSwarm: HealthCheckSwarmSchema.nullable(),
 	restartPolicySwarm: RestartPolicySwarmSchema.nullable(),
@@ -303,6 +352,7 @@ const createSchema = createInsertSchema(applications, {
 	previewPort: z.number().optional(),
 	previewEnv: z.string().optional(),
 	previewBuildArgs: z.string().optional(),
+	previewBuildSecrets: z.string().optional(),
 	previewWildcard: z.string().optional(),
 	previewLimit: z.number().optional(),
 	previewHttps: z.boolean().optional(),
@@ -312,6 +362,8 @@ const createSchema = createInsertSchema(applications, {
 	watchPaths: z.array(z.string()).optional(),
 	previewLabels: z.array(z.string()).optional(),
 	cleanCache: z.boolean().optional(),
+	stopGracePeriodSwarm: z.bigint().nullable(),
+	endpointSpecSwarm: EndpointSpecSwarmSchema.nullable(),
 });
 
 export const apiCreateApplication = createSchema.pick({
@@ -405,6 +457,7 @@ export const apiSaveBitbucketProvider = createSchema
 		bitbucketBuildPath: true,
 		bitbucketOwner: true,
 		bitbucketRepository: true,
+		bitbucketRepositorySlug: true,
 		bitbucketId: true,
 		applicationId: true,
 		watchPaths: true,
@@ -456,6 +509,8 @@ export const apiSaveEnvironmentVariables = createSchema
 		applicationId: true,
 		env: true,
 		buildArgs: true,
+		buildSecrets: true,
+		createEnvFile: true,
 	})
 	.required();
 
