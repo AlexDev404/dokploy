@@ -36,7 +36,7 @@ RUN chmod a+r /etc/apt/keyrings/docker.asc && \
   apt install fuse-overlayfs -y && \
   rm -rf /var/lib/apt/lists/*
 
-# Copy unified entrypoint script
+# Copy unified entrypoint script (expects docker/ directory in build context)
 COPY docker/unified-entrypoint.sh /app/entrypoint.sh
 RUN chmod +x /app/entrypoint.sh
 

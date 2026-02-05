@@ -29,6 +29,8 @@ fi
 if [ "$MODE" = "dind" ]; then
   echo "[Dokploy-Init] Configuring Docker-in-Docker environment..."
   
+  # Ensure log directory exists
+  mkdir -p /var/log
   # Start dockerd in background
   dockerd > /var/log/dockerd.log 2>&1 &
   DOCKERD_PID=$!
@@ -97,10 +99,11 @@ restart_application() {
   if [ -n "$APP_PID" ] && kill -0 $APP_PID 2>/dev/null; then
     kill -TERM $APP_PID
     
-    # Graceful wait
-    for i in {1..10}; do
-      kill -0 $APP_PID 2>/dev/null || break
+    # Graceful wait using a counter loop for better compatibility
+    local wait_count=0
+    while kill -0 $APP_PID 2>/dev/null && [ $wait_count -lt 10 ]; do
       sleep 1
+      wait_count=$((wait_count + 1))
     done
     
     # Force if needed

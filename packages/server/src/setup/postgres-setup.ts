@@ -55,11 +55,13 @@ export const initializePostgres = async () => {
       ...settings,
     });
     console.log("Postgres Started ✅");
+    // Brief wait for service tasks to start scheduling
     await new Promise((resolve) => setTimeout(resolve, 5000));
   } catch {
     try {
       await docker.createService(settings);
       console.log("Postgres Not Found: Starting ✅");
+      // Wait for initial container pull and start
       await new Promise((resolve) => setTimeout(resolve, 8000));
     } catch (error: any) {
       if (error?.statusCode !== 409) {

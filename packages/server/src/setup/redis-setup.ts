@@ -52,11 +52,13 @@ export const initializeRedis = async () => {
       ...settings,
     });
     console.log("Redis Started ✅");
+    // Brief wait for service tasks to begin scheduling
     await new Promise((resolve) => setTimeout(resolve, 3000));
   } catch {
     try {
       await docker.createService(settings);
       console.log("Redis Not Found: Starting ✅");
+      // Allow time for container image pull and initialization
       await new Promise((resolve) => setTimeout(resolve, 5000));
     } catch (error: any) {
       if (error?.statusCode !== 409) {
