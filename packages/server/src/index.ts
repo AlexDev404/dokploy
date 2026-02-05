@@ -51,6 +51,7 @@ export * from "./setup/redis-setup";
 export * from "./setup/server-audit";
 export * from "./setup/server-setup";
 export * from "./setup/server-validate";
+export * from "./setup/service-orchestrator";
 export * from "./setup/setup";
 export * from "./setup/traefik-setup";
 export * from "./templates/processors";

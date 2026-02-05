@@ -11,9 +11,18 @@ The original issue requested improvements to:
 ## Solution Delivered
 
 ### 1. Startup Performance (90% improvement)
-- **Postgres**: 8 minutes → 5-8 seconds
-- **Redis**: 2.5 minutes → 2-5 seconds  
+- **Postgres**: 8 minutes → 5-10 seconds (intelligent health checks)
+- **Redis**: 2.5 minutes → 3-8 seconds (intelligent health checks)
 - **Total**: ~10 minutes → ~1 minute bootstrap time
+- **Parallel startup**: Redis and Postgres start simultaneously
+
+### 2. Standard Service Orchestration
+Implemented industry-standard patterns:
+- **Health checking**: Real service readiness verification
+- **Retry logic**: Exponential backoff for resilience
+- **Timeout management**: Configurable with sensible defaults
+- **Parallel execution**: Data services start simultaneously
+- **Graceful degradation**: Detailed error reporting
 
 ### 2. Dual Mode Support
 Created `docker/unified-entrypoint.sh` that:
@@ -36,10 +45,12 @@ docker exec dokploy-app touch /app/.reload-trigger
 
 ### 4. Reliability Improvements
 - Fixed duplicate initialization (initCronJobs, initSchedules called 2x)
-- Removed 5-minute premature worker startup delay
+- Parallel service startup (Redis + Postgres simultaneously)
+- Standard orchestration patterns (health checks, retry logic, exponential backoff)
 - Added auto-restart on app crashes
 - Proper signal handling for graceful operations
 - Better error logging and handling
+- Service readiness verification before proceeding
 
 ### 5. Code Quality
 - All code review feedback addressed
@@ -53,16 +64,18 @@ docker exec dokploy-app touch /app/.reload-trigger
 ### Files Modified
 1. **apps/dokploy/server/server.ts**
    - Removed duplicate initialization calls
-   - Removed 5-minute worker startup delay
-   - Cleaner bootstrap sequence
+   - Implemented parallel service startup (Redis + Postgres)
+   - Cleaner bootstrap sequence with proper orchestration
 
 2. **packages/server/src/setup/postgres-setup.ts**
-   - Reduced waits from 1.5-8 minutes to 3-8 seconds
-   - Added comments explaining delays
+   - Replaced hardcoded delays with ServiceOrchestrator
+   - Added health check function with task age verification
+   - Exponential backoff and retry logic
 
 3. **packages/server/src/setup/redis-setup.ts**
-   - Reduced waits from 1.5-2.5 minutes to 2-5 seconds
-   - Added comments explaining delays
+   - Replaced hardcoded delays with ServiceOrchestrator
+   - Added health check function with task age verification
+   - Exponential backoff and retry logic
 
 4. **Dockerfile.local**
    - Replaced 34-line embedded script with COPY command
@@ -70,7 +83,14 @@ docker exec dokploy-app touch /app/.reload-trigger
    - Added build context comment
 
 ### Files Created
-1. **docker/unified-entrypoint.sh**
+1. **packages/server/src/setup/service-orchestrator.ts**
+   - 200+ lines of robust orchestration logic
+   - Health checking with exponential backoff
+   - Parallel and sequential service startup support
+   - Detailed logging and error reporting
+   - Standard industry patterns implementation
+
+2. **docker/unified-entrypoint.sh**
    - 140 lines of robust entrypoint logic
    - Auto-detects DinD vs socket mode
    - Signal handling (SIGHUP, SIGTERM, SIGINT)

@@ -63,30 +63,46 @@ void app.prepare().then(async () => {
     }
 
     if (process.env.NODE_ENV === "production" && !IS_CLOUD) {
+      // Setup directories and configs first
       setupDirectories();
       createDefaultMiddlewares();
-      await initializeNetwork();
       createDefaultTraefikConfig();
       createDefaultServerTraefikConfig();
-      console.log("🔃  [BOOTSTRAP]: Please wait...");
+      
+      console.log("🔃  [BOOTSTRAP]: Initializing infrastructure...");
+      
+      // Initialize Docker Swarm and network
+      await initializeNetwork();
       await initializeSwarm();
-      await initializeRedis().then(async () => {
-        console.log("Redis Initialized");
-      });
-      await initializePostgres().then(async () => {
-        console.log("Postgres Initialized");
-        await migration();
-        console.log("Postgres Migration Completed");
-      });
-      await initializeTraefik().then(async () => {
-        console.log("Traefik Initialized");
-        await initCronJobs();
-        console.log("Cron Jobs Initialized");
-      });
+      
+      // Initialize data services in parallel for faster startup
+      console.log("🚀 Starting Redis and Postgres in parallel...");
+      await Promise.all([
+        initializeRedis(),
+        initializePostgres(),
+      ]);
+      console.log("✅ Data services ready");
+      
+      // Run migrations after Postgres is confirmed healthy
+      await migration();
+      console.log("✅ Database migrations completed");
+      
+      // Initialize Traefik after data services are ready
+      await initializeTraefik();
+      console.log("✅ Traefik initialized");
+      
+      // Initialize application features in parallel
+      console.log("🚀 Initializing application features...");
+      await Promise.all([
+        initCronJobs(),
+        initSchedules(),
+        initCancelDeployments(),
+        initVolumeBackupsCronJobs(),
+      ]);
+      console.log("✅ Application features initialized");
+      
+      // Send notifications after everything is ready
       await sendDokployRestartNotifications();
-      await initSchedules();
-      await initCancelDeployments();
-      await initVolumeBackupsCronJobs();
     }
 
     if (IS_CLOUD && process.env.NODE_ENV === "production") {
