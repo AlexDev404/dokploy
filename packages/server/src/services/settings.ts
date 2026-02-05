@@ -3,6 +3,8 @@ import {
   execAsync,
   execAsyncRemote,
 } from "@dokploy/server/utils/process/execAsync";
+import { readdirSync } from "node:fs";
+import { join } from "node:path";
 import semver from "semver";
 import {
   initializeStandaloneTraefik,
