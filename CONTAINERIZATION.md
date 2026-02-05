@@ -62,21 +62,54 @@ Both methods use the same image - the entrypoint auto-detects the mode.
 
 ## Updating the Application
 
-When you need to update just the Node.js application code (not infrastructure):
+### Method 1: Tarball Deployment (Recommended)
 
-1. **Build new image** (if needed):
-   ```bash
-   docker build -t dokploy-app:new-version .
-   ```
+Build just the application without rebuilding the entire Docker image:
 
-2. **Trigger hot-reload**:
-   ```bash
-   # Copy new files into running container
-   docker cp ./apps/dokploy dokploy-app:/app/
-   
-   # Trigger reload
-   docker kill -s HUP dokploy-app
-   ```
+```bash
+# Build application tarball
+pnpm build:tarball
+# or directly: ./scripts/build-app-tarball.sh
+
+# Deploy to running container
+cd dist-tarball
+./deploy-tarball.sh dokploy-app dokploy-app-YYYYMMDD-HHMMSS.tar.gz
+```
+
+This method:
+- ✅ Takes ~2 minutes to build (vs ~10 minutes for full image)
+- ✅ Deploys in ~5 seconds
+- ✅ Automatically backs up current deployment
+- ✅ Triggers hot-reload automatically
+- ✅ No container downtime
+
+### Method 2: Hot-Reload with Manual Files
+
+When you need to update just the Node.js application code:
+
+```bash
+# Build new image (if needed)
+docker build -t dokploy-app:new-version .
+
+# Copy new files into running container
+docker cp ./apps/dokploy dokploy-app:/app/
+
+# Trigger reload
+docker kill -s HUP dokploy-app
+```
+
+### Method 3: Full Image Rebuild
+
+For major updates or infrastructure changes:
+
+```bash
+# Build new image
+pnpm local:build
+
+# Stop and recreate container
+docker-compose down
+docker-compose up -d
+```
 
 The application will restart while Docker daemon, databases, and other services continue running.
 
