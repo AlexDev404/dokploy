@@ -1,5 +1,5 @@
 import type { Service } from "dockerode";
-import { docker } from "../constants";
+import { docker } from "@dokploy/server/constants";
 
 /**
  * Service health check configuration
@@ -51,7 +51,7 @@ export class ServiceOrchestrator {
    */
   private async checkServiceHealth(service: Service): Promise<boolean> {
     try {
-      const tasks = await service.tasks();
+      const tasks = await docker.listTasks({ service: service.id });
       
       if (!tasks || tasks.length === 0) {
         return false;
@@ -59,7 +59,7 @@ export class ServiceOrchestrator {
 
       // Check if any task is in running state
       const runningTasks = tasks.filter(
-        (task) => task.Status?.State === "running"
+        (task: any) => task.Status?.State === "running"
       );
 
       if (runningTasks.length === 0) {

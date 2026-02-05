@@ -1,5 +1,5 @@
 import type { CreateServiceOptions } from "dockerode";
-import { docker } from "../constants";
+import { docker } from "@dokploy/server/constants";
 import { pullImage } from "../utils/docker/utils";
 import { ServiceOrchestrator } from "./service-orchestrator";
 
@@ -9,11 +9,11 @@ import { ServiceOrchestrator } from "./service-orchestrator";
 const redisHealthCheck = async (): Promise<boolean> => {
   try {
     const service = docker.getService("dokploy-redis");
-    const tasks = await service.tasks();
+    const tasks = await docker.listTasks({ service: service.id });
     
     // Check for running tasks
     const runningTasks = tasks.filter(
-      (task) => task.Status?.State === "running"
+      (task: any) => task.Status?.State === "running"
     );
     
     if (runningTasks.length === 0) {
@@ -49,7 +49,7 @@ export const initializeRedis = async () => {
             Target: "/data",
           },
         ],
-        Healthcheck: {
+        HealthCheck: {
           Test: ["CMD", "redis-cli", "ping"],
           Interval: 5000000000, // 5 seconds in nanoseconds
           Timeout: 3000000000,  // 3 seconds in nanoseconds
