@@ -41,10 +41,11 @@ import {
 	updateDeploymentStatus,
 } from "./deployment";
 import { validUniqueServerAppName } from "./project";
+import { z } from "zod";
 
 export type Compose = typeof compose.$inferSelect;
 
-export const createCompose = async (input: typeof apiCreateCompose._type) => {
+export const createCompose = async (input: z.infer<typeof apiCreateCompose>) => {
 	const appName = buildAppName("compose", input.appName);
 
 	const valid = await validUniqueServerAppName(appName);

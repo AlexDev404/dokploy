@@ -18,6 +18,7 @@ import { removeDeploymentsByPreviewDeploymentId } from "./deployment";
 import { createDomain } from "./domain";
 import { type Github, getIssueComment } from "./github";
 import { getWebServerSettings } from "./web-server-settings";
+import { z } from "zod";
 
 export type PreviewDeployment = typeof previewDeployments.$inferSelect;
 
@@ -130,7 +131,7 @@ export const findPreviewDeploymentsByApplicationId = async (
 };
 
 export const createPreviewDeployment = async (
-	schema: typeof apiCreatePreviewDeployment._type,
+	schema: z.infer<typeof apiCreatePreviewDeployment>,
 ) => {
 	const application = await findApplicationById(schema.applicationId);
 	const appName = `preview-${application.appName}-${generatePassword(6)}`;
@@ -179,11 +180,11 @@ export const createPreviewDeployment = async (
 
 	const newDomain = await createDomain({
 		host: generateDomain,
-		path: application.previewPath,
-		port: application.previewPort,
-		https: application.previewHttps,
-		certificateType: application.previewCertificateType,
-		customCertResolver: application.previewCustomCertResolver,
+		path: application.previewPath ?? undefined,
+		port: application.previewPort ?? undefined,
+		https: application.previewHttps ?? undefined,
+		certificateType: application.previewCertificateType ?? undefined,
+		customCertResolver: application.previewCustomCertResolver ?? "",
 		domainType: "preview",
 		previewDeploymentId: previewDeployment.previewDeploymentId,
 	});

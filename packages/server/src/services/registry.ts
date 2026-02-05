@@ -7,6 +7,7 @@ import {
 import { TRPCError } from "@trpc/server";
 import { eq } from "drizzle-orm";
 import { IS_CLOUD } from "../constants";
+import { z } from "zod";
 
 export type Registry = typeof registry.$inferSelect;
 
@@ -27,7 +28,7 @@ function safeDockerLoginCommand(
 }
 
 export const createRegistry = async (
-	input: typeof apiCreateRegistry._type,
+	input: z.infer<typeof apiCreateRegistry>,
 	organizationId: string,
 ) => {
 	return await db.transaction(async (tx) => {

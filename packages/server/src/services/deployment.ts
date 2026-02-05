@@ -33,6 +33,7 @@ import { removeRollbackById } from "./rollbacks";
 import { findScheduleById } from "./schedule";
 import { findServerById, type Server } from "./server";
 import { findVolumeBackupById } from "./volume-backups";
+import { z } from "zod";
 
 export type Deployment = typeof deployments.$inferSelect;
 
@@ -69,7 +70,7 @@ export const findDeploymentByApplicationId = async (applicationId: string) => {
 
 export const createDeployment = async (
 	deployment: Omit<
-		typeof apiCreateDeployment._type,
+		z.infer<typeof apiCreateDeployment>,
 		"deploymentId" | "createdAt" | "status" | "logPath"
 	>,
 ) => {
@@ -150,7 +151,7 @@ export const createDeployment = async (
 
 export const createDeploymentPreview = async (
 	deployment: Omit<
-		typeof apiCreateDeploymentPreview._type,
+		z.infer<typeof apiCreateDeploymentPreview>,
 		"deploymentId" | "createdAt" | "status" | "logPath"
 	>,
 ) => {
@@ -233,7 +234,7 @@ export const createDeploymentPreview = async (
 
 export const createDeploymentCompose = async (
 	deployment: Omit<
-		typeof apiCreateDeploymentCompose._type,
+		z.infer<typeof apiCreateDeploymentCompose>,
 		"deploymentId" | "createdAt" | "status" | "logPath"
 	>,
 ) => {
@@ -310,7 +311,7 @@ echo "Initializing deployment\n" >> ${logFilePath};
 
 export const createDeploymentBackup = async (
 	deployment: Omit<
-		typeof apiCreateDeploymentBackup._type,
+		z.infer<typeof apiCreateDeploymentBackup>,
 		"deploymentId" | "createdAt" | "status" | "logPath"
 	>,
 ) => {
@@ -390,7 +391,7 @@ echo "Initializing backup\n" >> ${logFilePath};
 
 export const createDeploymentSchedule = async (
 	deployment: Omit<
-		typeof apiCreateDeploymentSchedule._type,
+		z.infer<typeof apiCreateDeploymentSchedule>,
 		"deploymentId" | "createdAt" | "status" | "logPath"
 	>,
 ) => {
@@ -466,7 +467,7 @@ export const createDeploymentSchedule = async (
 
 export const createDeploymentVolumeBackup = async (
 	deployment: Omit<
-		typeof apiCreateDeploymentVolumeBackup._type,
+		z.infer<typeof apiCreateDeploymentVolumeBackup>,
 		"deploymentId" | "createdAt" | "status" | "logPath"
 	>,
 ) => {
@@ -753,7 +754,7 @@ export const updateDeploymentStatus = async (
 
 export const createServerDeployment = async (
 	deployment: Omit<
-		typeof apiCreateDeploymentServer._type,
+		z.infer<typeof apiCreateDeploymentServer>,
 		"deploymentId" | "createdAt" | "status" | "logPath"
 	>,
 ) => {
