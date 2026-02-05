@@ -29,6 +29,7 @@ import { cloneGitlabRepository } from "@dokploy/server/utils/providers/gitlab";
 import { createTraefikConfig } from "@dokploy/server/utils/traefik/application";
 import { TRPCError } from "@trpc/server";
 import { eq } from "drizzle-orm";
+import { z } from "zod";
 import { encodeBase64 } from "../utils/docker/utils";
 import { getDokployUrl } from "./admin";
 import {
@@ -52,7 +53,7 @@ import { validUniqueServerAppName } from "./project";
 export type Application = typeof applications.$inferSelect;
 
 export const createApplication = async (
-	input: typeof apiCreateApplication._type,
+	input: z.infer<typeof apiCreateApplication>,
 ) => {
 	const appName = buildAppName("app", input.appName);
 

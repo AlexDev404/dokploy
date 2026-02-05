@@ -10,10 +10,11 @@ import { type apiCreateDomain, domains } from "../db/schema";
 import { findApplicationById } from "./application";
 import { detectCDNProvider } from "./cdn";
 import { findServerById } from "./server";
+import { z } from "zod";
 
 export type Domain = typeof domains.$inferSelect;
 
-export const createDomain = async (input: typeof apiCreateDomain._type) => {
+export const createDomain = async (input: z.infer<typeof apiCreateDomain>) => {
 	const result = await db.transaction(async (tx) => {
 		const domain = await tx
 			.insert(domains)

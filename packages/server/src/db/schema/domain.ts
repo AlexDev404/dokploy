@@ -70,7 +70,7 @@ export const domainsRelations = relations(domains, ({ one }) => ({
 	}),
 }));
 
-const createSchema = createInsertSchema(domains, domain._def.schema.shape);
+const createSchema = createInsertSchema(domains).extend(domain.shape);
 
 export const apiCreateDomain = createSchema.pick({
 	host: true,

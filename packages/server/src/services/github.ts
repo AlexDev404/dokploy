@@ -8,10 +8,11 @@ import { TRPCError } from "@trpc/server";
 import { eq } from "drizzle-orm";
 import { authGithub } from "../utils/providers/github";
 import { updatePreviewDeployment } from "./preview-deployment";
+import { z } from "zod";
 
 export type Github = typeof github.$inferSelect;
 export const createGithub = async (
-	input: typeof apiCreateGithub._type,
+	input: z.infer<typeof apiCreateGithub>,
 	organizationId: string,
 	userId: string,
 ) => {

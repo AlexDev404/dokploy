@@ -12,11 +12,12 @@ import {
 import { TRPCError } from "@trpc/server";
 import { eq } from "drizzle-orm";
 import { createProductionEnvironment } from "./environment";
+import { z } from "zod";
 
 export type Project = typeof projects.$inferSelect;
 
 export const createProject = async (
-	input: typeof apiCreateProject._type,
+	input: z.infer<typeof apiCreateProject>,
 	organizationId: string,
 ) => {
 	const newProject = await db

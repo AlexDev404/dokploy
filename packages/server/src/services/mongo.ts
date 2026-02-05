@@ -13,10 +13,11 @@ import { execAsyncRemote } from "@dokploy/server/utils/process/execAsync";
 import { TRPCError } from "@trpc/server";
 import { eq, getTableColumns } from "drizzle-orm";
 import { validUniqueServerAppName } from "./project";
+import { z } from "zod";
 
 export type Mongo = typeof mongo.$inferSelect;
 
-export const createMongo = async (input: typeof apiCreateMongo._type) => {
+export const createMongo = async (input: z.infer<typeof apiCreateMongo>) => {
 	const appName = buildAppName("mongo", input.appName);
 
 	const valid = await validUniqueServerAppName(appName);

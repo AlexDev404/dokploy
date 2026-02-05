@@ -10,6 +10,7 @@ import {
 } from "@dokploy/server/services/bitbucket";
 import type { InferResultType } from "@dokploy/server/types/with";
 import { TRPCError } from "@trpc/server";
+import { z } from "zod";
 
 export type ApplicationWithBitbucket = InferResultType<
 	"applications",
@@ -177,7 +178,7 @@ export const getBitbucketRepositories = async (bitbucketId?: string) => {
 };
 
 export const getBitbucketBranches = async (
-	input: typeof apiFindBitbucketBranches._type,
+	input: z.infer<typeof apiFindBitbucketBranches>,
 ) => {
 	if (!input.bitbucketId) {
 		return [];
@@ -232,7 +233,7 @@ export const getBitbucketBranches = async (
 };
 
 export const testBitbucketConnection = async (
-	input: typeof apiBitbucketTestConnection._type,
+	input: z.infer<typeof apiBitbucketTestConnection>,
 ) => {
 	const bitbucketProvider = await findBitbucketById(input.bitbucketId);
 

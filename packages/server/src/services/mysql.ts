@@ -12,10 +12,11 @@ import { execAsyncRemote } from "@dokploy/server/utils/process/execAsync";
 import { TRPCError } from "@trpc/server";
 import { eq, getTableColumns } from "drizzle-orm";
 import { validUniqueServerAppName } from "./project";
+import { z } from "zod";
 
 export type MySql = typeof mysql.$inferSelect;
 
-export const createMysql = async (input: typeof apiCreateMySql._type) => {
+export const createMysql = async (input: z.infer<typeof apiCreateMySql>) => {
 	const appName = buildAppName("mysql", input.appName);
 
 	const valid = await validUniqueServerAppName(appName);
