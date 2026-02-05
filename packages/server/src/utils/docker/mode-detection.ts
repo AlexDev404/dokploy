@@ -1,4 +1,4 @@
-import { docker } from "../constants";
+import { docker } from "@dokploy/server/constants";
 import { existsSync } from "node:fs";
 
 /**
