@@ -16,7 +16,7 @@ importers:
         specifier: 2.1.1
         version: 2.1.1
       '@types/node':
-        specifier: ^20.16.0
+        specifier: ^22.22.0
         version: 20.17.51
       dotenv:
         specifier: 16.4.5
@@ -71,7 +71,7 @@ importers:
         version: 3.25.32
     devDependencies:
       '@types/node':
-        specifier: ^20.16.0
+        specifier: ^22.22.0
         version: 20.17.51
       '@types/react':
         specifier: 18.3.5
@@ -462,7 +462,7 @@ importers:
         specifier: 4.0.9
         version: 4.0.9
       '@types/node':
-        specifier: ^20.16.0
+        specifier: ^22.22.0
         version: 20.17.51
       '@types/node-schedule':
         specifier: 2.1.6
@@ -568,7 +568,7 @@ importers:
         version: 3.25.32
     devDependencies:
       '@types/node':
-        specifier: ^20.16.0
+        specifier: ^22.22.0
         version: 20.17.51
       '@types/react':
         specifier: 18.3.5
@@ -761,7 +761,7 @@ importers:
         specifier: 4.0.9
         version: 4.0.9
       '@types/node':
-        specifier: ^20.16.0
+        specifier: ^22.22.0
         version: 20.17.51
       '@types/node-schedule':
         specifier: 2.1.6

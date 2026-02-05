@@ -1,21 +1,32 @@
 {
   "name": "@dokploy/server",
   "version": "1.0.0",
-  "main": "./src/index.ts",
+  "main": "./dist/index.js",
   "type": "module",
   "exports": {
-    ".": "./src/index.ts",
+    ".": {
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs.js"
+    },
     "./db": {
-      "import": "./src/db/index.ts",
+      "import": "./dist/db/index.js",
       "require": "./dist/db/index.cjs.js"
     },
-    "./setup/*": {
-      "import": "./src/setup/*.ts",
-      "require": "./dist/setup/index.cjs.js"
+    "./*": {
+      "import": "./dist/*",
+      "require": "./dist/*.cjs"
     },
-    "./constants": {
-      "import": "./src/constants/index.ts",
-      "require": "./dist/constants.cjs.js"
+    "./dist": {
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs.js"
+    },
+    "./dist/db": {
+      "import": "./dist/db/index.js",
+      "require": "./dist/db/index.cjs.js"
+    },
+    "./dist/db/schema": {
+      "import": "./dist/db/schema/index.js",
+      "require": "./dist/db/schema/index.cjs.js"
     }
   },
   "scripts": {
@@ -44,7 +55,7 @@
     "@oslojs/crypto": "1.0.1",
     "@oslojs/encoding": "1.1.0",
     "@react-email/components": "^0.0.21",
-    "@better-auth/sso":"1.4.18",
+    "@better-auth/sso": "1.4.18",
     "@trpc/server": "^10.45.2",
     "adm-zip": "^0.5.16",
     "ai": "^5.0.17",
@@ -84,14 +95,14 @@
     "semver": "7.7.3"
   },
   "devDependencies": {
-		"@better-auth/cli": "1.4.18",
+    "@better-auth/cli": "1.4.18",
     "@types/semver": "7.7.1",
     "@types/adm-zip": "^0.5.7",
     "@types/bcrypt": "5.0.2",
     "@types/dockerode": "3.3.23",
     "@types/lodash": "4.17.4",
     "@types/micromatch": "4.0.9",
-    "@types/node": "^20.16.0",
+    "@types/node": "^22.22.0",
     "@types/node-schedule": "2.1.6",
     "@types/nodemailer": "^6.4.17",
     "@types/qrcode": "^1.5.5",
@@ -111,7 +122,7 @@
   },
   "packageManager": "pnpm@9.12.0",
   "engines": {
-    "node": "^20.16.0",
+    "node": "^22.22.0",
     "pnpm": ">=9.12.0"
   }
 }
