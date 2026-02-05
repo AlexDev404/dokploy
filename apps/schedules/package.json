@@ -23,7 +23,7 @@
     "zod": "^3.25.32"
   },
   "devDependencies": {
-    "@types/node": "^22.22.0",
+    "@types/node": "^22.13.14",
     "@types/react": "^18.3.5",
     "@types/react-dom": "^18.3.0",
     "tsx": "^4.16.2",
