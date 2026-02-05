@@ -72,18 +72,6 @@ void app.prepare().then(async () => {
       await initializeSwarm();
       await initializeRedis().then(async () => {
         console.log("Redis Initialized");
-        if (!IS_CLOUD) {
-          console.log("Starting Deployment Worker");
-          const { deploymentWorker } =
-            await import("./queues/deployments-queue");
-          setTimeout(
-            async () => {
-              await deploymentWorker.run();
-            },
-            1000 * 60 * 5,
-          );
-          console.log("Redis Worker Initialized");
-        }
       });
       await initializePostgres().then(async () => {
         console.log("Postgres Initialized");
@@ -96,10 +84,6 @@ void app.prepare().then(async () => {
         console.log("Cron Jobs Initialized");
       });
       await sendDokployRestartNotifications();
-      await initSchedules();
-      await initCancelDeployments();
-      await initVolumeBackupsCronJobs();
-      await initCronJobs();
       await initSchedules();
       await initCancelDeployments();
       await initVolumeBackupsCronJobs();

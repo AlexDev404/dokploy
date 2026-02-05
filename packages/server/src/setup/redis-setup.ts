@@ -52,18 +52,18 @@ export const initializeRedis = async () => {
       ...settings,
     });
     console.log("Redis Started ✅");
-    await new Promise((resolve) => setTimeout(resolve, 1000 * 60 * 2.5));
+    await new Promise((resolve) => setTimeout(resolve, 3000));
   } catch {
     try {
       await docker.createService(settings);
       console.log("Redis Not Found: Starting ✅");
-      await new Promise((resolve) => setTimeout(resolve, 1000 * 60 * 2.5));
+      await new Promise((resolve) => setTimeout(resolve, 5000));
     } catch (error: any) {
       if (error?.statusCode !== 409) {
         throw error;
       }
       console.log("Redis service already exists, continuing...");
-      await new Promise((resolve) => setTimeout(resolve, 1000 * 60 * 1.5));
+      await new Promise((resolve) => setTimeout(resolve, 2000));
     }
   }
 };
