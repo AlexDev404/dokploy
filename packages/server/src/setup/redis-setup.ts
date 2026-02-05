@@ -1,6 +1,37 @@
 import type { CreateServiceOptions } from "dockerode";
 import { docker } from "../constants";
 import { pullImage } from "../utils/docker/utils";
+import { ServiceOrchestrator } from "./service-orchestrator";
+
+/**
+ * Health check for Redis - verifies running state
+ */
+const redisHealthCheck = async (): Promise<boolean> => {
+  try {
+    const service = docker.getService("dokploy-redis");
+    const tasks = await service.tasks();
+    
+    // Check for running tasks
+    const runningTasks = tasks.filter(
+      (task) => task.Status?.State === "running"
+    );
+    
+    if (runningTasks.length === 0) {
+      return false;
+    }
+    
+    // Redis starts quickly, check if task has been running for at least 3 seconds
+    const oldestTask = runningTasks[0];
+    if (oldestTask.Status?.Timestamp) {
+      const taskAge = Date.now() - new Date(oldestTask.Status.Timestamp).getTime();
+      return taskAge >= 3000;
+    }
+    
+    return true;
+  } catch {
+    return false;
+  }
+};
 
 export const initializeRedis = async () => {
   const imageName = "redis:7";
@@ -18,6 +49,13 @@ export const initializeRedis = async () => {
             Target: "/data",
           },
         ],
+        Healthcheck: {
+          Test: ["CMD", "redis-cli", "ping"],
+          Interval: 5000000000, // 5 seconds in nanoseconds
+          Timeout: 3000000000,  // 3 seconds in nanoseconds
+          Retries: 5,
+          StartPeriod: 5000000000, // 5 seconds in nanoseconds
+        },
       },
       Networks: [{ Target: "dokploy-network" }],
       Placement: {
@@ -42,28 +80,39 @@ export const initializeRedis = async () => {
       },
     }),
   };
+  
   try {
     await pullImage(imageName);
-
     const service = docker.getService(containerName);
     const inspect = await service.inspect();
     await service.update({
       version: Number.parseInt(inspect.Version.Index),
       ...settings,
     });
-    console.log("Redis Started ✅");
-    await new Promise((resolve) => setTimeout(resolve, 1000 * 60 * 2.5));
+    console.log("📦 Redis service configuration updated");
   } catch {
     try {
       await docker.createService(settings);
-      console.log("Redis Not Found: Starting ✅");
-      await new Promise((resolve) => setTimeout(resolve, 1000 * 60 * 2.5));
+      console.log("📦 Redis service created");
     } catch (error: any) {
       if (error?.statusCode !== 409) {
         throw error;
       }
-      console.log("Redis service already exists, continuing...");
-      await new Promise((resolve) => setTimeout(resolve, 1000 * 60 * 1.5));
+      console.log("📦 Redis service already exists");
     }
+  }
+  
+  // Use orchestrator for health checking
+  const orchestrator = new ServiceOrchestrator({
+    serviceName: containerName,
+    checkInterval: 2000,
+    timeout: 120000, // 2 minutes max
+    retries: 60,
+    healthCheck: redisHealthCheck,
+  });
+  
+  const result = await orchestrator.waitForHealthy();
+  if (!result.success) {
+    throw new Error(`Redis failed to become healthy: ${result.error}`);
   }
 };

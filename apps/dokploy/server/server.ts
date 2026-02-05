@@ -19,6 +19,7 @@ import {
   initializeSwarm,
   initializeStandaloneTraefik as initializeTraefik,
 } from "@dokploy/server/index";
+import { logDockerMode } from "@dokploy/server/utils/docker/mode-detection";
 import { config } from "dotenv";
 import next from "next";
 import packageInfo from "../package.json";
@@ -63,46 +64,49 @@ void app.prepare().then(async () => {
     }
 
     if (process.env.NODE_ENV === "production" && !IS_CLOUD) {
+      // Detect and log Docker mode for debugging
+      await logDockerMode();
+      
+      // Setup directories and configs first
       setupDirectories();
       createDefaultMiddlewares();
-      await initializeNetwork();
       createDefaultTraefikConfig();
       createDefaultServerTraefikConfig();
-      console.log("🔃  [BOOTSTRAP]: Please wait...");
+      
+      console.log("🔃  [BOOTSTRAP]: Initializing infrastructure...");
+      
+      // Initialize Docker Swarm and network
+      await initializeNetwork();
       await initializeSwarm();
-      await initializeRedis().then(async () => {
-        console.log("Redis Initialized");
-        if (!IS_CLOUD) {
-          console.log("Starting Deployment Worker");
-          const { deploymentWorker } =
-            await import("./queues/deployments-queue");
-          setTimeout(
-            async () => {
-              await deploymentWorker.run();
-            },
-            1000 * 60 * 5,
-          );
-          console.log("Redis Worker Initialized");
-        }
-      });
-      await initializePostgres().then(async () => {
-        console.log("Postgres Initialized");
-        await migration();
-        console.log("Postgres Migration Completed");
-      });
-      await initializeTraefik().then(async () => {
-        console.log("Traefik Initialized");
-        await initCronJobs();
-        console.log("Cron Jobs Initialized");
-      });
+      
+      // Initialize data services in parallel for faster startup
+      console.log("🚀 Starting Redis and Postgres in parallel...");
+      await Promise.all([
+        initializeRedis(),
+        initializePostgres(),
+      ]);
+      console.log("✅ Data services ready");
+      
+      // Run migrations after Postgres is confirmed healthy
+      await migration();
+      console.log("✅ Database migrations completed");
+      
+      // Initialize Traefik after data services are ready
+      await initializeTraefik();
+      console.log("✅ Traefik initialized");
+      
+      // Initialize application features in parallel
+      console.log("🚀 Initializing application features...");
+      await Promise.all([
+        initCronJobs(),
+        initSchedules(),
+        initCancelDeployments(),
+        initVolumeBackupsCronJobs(),
+      ]);
+      console.log("✅ Application features initialized");
+      
+      // Send notifications after everything is ready
       await sendDokployRestartNotifications();
-      await initSchedules();
-      await initCancelDeployments();
-      await initVolumeBackupsCronJobs();
-      await initCronJobs();
-      await initSchedules();
-      await initCancelDeployments();
-      await initVolumeBackupsCronJobs();
     }
 
     if (IS_CLOUD && process.env.NODE_ENV === "production") {
