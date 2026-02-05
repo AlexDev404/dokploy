@@ -19,6 +19,7 @@ import {
   initializeSwarm,
   initializeStandaloneTraefik as initializeTraefik,
 } from "@dokploy/server/index";
+import { logDockerMode } from "@dokploy/server/utils/docker/mode-detection";
 import { config } from "dotenv";
 import next from "next";
 import packageInfo from "../package.json";
@@ -63,6 +64,9 @@ void app.prepare().then(async () => {
     }
 
     if (process.env.NODE_ENV === "production" && !IS_CLOUD) {
+      // Detect and log Docker mode for debugging
+      await logDockerMode();
+      
       // Setup directories and configs first
       setupDirectories();
       createDefaultMiddlewares();

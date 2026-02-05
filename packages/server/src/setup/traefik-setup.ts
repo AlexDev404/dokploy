@@ -95,27 +95,67 @@ export const initializeStandaloneTraefik = async ({
   };
 
   const docker = await getRemoteDocker(serverId);
+  
+  // Pull image without unnecessary delay
   try {
     await docker.pull(imageName);
-    await new Promise((resolve) => setTimeout(resolve, 3000));
     console.log("Traefik Image Pulled ✅");
   } catch (error) {
-    console.log("Traefik Image Not Found: Pulling ", error);
+    console.log("Traefik Image Pull Warning:", error);
   }
+  
+  // Remove existing container if present
   try {
     const container = docker.getContainer(containerName);
     await container.remove({ force: true });
-    await new Promise((resolve) => setTimeout(resolve, 5000));
+    // Brief moment for cleanup to complete
+    await new Promise((resolve) => setTimeout(resolve, 500));
   } catch {}
 
+  // Create and start container
   try {
     await docker.createContainer(settings);
     const newContainer = docker.getContainer(containerName);
     await newContainer.start();
+    
+    // Wait for Traefik to be actually ready
+    await waitForTraefikReady(docker, containerName);
     console.log("Traefik Started ✅");
   } catch (error) {
-    console.log("Traefik Not Found: Starting ", error);
+    console.log("Traefik Startup Error:", error);
   }
+};
+
+/**
+ * Wait for Traefik container to be healthy and ready
+ */
+const waitForTraefikReady = async (dockerClient: any, containerName: string): Promise<void> => {
+  const maxAttempts = 30;
+  const checkInterval = 1000;
+  
+  for (let attempt = 0; attempt < maxAttempts; attempt++) {
+    try {
+      const container = dockerClient.getContainer(containerName);
+      const inspect = await container.inspect();
+      
+      // Check if container is running
+      if (inspect.State?.Running) {
+        // If it's been running for at least 2 seconds, consider it ready
+        const startedAt = new Date(inspect.State.StartedAt).getTime();
+        const uptime = Date.now() - startedAt;
+        
+        if (uptime >= 2000) {
+          return;
+        }
+      }
+    } catch (error) {
+      // Container not ready yet
+    }
+    
+    await new Promise((resolve) => setTimeout(resolve, checkInterval));
+  }
+  
+  console.warn("Traefik health check timeout - proceeding anyway");
 };
 
 export const initializeTraefikService = async ({

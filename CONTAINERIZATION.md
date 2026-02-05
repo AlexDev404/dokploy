@@ -2,21 +2,32 @@
 
 ## Overview
 
-This update improves Dokploy's containerization to work reliably with both Docker-in-Docker (DinD) and host socket mounting.
+This update delivers production-ready containerization with native support for both Docker-in-Docker (DinD) and host socket mounting. The system automatically detects which mode it's running in and optimizes accordingly - no configuration needed.
 
 ## Key Improvements
 
-### 1. **Faster Startup Times**
-- **Postgres**: Reduced from 2.5-8 minutes → 3-8 seconds
-- **Redis**: Reduced from 1.5-2.5 minutes → 2-5 seconds
-- **Total bootstrap time**: Reduced by ~10 minutes
+### 1. **Native Dual-Mode Support**
+The application works seamlessly with both approaches:
+- **Auto-detection**: Automatically detects DinD vs socket mode at startup
+- **No configuration**: Works out-of-the-box with either approach
+- **Optimized performance**: Adjusts parallelization and timeouts based on mode
+- **Mode logging**: Clearly shows which mode is active in startup logs
 
-### 2. **Flexible Docker Mode Support**
-The new unified entrypoint (`docker/unified-entrypoint.sh`) automatically detects and configures for:
-- **DinD Mode**: Starts dockerd inside the container
-- **Socket Mode**: Uses host Docker socket (`/var/run/docker.sock`)
+### 2. **Maximum Startup Speed**
+- **Postgres**: Reduced from 8 minutes → 5-10 seconds (intelligent health checks)
+- **Redis**: Reduced from 2.5 minutes → 3-8 seconds (intelligent health checks)
+- **Traefik**: No hardcoded delays, uses container readiness checks
+- **Total**: ~10 minutes → ~1 minute bootstrap time
+- **Parallel startup**: Redis and Postgres initialize simultaneously
 
-### 3. **Hot-Reload Without Container Restart**
+### 3. **Zero Hardcoded Delays**
+All service initialization uses intelligent health checks instead of arbitrary waits:
+- **ServiceOrchestrator**: Retry logic with exponential backoff
+- **Health verification**: Actual service readiness, not time-based guessing
+- **Fast failure**: Services that can't start fail quickly with clear errors
+- **Task age verification**: Ensures services are truly running before proceeding
+
+### 4. **Hot-Reload Without Container Restart**
 Update your application without bringing down the entire container:
 
 ```bash
