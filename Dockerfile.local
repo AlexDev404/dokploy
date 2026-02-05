@@ -36,42 +36,12 @@ RUN chmod a+r /etc/apt/keyrings/docker.asc && \
   apt install fuse-overlayfs -y && \
   rm -rf /var/lib/apt/lists/*
 
-# Create the startup script for Docker and SSH
-RUN echo "#!/bin/bash\n \
-rm -rf /var/run/docker.pid\n \
-/usr/sbin/sshd\n \
-dockerd &\n \
-counter=0\n \
-max_attempts=100\n \
-while ! docker info > /dev/null 2>&1; do\n \
-  echo 'Waiting for Docker to start...'\n \
-  ((counter++))\n \
-  if [ \$counter -ge \$max_attempts ]; then\n \
-    echo 'Docker failed to start after \$max_attempts attempts. Exiting.'\n \
-    exit 1\n \
-  fi\n \
-  sleep 1\n \
-done\n \
-docker swarm init\n \
-pnpm start &\n \
-# Wait for a signal to restart\n \
-while true; do\n \
-  if [ -f /app/restart.txt ]; then\n \
-    echo "Restarting container..."\n \
-    # Remove the restart flag\n \
-    rm -f /app/restart.txt\n \
-    # Stop Docker\n \
-    docker stop $(docker ps -q)\n \
-    kill -s SIGINT \$(cat /var/run/docker.pid)\n \
-    # exit the container - exit code is optional\n \
-    exit 3010\n \
-  fi\n \
-  sleep 5\n \
-done\n \
-" > /app/dockerd-entrypoint.sh && chmod +x /app/dockerd-entrypoint.sh
+# Copy unified entrypoint script
+COPY docker/unified-entrypoint.sh /app/entrypoint.sh
+RUN chmod +x /app/entrypoint.sh
 
-# Expose SSH port and Docker (if needed)
+# Expose SSH port
 EXPOSE 22
 
-# Start SSH + Docker + your app
-CMD ["/bin/bash", "/app/dockerd-entrypoint.sh"]
+# Use unified entrypoint (auto-detects DinD vs socket mode)
+CMD ["/bin/bash", "/app/entrypoint.sh"]
