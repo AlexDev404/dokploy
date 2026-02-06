@@ -17,7 +17,7 @@ if (process.env.NODE_ENV !== "production" || process.env.DEBUG) {
 const sql = postgres(dbUrl, { max: 1 });
 const db = drizzle(sql);
 
-await migrate(db, { migrationsFolder: join(__dirname, "drizzle") })
+await migrate(db, { migrationsFolder: "drizzle" })
 	.then(() => {
 		console.log("Migration complete");
 		sql.end();
