@@ -118,11 +118,15 @@ const { handler, api } = betterAuth({
 							if (isSSORequest) {
 								return;
 							}
-							console.log("[AUTH] Checking if admin already exists (querying member table)");
+							if (process.env.DEBUG) {
+								console.log("[AUTH] Checking if admin already exists (querying member table)");
+							}
 							const isAdminPresent = await db.query.member.findFirst({
 								where: eq(schema.member.role, "owner"),
 							});
-							console.log("[AUTH] Admin check complete. Admin present:", !!isAdminPresent);
+							if (process.env.DEBUG) {
+								console.log("[AUTH] Admin check complete. Admin present:", !!isAdminPresent);
+							}
 							if (isAdminPresent) {
 								throw new APIError("BAD_REQUEST", {
 									message: "Admin is already created",
@@ -169,7 +173,9 @@ const { handler, api } = betterAuth({
 					}
 
 					if (IS_CLOUD || !isAdminPresent) {
-						console.log("[AUTH] Creating organization and member for new user:", user.id);
+						if (process.env.DEBUG) {
+							console.log("[AUTH] Creating organization and member for new user");
+						}
 						await db.transaction(async (tx) => {
 							const organization = await tx
 								.insert(schema.organization)
@@ -181,7 +187,9 @@ const { handler, api } = betterAuth({
 								.returning()
 								.then((res) => res[0]);
 
-							console.log("[AUTH] Organization created, inserting member for org:", organization?.id);
+							if (process.env.DEBUG) {
+								console.log("[AUTH] Organization created, inserting member");
+							}
 							await tx.insert(schema.member).values({
 								userId: user.id,
 								organizationId: organization?.id || "",
@@ -189,7 +197,9 @@ const { handler, api } = betterAuth({
 								createdAt: new Date(),
 								isDefault: true, // Mark first organization as default
 							});
-							console.log("[AUTH] Member created successfully");
+							if (process.env.DEBUG) {
+								console.log("[AUTH] Member created successfully");
+							}
 						});
 					} else if (isSSORequest) {
 						const providerId = context?.params?.providerId;
