@@ -18,47 +18,57 @@ CREATE TABLE "webServerSettings" (
 
 -- Migrate data from user table to webServerSettings
 -- Get the owner user's data and insert into webServerSettings
-INSERT INTO "webServerSettings" (
-	"id",
-	"serverIp",
-	"certificateType",
-	"https",
-	"host",
-	"letsEncryptEmail",
-	"sshPrivateKey",
-	"enableDockerCleanup",
-	"logCleanupCron",
-	"metricsConfig",
-	"cleanupCacheApplications",
-	"cleanupCacheOnPreviews",
-	"cleanupCacheOnCompose",
-	"created_at",
-	"updated_at"
-)
-SELECT 
-	gen_random_uuid()::text as "id",
-	u."serverIp",
-	COALESCE(u."certificateType", 'none') as "certificateType",
-	COALESCE(u."https", false) as "https",
-	u."host",
-	u."letsEncryptEmail",
-	u."sshPrivateKey",
-	COALESCE(u."enableDockerCleanup", true) as "enableDockerCleanup",
-	COALESCE(u."logCleanupCron", '0 0 * * *') as "logCleanupCron",
-	COALESCE(
-		u."metricsConfig",
-		'{"server":{"type":"Dokploy","refreshRate":60,"port":4500,"token":"","retentionDays":2,"cronJob":"","urlCallback":"","thresholds":{"cpu":0,"memory":0}},"containers":{"refreshRate":60,"services":{"include":[],"exclude":[]}}}'::jsonb
-	) as "metricsConfig",
-	COALESCE(u."cleanupCacheApplications", false) as "cleanupCacheApplications",
-	COALESCE(u."cleanupCacheOnPreviews", false) as "cleanupCacheOnPreviews",
-	COALESCE(u."cleanupCacheOnCompose", false) as "cleanupCacheOnCompose",
-	NOW() as "created_at",
-	NOW() as "updated_at"
-FROM "user" u
-INNER JOIN "member" m ON u."id" = m."user_id"
-WHERE m."role" = 'owner'
-ORDER BY m."created_at" ASC
-LIMIT 1;
+-- Only run if member table exists
+DO $$
+BEGIN
+    IF EXISTS (
+        SELECT FROM information_schema.tables 
+        WHERE table_schema = 'public' 
+        AND table_name = 'member'
+    ) THEN
+        INSERT INTO "webServerSettings" (
+            "id",
+            "serverIp",
+            "certificateType",
+            "https",
+            "host",
+            "letsEncryptEmail",
+            "sshPrivateKey",
+            "enableDockerCleanup",
+            "logCleanupCron",
+            "metricsConfig",
+            "cleanupCacheApplications",
+            "cleanupCacheOnPreviews",
+            "cleanupCacheOnCompose",
+            "created_at",
+            "updated_at"
+        )
+        SELECT 
+            gen_random_uuid()::text as "id",
+            u."serverIp",
+            COALESCE(u."certificateType", 'none') as "certificateType",
+            COALESCE(u."https", false) as "https",
+            u."host",
+            u."letsEncryptEmail",
+            u."sshPrivateKey",
+            COALESCE(u."enableDockerCleanup", true) as "enableDockerCleanup",
+            COALESCE(u."logCleanupCron", '0 0 * * *') as "logCleanupCron",
+            COALESCE(
+                u."metricsConfig",
+                '{"server":{"type":"Dokploy","refreshRate":60,"port":4500,"token":"","retentionDays":2,"cronJob":"","urlCallback":"","thresholds":{"cpu":0,"memory":0}},"containers":{"refreshRate":60,"services":{"include":[],"exclude":[]}}}'::jsonb
+            ) as "metricsConfig",
+            COALESCE(u."cleanupCacheApplications", false) as "cleanupCacheApplications",
+            COALESCE(u."cleanupCacheOnPreviews", false) as "cleanupCacheOnPreviews",
+            COALESCE(u."cleanupCacheOnCompose", false) as "cleanupCacheOnCompose",
+            NOW() as "created_at",
+            NOW() as "updated_at"
+        FROM "user" u
+        INNER JOIN "member" m ON u."id" = m."user_id"
+        WHERE m."role" = 'owner'
+        ORDER BY m."created_at" ASC
+        LIMIT 1;
+    END IF;
+END $$;
 
 -- If no owner found, create a default entry
 INSERT INTO "webServerSettings" (
