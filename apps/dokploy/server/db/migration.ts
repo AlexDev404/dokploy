@@ -18,7 +18,7 @@ const sql = postgres(dbUrl, { max: 1 });
 const db = drizzle(sql);
 
 export const migration = async () =>
-  await migrate(db, { migrationsFolder: "drizzle") })
+  await migrate(db, { migrationsFolder: "drizzle" })
     .then(() => {
       console.log("Migration complete");
       sql.end();
