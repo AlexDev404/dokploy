@@ -87,7 +87,10 @@ void app.prepare().then(async () => {
       console.log("✅ Data services ready");
 
       // Run migrations after Postgres is confirmed healthy
-      await migration();
+      await migration().catch((e) => {
+        console.error("Database Migration Error:", e);
+        process.exit(1);
+      });
       console.log("✅ Database migrations completed");
 
       // Initialize Traefik after data services are ready

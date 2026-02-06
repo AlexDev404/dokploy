@@ -3,7 +3,7 @@ FROM alexdev404/dokploy-containerized:latest
 # Install Docker CLI and prepare for Docker installation
 RUN for pkg in docker.io docker-doc docker-compose podman-docker containerd runc; do apt-get remove -y $pkg; done && \
     apt-get update && \
-    apt-get install -y ca-certificates openssh-server nano htop wget curl iputils-ping dos2unix && \
+    apt-get install -y ca-certificates openssh-server nano htop wget curl iputils-ping dos2unix postgresql-client && \
     rm -rf /var/lib/apt/lists/* && \
     install -m 0755 -d /etc/apt/keyrings
 
