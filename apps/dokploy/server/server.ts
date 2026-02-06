@@ -46,6 +46,18 @@ if (process.env.NODE_ENV === "production" && !IS_CLOUD) {
   console.log("✅ initialization complete");
 }
 
+// Initialize data services in parallel for faster startup
+console.log("🚀 Starting Redis and Postgres in parallel...");
+await Promise.all([initializePostgres(), initializeRedis()]).then(async () => {
+  // Run migrations after Postgres is confirmed healthy
+  await migration().catch((e) => {
+    console.error("Database Migration Error:", e);
+    process.exit(1);
+  });
+  console.log("✅ Database migrations completed");
+});
+console.log("✅ Data services ready");
+
 const app = next({ dev, turbopack: process.env.TURBOPACK === "1" });
 const handle = app.getRequestHandler();
 void app.prepare().then(async () => {
@@ -80,18 +92,6 @@ void app.prepare().then(async () => {
       // Initialize Docker Swarm and network
       await initializeNetwork();
       await initializeSwarm();
-
-      // Initialize data services in parallel for faster startup
-      console.log("🚀 Starting Redis and Postgres in parallel...");
-      await Promise.all([initializePostgres(), initializeRedis()]);
-      console.log("✅ Data services ready");
-
-      // Run migrations after Postgres is confirmed healthy
-      await migration().catch((e) => {
-        console.error("Database Migration Error:", e);
-        process.exit(1);
-      });
-      console.log("✅ Database migrations completed");
 
       // Initialize Traefik after data services are ready
       await initializeTraefik();

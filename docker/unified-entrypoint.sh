@@ -46,6 +46,7 @@ if [ "$MODE" = "dind" ]; then
     
     if ! kill -0 $DOCKERD_PID 2>/dev/null; then
       echo "[Dokploy-Init] ERROR: dockerd died during startup"
+      rm -f /var/run/docker.pid
       cat /var/log/dockerd.log
       exit 1
     fi
