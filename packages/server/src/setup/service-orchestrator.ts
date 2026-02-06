@@ -1,5 +1,5 @@
-import type { Service } from "dockerode";
 import { docker } from "@dokploy/server/constants";
+import type { Service } from "dockerode";
 
 /**
  * Service health check configuration
@@ -52,14 +52,14 @@ export class ServiceOrchestrator {
   private async checkServiceHealth(service: Service): Promise<boolean> {
     try {
       const tasks = await docker.listTasks({ service: service.id });
-      
+
       if (!tasks || tasks.length === 0) {
         return false;
       }
 
       // Check if any task is in running state
       const runningTasks = tasks.filter(
-        (task: any) => task.Status?.State === "running"
+        (task: any) => task.Status?.State === "running",
       );
 
       if (runningTasks.length === 0) {
@@ -83,7 +83,7 @@ export class ServiceOrchestrator {
   private calculateBackoff(attempt: number): number {
     const baseDelay = this.checkInterval;
     const maxDelay = 10000; // Cap at 10 seconds
-    const exponentialDelay = baseDelay * Math.pow(1.5, attempt);
+    const exponentialDelay = baseDelay * 1.5 ** attempt;
     return Math.min(exponentialDelay, maxDelay);
   }
 
@@ -95,11 +95,13 @@ export class ServiceOrchestrator {
     let attempts = 0;
     let lastError: string | undefined;
 
-    console.log(`[Orchestrator] Waiting for ${this.serviceName} to become healthy...`);
+    console.log(
+      `[Orchestrator] Waiting for ${this.serviceName} to become healthy...`,
+    );
 
     while (attempts < this.maxRetries) {
       const elapsedTime = Date.now() - startTime.getTime();
-      
+
       // Check timeout
       if (elapsedTime >= this.timeout) {
         return {
@@ -120,9 +122,9 @@ export class ServiceOrchestrator {
 
         if (isHealthy) {
           console.log(
-            `[Orchestrator] ${this.serviceName} is healthy after ${attempts} attempts (${elapsedTime}ms)`
+            `[Orchestrator] ${this.serviceName} is healthy after ${attempts} attempts (${elapsedTime}ms)`,
           );
-          await new Promise((resolve) => setTimeout(resolve, 5000));
+          // await new Promise((resolve) => setTimeout(resolve, 5000));
           return {
             success: true,
             serviceName: this.serviceName,
@@ -140,7 +142,7 @@ export class ServiceOrchestrator {
       // Log progress periodically
       if (attempts % 5 === 0) {
         console.log(
-          `[Orchestrator] Still waiting for ${this.serviceName}... (attempt ${attempts}, ${elapsedTime}ms elapsed)`
+          `[Orchestrator] Still waiting for ${this.serviceName}... (attempt ${attempts}, ${elapsedTime}ms elapsed)`,
         );
       }
 
@@ -163,18 +165,20 @@ export class ServiceOrchestrator {
    * Wait for multiple services in parallel
    */
   static async waitForMultiple(
-    configs: HealthCheckConfig[]
+    configs: HealthCheckConfig[],
   ): Promise<OrchestrationResult[]> {
-    const orchestrators = configs.map((config) => new ServiceOrchestrator(config));
+    const orchestrators = configs.map(
+      (config) => new ServiceOrchestrator(config),
+    );
     const results = await Promise.all(
-      orchestrators.map((orch) => orch.waitForHealthy())
+      orchestrators.map((orch) => orch.waitForHealthy()),
     );
 
     const failures = results.filter((r) => !r.success);
     if (failures.length > 0) {
       console.error(
         `[Orchestrator] ${failures.length} service(s) failed to become healthy:`,
-        failures.map((f) => f.serviceName).join(", ")
+        failures.map((f) => f.serviceName).join(", "),
       );
     }
 
@@ -185,7 +189,7 @@ export class ServiceOrchestrator {
    * Wait for multiple services sequentially with dependencies
    */
   static async waitForSequential(
-    configs: HealthCheckConfig[]
+    configs: HealthCheckConfig[],
   ): Promise<OrchestrationResult[]> {
     const results: OrchestrationResult[] = [];
 
@@ -196,7 +200,7 @@ export class ServiceOrchestrator {
 
       if (!result.success) {
         console.error(
-          `[Orchestrator] Failed to start ${config.serviceName}, aborting sequential startup`
+          `[Orchestrator] Failed to start ${config.serviceName}, aborting sequential startup`,
         );
         break;
       }
