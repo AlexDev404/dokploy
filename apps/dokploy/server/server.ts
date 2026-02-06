@@ -83,7 +83,7 @@ void app.prepare().then(async () => {
 
       // Initialize data services in parallel for faster startup
       console.log("🚀 Starting Redis and Postgres in parallel...");
-      await Promise.all([initializeRedis(), initializePostgres()]);
+      await Promise.all([initializePostgres(), initializeRedis()]);
       console.log("✅ Data services ready");
 
       // Run migrations after Postgres is confirmed healthy
