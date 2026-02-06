@@ -3,7 +3,7 @@ FROM alexdev404/dokploy-containerized:latest
 # Install Docker CLI and prepare for Docker installation
 RUN for pkg in docker.io docker-doc docker-compose podman-docker containerd runc; do apt-get remove -y $pkg; done && \
     apt-get update && \
-    apt-get install -y ca-certificates openssh-server nano htop wget curl iputils-ping && \
+    apt-get install -y ca-certificates openssh-server nano htop wget curl iputils-ping dos2unix && \
     rm -rf /var/lib/apt/lists/* && \
     install -m 0755 -d /etc/apt/keyrings
 
@@ -25,6 +25,7 @@ RUN mkdir /var/run/sshd && \
 
 # Add Docker's GPG key using ADD instruction
 ADD https://download.docker.com/linux/debian/gpg /etc/apt/keyrings/docker.asc
+# Linux equivalent: curl -fsSL https://download.docker.com/linux/debian/gpg -o /etc/apt/keyrings/docker.asc
 
 # Add the repository to Apt sources and install dependencies
 RUN chmod a+r /etc/apt/keyrings/docker.asc && \
@@ -38,6 +39,7 @@ RUN chmod a+r /etc/apt/keyrings/docker.asc && \
 
 # Copy unified entrypoint script (expects docker/ directory in build context)
 COPY docker/unified-entrypoint.sh /app/entrypoint.sh
+RUN dos2unix /app/entrypoint.sh
 RUN chmod +x /app/entrypoint.sh
 
 # Expose SSH port
