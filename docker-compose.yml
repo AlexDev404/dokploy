@@ -13,6 +13,8 @@ services:
       - "8081:8081"  # Xibo
       - "8082:8082"  # Unassigned
       - "8083:8083"  # Unassigned
+    networks:
+      - dokploy-network
     # For DinD mode: use privileged
     privileged: true
     # For socket mode: uncomment below and comment out privileged
@@ -23,3 +25,8 @@ services:
       restart_policy:
         delay: 1m
         condition: any
+
+networks:
+  dokploy-network:
+    external: true
+    name: dokploy-network
