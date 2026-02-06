@@ -8,6 +8,10 @@ import postgres from "postgres";
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
+// Log database connection for debugging
+const sanitizedUrl = dbUrl.replace(/:[^:@]+@/, ':***@');
+console.log(`[MIGRATION] Connecting to database: ${sanitizedUrl}`);
+
 const sql = postgres(dbUrl, { max: 1 });
 const db = drizzle(sql);
 

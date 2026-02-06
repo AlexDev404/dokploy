@@ -7,6 +7,10 @@ declare global {
 	var db: PostgresJsDatabase<typeof schema> | undefined;
 }
 
+// Log database connection for debugging
+const sanitizedUrl = dbUrl.replace(/:[^:@]+@/, ':***@');
+console.log(`[RUNTIME] Connecting to database: ${sanitizedUrl}`);
+
 export let db: PostgresJsDatabase<typeof schema>;
 if (process.env.NODE_ENV === "production") {
 	db = drizzle(postgres(dbUrl), {
