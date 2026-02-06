@@ -4,6 +4,8 @@ services:
   dokploy-app:
     image: alexdev404/dokploy
     container_name: dokploy-app
+    environment:
+      - NODE_ENV=production
     ports:
       - "3000:3000"  # Web Interface
       - "3001:22"    # SSH for tunneling/maintenance/upgrades

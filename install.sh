@@ -2,7 +2,6 @@
 
 # This script is used to install the required packages for the project.
 export NODE_ENV=production
-export REDIS_HOST=127.0.0.1
 
 mkdir -p ./build
 mkdir -p ./build-tmp
