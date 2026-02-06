@@ -21,6 +21,7 @@ import {
 } from "@dokploy/server/index";
 import { logDockerMode } from "@dokploy/server/utils/docker/mode-detection";
 import { config } from "dotenv";
+import http from "http";
 import next from "next";
 import packageInfo from "../package.json";
 import { setupDockerContainerLogsWebSocketServer } from "./wss/docker-container-logs";
@@ -66,35 +67,32 @@ void app.prepare().then(async () => {
     if (process.env.NODE_ENV === "production" && !IS_CLOUD) {
       // Detect and log Docker mode for debugging
       await logDockerMode();
-      
+
       // Setup directories and configs first
       setupDirectories();
       createDefaultMiddlewares();
       createDefaultTraefikConfig();
       createDefaultServerTraefikConfig();
-      
+
       console.log("🔃  [BOOTSTRAP]: Initializing infrastructure...");
-      
+
       // Initialize Docker Swarm and network
       await initializeNetwork();
       await initializeSwarm();
-      
+
       // Initialize data services in parallel for faster startup
       console.log("🚀 Starting Redis and Postgres in parallel...");
-      await Promise.all([
-        initializeRedis(),
-        initializePostgres(),
-      ]);
+      await Promise.all([initializeRedis(), initializePostgres()]);
       console.log("✅ Data services ready");
-      
+
       // Run migrations after Postgres is confirmed healthy
       await migration();
       console.log("✅ Database migrations completed");
-      
+
       // Initialize Traefik after data services are ready
       await initializeTraefik();
       console.log("✅ Traefik initialized");
-      
+
       // Initialize application features in parallel
       console.log("🚀 Initializing application features...");
       await Promise.all([
@@ -104,7 +102,7 @@ void app.prepare().then(async () => {
         initVolumeBackupsCronJobs(),
       ]);
       console.log("✅ Application features initialized");
-      
+
       // Send notifications after everything is ready
       await sendDokployRestartNotifications();
     }
