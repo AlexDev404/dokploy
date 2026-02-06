@@ -3,95 +3,189 @@
 ## Error Summary
 ```
 dokploy-app  | [RUNTIME] Connecting to database: postgres://dokploy:***@127.0.0.1:5432/dokploy
+dokploy-app  | [RUNTIME] Connecting to database: postgres://dokploy:***@127.0.0.1:5432/dokploy
 dokploy-app  | ELIFECYCLE Command failed with exit code 1.
 dokploy-app  | [Dokploy-Init] App crashed
 ```
 
 ## Root Cause Analysis
 
-### Primary Issue: Missing Build Artifacts
-The application is crashing because the `dist/` directory is missing. The start command in `package.json` tries to run:
-```json
-"start": "node -r dotenv/config dist/server.mjs"
-```
+### Crash Location: Bootstrap Function - Module Import Phase
+The crash is occurring during **module initialization**, NOT during migrations or the bootstrap function execution itself.
 
-But the `dist/server.mjs` file doesn't exist because the build step hasn't been run.
+**Evidence:**
+- The bootstrap console messages ("🔃  [BOOTSTRAP]: Initializing infrastructure...") never appear
+- Database connection log appears twice during module imports
+- The crash happens BEFORE any async bootstrap code runs
 
 ### Why the Database Connection Appears Twice
 The "[RUNTIME] Connecting to database" message appears twice because:
-1. **First occurrence**: When `@/server/db/migration` is imported (line 1 of `server/server.ts`), it imports `dbUrl` from `@dokploy/server/db`, which initializes the database module
-2. **Second occurrence**: When other `@dokploy/server` imports are loaded, they also trigger the db module initialization
+1. **First import**: `apps/dokploy/server/server.ts` line 1 imports `migration` from `@/server/db/migration`, which imports `dbUrl` from `@dokploy/server/db`
+2. **Second import**: Lines 2-15 import multiple functions from `@dokploy/server` - ALL services in that package import the db schema, triggering the database module initialization again
 
-This is normal behavior for ES modules with side effects.
+**The database connection is attempted during module loading**, which causes:
+- Connection to 127.0.0.1:5432 to be attempted
+- If connection fails or times out, the entire module loading fails
+- Process exits with code 1
 
-### Build Process Issue
-The Dockerfile expects a `.env.production` file to exist in the repository root:
-```dockerfile
-COPY .env.production ./.env
+### The Critical Problem
+When `packages/server/src/db/index.ts` is imported, it **immediately** tries to connect to the database:
+```typescript
+// This runs at module load time, not async
+db = drizzle(postgres(dbUrl), { schema });
 ```
 
-However:
-- This file is in `.gitignore` (line 48)
-- It should be created before the Docker build
-- The `.env.production.example` file in `apps/dokploy/` shows the expected format
+The `postgres(dbUrl)` call attempts to establish a connection. If the database at 127.0.0.1:5432 is:
+- Not running
+- Not accessible
+- Taking too long to respond
+- Refusing connections
+
+Then the module import fails and the app crashes.
+
 
 ## Diagnosis Steps to Verify
 
-1. **Check if PostgreSQL is accessible**:
-   ```bash
-   # From within the dokploy-app container
-   nc -zv 127.0.0.1 5432
-   ```
+### Step 1: Verify PostgreSQL is Running and Accessible
+```bash
+# From your host machine or within dokploy-app container
+# Check if PostgreSQL is listening on 127.0.0.1:5432
+nc -zv 127.0.0.1 5432
 
-2. **Verify the dist directory exists**:
-   ```bash
-   # From within the dokploy-app container
-   ls -la /app/dist/
-   ```
+# OR try to connect
+psql postgres://dokploy:amukds4wi9001583845717ad2@127.0.0.1:5432/dokploy -c "SELECT 1;"
+```
 
-3. **Check environment variables**:
-   ```bash
-   # From within the dokploy-app container
-   env | grep DATABASE_URL
-   env | grep NODE_ENV
-   ```
+**Expected behavior:**
+- If PostgreSQL is NOT running → **This is the crash cause**
+- If PostgreSQL is not accessible from 127.0.0.1 → **This is the crash cause**
+- If connection times out → **This is the crash cause**
 
-4. **Test database connection**:
-   ```bash
-   # From within the dokploy-app container
-   psql postgres://dokploy:PASSWORD@127.0.0.1:5432/dokploy -c "SELECT 1;"
-   ```
+### Step 2: Check Docker/Postgres Container Status
+```bash
+# Check if postgres container/service exists
+docker ps -a | grep postgres
+docker service ls | grep postgres
+
+# Check postgres logs
+docker logs dokploy-postgres 2>&1 | tail -50
+# OR if it's a service
+docker service logs dokploy-postgres --tail 50
+```
+
+### Step 3: Verify Network Configuration
+The app is trying to connect to `127.0.0.1:5432`, which means:
+- PostgreSQL must be running on localhost
+- Port 5432 must be exposed/published
+- No firewall blocking the connection
+
+Check if PostgreSQL is supposed to be at `127.0.0.1` or `dokploy-postgres`:
+```bash
+# If using docker-compose or docker network
+docker network inspect dokploy-network
+```
 
 ## Solution Recommendations
 
-### Immediate Fix
-1. Ensure the application is properly built before running:
-   ```bash
-   pnpm run build  # This runs both build-server and build-next
-   ```
+### Immediate Fix Option 1: Ensure PostgreSQL is Running at 127.0.0.1:5432
+Since you've intentionally set DATABASE_URL to point to 127.0.0.1:5432, you need to ensure:
+1. PostgreSQL is running
+2. It's accessible at that address
+3. It accepts connections with those credentials
 
-2. Verify the `dist/server.mjs` file exists before starting the app
+```bash
+# Start PostgreSQL if it's not running
+docker start dokploy-postgres
+# OR if it's a service
+docker service scale dokploy-postgres=1
+```
 
-### Long-term Fixes
-1. **Add build verification**: Update the Dockerfile to verify build artifacts exist
-2. **Improve error messages**: Add better error handling for missing build files
-3. **Document build process**: Clarify the build process in documentation
+### Immediate Fix Option 2: Verify Port Publishing
+The Dockerfile shows postgres-setup.ts publishes port 5432:
+```typescript
+EndpointSpec: {
+  Ports: [{
+    TargetPort: 5432,
+    PublishedPort: 5432,
+    Protocol: "tcp",
+    PublishMode: "host",  // This publishes to host
+  }],
+}
+```
+
+Verify this is working:
+```bash
+# Check if port 5432 is bound
+netstat -tlnp | grep 5432
+# OR
+ss -tlnp | grep 5432
+```
+
+### Root Cause Solution
+The real issue is that **database connection happens during module import** instead of during application initialization. This means:
+- The app cannot start if the database is unavailable
+- No graceful error handling is possible
+- Circular dependency issues can occur
+
+**This is a design issue** where the database client is created at import time rather than when needed.
+
 
 ## Questions to Answer
 
-1. **Is the database actually running and accessible at 127.0.0.1:5432?**
-   - This needs to be verified in your environment
+### Critical Questions:
+1. **Is PostgreSQL running and accessible at 127.0.0.1:5432?**
+   - Check with: `nc -zv 127.0.0.1 5432` or `telnet 127.0.0.1 5432`
+   - This is the most likely cause of the crash
 
-2. **Did the Docker build complete successfully?**
-   - Check Docker build logs for any errors during the `pnpm run build` step
+2. **Is the bootstrap function (`bootstrapInfrastructure()`) being called?**
+   - You mentioned migrations aren't happening
+   - The bootstrap function should start PostgreSQL via `initializePostgres()`
+   - BUT the app crashes BEFORE bootstrap runs, during module imports
 
-3. **Are there any other missing dependencies or files?**
-   - The dist directory is required, but there may be other missing files
+3. **What's the actual deployment scenario?**
+   - Are you running this in Docker?
+   - Is this a fresh installation or an existing instance?
+   - Should PostgreSQL already be running, or should bootstrap start it?
 
-## Next Steps
+### The Chicken-and-Egg Problem:
+- App imports `@dokploy/server` → Database module loads → Tries to connect to DB
+- BUT bootstrap function (which would start PostgreSQL) hasn't run yet
+- So if PostgreSQL isn't already running, the app crashes before it can start it
 
-Please provide:
-1. The full Docker build logs
-2. Output of `ls -la /app/dist/` from within the container
-3. Output of `env | grep DATABASE` from within the container
-4. PostgreSQL connection test results from within the container
+**This means:** PostgreSQL must already be running BEFORE the app starts, OR the database connection must be deferred until after bootstrap.
+
+## Next Steps Required
+
+Please provide the following information:
+
+1. **PostgreSQL Status:**
+   ```bash
+   # Run these commands and share the output
+   docker ps -a | grep postgres
+   docker service ls | grep postgres
+   nc -zv 127.0.0.1 5432
+   netstat -tlnp | grep 5432
+   ```
+
+2. **Docker Container/Service Logs:**
+   ```bash
+   # Share the postgres logs
+   docker logs dokploy-postgres 2>&1 | tail -100
+   # OR
+   docker service logs dokploy-postgres --tail 100
+   ```
+
+3. **Expected Behavior:**
+   - Should PostgreSQL already be running when the app starts?
+   - Or should the app's bootstrap function create/start PostgreSQL?
+   
+4. **Installation Method:**
+   - How was Dokploy installed?
+   - Is this running in Docker Swarm mode?
+   - Is this a development or production environment?
+
+## Summary
+
+**Most Likely Cause:** PostgreSQL is not running or not accessible at 127.0.0.1:5432, causing the database connection to fail during module import, which crashes the app before bootstrap can even run.
+
+**To fix:** Ensure PostgreSQL is running and accessible at the configured address BEFORE starting the Dokploy app.
