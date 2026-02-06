@@ -23,6 +23,7 @@ import { logDockerMode } from "@dokploy/server/utils/docker/mode-detection";
 import { config } from "dotenv";
 import http from "http";
 import next from "next";
+import { writeFileSync } from "node:fs";
 import packageInfo from "../package.json";
 import { setupDockerContainerLogsWebSocketServer } from "./wss/docker-container-logs";
 import { setupDockerContainerTerminalWebSocketServer } from "./wss/docker-container-terminal";
@@ -121,5 +122,13 @@ void app.prepare().then(async () => {
     }
   } catch (e) {
     console.error("Main Server Error", e);
+    try {
+      writeFileSync("/app/.reload-trigger", Date.now().toString());
+    } catch {
+      console.error(
+        "[RECOVERY]: Failed to write reload trigger file. You're probably not running in Docker.",
+      );
+    }
+    process.exit(1);
   }
 });
