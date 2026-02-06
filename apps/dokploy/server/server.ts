@@ -21,9 +21,9 @@ import {
 } from "@dokploy/server/index";
 import { logDockerMode } from "@dokploy/server/utils/docker/mode-detection";
 import { config } from "dotenv";
-import http from "http";
 import next from "next";
 import { writeFileSync } from "node:fs";
+import http from "node:http";
 import packageInfo from "../package.json";
 import { setupDockerContainerLogsWebSocketServer } from "./wss/docker-container-logs";
 import { setupDockerContainerTerminalWebSocketServer } from "./wss/docker-container-terminal";
@@ -46,92 +46,98 @@ if (process.env.NODE_ENV === "production" && !IS_CLOUD) {
   console.log("✅ initialization complete");
 }
 
-// Initialize data services in parallel for faster startup
-console.log("🚀 Starting Redis and Postgres in parallel...");
-await Promise.all([initializePostgres(), initializeRedis()]).then(async () => {
-  // Run migrations after Postgres is confirmed healthy
-  await migration().catch((e) => {
-    console.error("Database Migration Error:", e);
-    process.exit(1);
-  });
-  console.log("✅ Database migrations completed");
-});
-console.log("✅ Data services ready");
+async function bootstrapInfrastructure() {
+  console.log("🔃  [BOOTSTRAP]: Initializing infrastructure...");
 
-const app = next({ dev, turbopack: process.env.TURBOPACK === "1" });
-const handle = app.getRequestHandler();
-void app.prepare().then(async () => {
-  try {
-    console.log("Running DokployVersion: ", packageInfo.version);
-    const server = http.createServer((req, res) => {
-      handle(req, res);
-    });
+  // Initialize Docker Swarm and network
+  await initializeNetwork();
+  console.log("✅ Docker network initialized");
+  await initializeSwarm();
+  console.log("✅ Docker Swarm initialized");
+  // Initialize data services in parallel for faster startup
+  console.log("🚀 Starting Redis and Postgres in parallel...");
+  await Promise.all([initializePostgres(), initializeRedis()]);
+  console.log("✅ Data services ready");
+}
 
-    // WEBSOCKET
-    setupDrawerLogsWebSocketServer(server);
-    setupDeploymentLogsWebSocketServer(server);
-    setupDockerContainerLogsWebSocketServer(server);
-    setupDockerContainerTerminalWebSocketServer(server);
-    setupTerminalWebSocketServer(server);
-    if (!IS_CLOUD) {
-      setupDockerStatsMonitoringSocketServer(server);
-    }
-
-    if (process.env.NODE_ENV === "production" && !IS_CLOUD) {
-      // Detect and log Docker mode for debugging
-      await logDockerMode();
-
-      // Setup directories and configs first
-      setupDirectories();
-      createDefaultMiddlewares();
-      createDefaultTraefikConfig();
-      createDefaultServerTraefikConfig();
-
-      console.log("🔃  [BOOTSTRAP]: Initializing infrastructure...");
-
-      // Initialize Docker Swarm and network
-      await initializeNetwork();
-      await initializeSwarm();
-
-      // Initialize Traefik after data services are ready
-      await initializeTraefik();
-      console.log("✅ Traefik initialized");
-
-      // Initialize application features in parallel
-      console.log("🚀 Initializing application features...");
-      await Promise.all([
-        initCronJobs(),
-        initSchedules(),
-        initCancelDeployments(),
-        initVolumeBackupsCronJobs(),
-      ]);
-      console.log("✅ Application features initialized");
-
-      // Send notifications after everything is ready
-      await sendDokployRestartNotifications();
-    }
-
-    if (IS_CLOUD && process.env.NODE_ENV === "production") {
-      await migration();
-    }
-    server.listen(PORT, HOST);
-    console.log(`Server Started on: http://${HOST}:${PORT}`);
-    await initEnterpriseBackupCronJobs();
-
-    if (!IS_CLOUD) {
-      console.log("Starting Deployment Worker");
-      const { deploymentWorker } = await import("./queues/deployments-queue");
-      await deploymentWorker.run();
-    }
-  } catch (e) {
-    console.error("Main Server Error", e);
+// Call bootstrap before Next.js setup
+bootstrapInfrastructure().then(() => {
+  const app = next({ dev, turbopack: process.env.TURBOPACK === "1" });
+  const handle = app.getRequestHandler();
+  void app.prepare().then(async () => {
     try {
-      writeFileSync("/app/.reload-trigger", Date.now().toString());
-    } catch {
-      console.error(
-        "[RECOVERY]: Failed to write reload trigger file. You're probably not running in Docker.",
-      );
+      console.log("Running Dokploy version: ", packageInfo.version);
+      const server = http.createServer((req, res) => {
+        handle(req, res);
+      });
+
+      // Run migrations after Postgres is confirmed healthy
+      await migration().catch((e) => {
+        console.error("Database Migration Error:", e);
+        process.exit(1);
+      });
+      console.log("✅ Database migrations completed");
+
+      if (!IS_CLOUD) {
+        setupDockerStatsMonitoringSocketServer(server);
+      }
+
+      if (process.env.NODE_ENV === "production" && !IS_CLOUD) {
+        // Detect and log Docker mode for debugging
+        await logDockerMode();
+
+        // Setup directories and configs first
+        setupDirectories();
+        createDefaultMiddlewares();
+        createDefaultTraefikConfig();
+        createDefaultServerTraefikConfig();
+
+        await initializeTraefik();
+        console.log("✅ Traefik initialized");
+
+        // WEBSOCKET
+        setupDrawerLogsWebSocketServer(server);
+        setupDeploymentLogsWebSocketServer(server);
+        setupDockerContainerLogsWebSocketServer(server);
+        setupDockerContainerTerminalWebSocketServer(server);
+        setupTerminalWebSocketServer(server);
+
+        // Initialize application features in parallel
+        console.log("🚀 Initializing application features...");
+        await Promise.all([
+          initCronJobs(),
+          initSchedules(),
+          initCancelDeployments(),
+          initVolumeBackupsCronJobs(),
+        ]);
+        console.log("✅ Application features initialized");
+
+        // Send notifications after everything is ready
+        await sendDokployRestartNotifications();
+      }
+
+      if (IS_CLOUD && process.env.NODE_ENV === "production") {
+        await migration();
+      }
+      server.listen(PORT, HOST);
+      console.log(`Server Started on: http://${HOST}:${PORT}`);
+      await initEnterpriseBackupCronJobs();
+
+      if (!IS_CLOUD) {
+        console.log("Starting Deployment Worker");
+        const { deploymentWorker } = await import("./queues/deployments-queue");
+        await deploymentWorker.run();
+      }
+    } catch (e) {
+      console.error("Main Server Error", e);
+      try {
+        writeFileSync("/app/.reload-trigger", Date.now().toString());
+      } catch {
+        console.error(
+          "[RECOVERY]: Failed to write reload trigger file. You're probably not running in Docker.",
+        );
+      }
+      process.exit(1);
     }
-    process.exit(1);
-  }
+  });
 });
