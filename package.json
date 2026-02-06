@@ -7,7 +7,7 @@
   ],
   "scripts": {
     "local:build": "docker build -t alexdev404/dokploy-containerized:latest . && docker build -t alexdev404/dokploy:latest -f Dockerfile.local .",
-    "local:build::pub": "docker build -t alexdev404/dokploy-containerized:latest . && docker build -t alexdev404/dokploy:latest -f Dockerfile.local . && docker push alexdev404/dokploy:latest && docker push alexdev404/dokploy-containerized:latest",
+    "local:build::pub": "docker build -t alexdev404/dokploy-containerized:latest . && docker build -t alexdev404/dokploy:latest -f Dockerfile.local . && docker push alexdev404/dokploy-containerized:latest && docker push alexdev404/dokploy:latest",
     "build:tarball": "./scripts/build-app-tarball.sh",
     "dokploy:setup": "pnpm --filter=dokploy run setup",
     "dokploy:dev": "pnpm --filter=dokploy run dev",
