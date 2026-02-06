@@ -122,6 +122,7 @@ export class ServiceOrchestrator {
           console.log(
             `[Orchestrator] ${this.serviceName} is healthy after ${attempts} attempts (${elapsedTime}ms)`
           );
+          await new Promise((resolve) => setTimeout(resolve, 5000));
           return {
             success: true,
             serviceName: this.serviceName,
