@@ -1,4 +1,3 @@
-import { migration } from "@/server/db/migration";
 import {
   createDefaultMiddlewares,
   createDefaultServerTraefikConfig,
@@ -44,19 +43,22 @@ if (process.env.NODE_ENV === "production" && !IS_CLOUD) {
   createDefaultTraefikConfig();
   createDefaultServerTraefikConfig();
   console.log("✅ initialization complete");
+
+  // Initialize data services in parallel for faster startup
+  // This MUST happen before any database connections are attempted
+  console.log("🚀 Starting Redis and Postgres in parallel...");
+  await Promise.all([initializePostgres(), initializeRedis()]);
+  console.log("✅ Data services ready");
 }
 
-// Initialize data services in parallel for faster startup
-console.log("🚀 Starting Redis and Postgres in parallel...");
-await Promise.all([initializePostgres(), initializeRedis()]).then(async () => {
-  // Run migrations after Postgres is confirmed healthy
-  await migration().catch((e) => {
-    console.error("Database Migration Error:", e);
-    process.exit(1);
-  });
-  console.log("✅ Database migrations completed");
+// Run migrations after Postgres is confirmed healthy
+// Dynamic import to avoid triggering database connections at module load time
+const { migration } = await import("@/server/db/migration");
+await migration().catch((e) => {
+  console.error("Database Migration Error:", e);
+  process.exit(1);
 });
-console.log("✅ Data services ready");
+console.log("✅ Database migrations completed");
 
 const app = next({ dev, turbopack: process.env.TURBOPACK === "1" });
 const handle = app.getRequestHandler();
@@ -111,9 +113,6 @@ void app.prepare().then(async () => {
       await sendDokployRestartNotifications();
     }
 
-    if (IS_CLOUD && process.env.NODE_ENV === "production") {
-      await migration();
-    }
     server.listen(PORT, HOST);
     console.log(`Server Started on: http://${HOST}:${PORT}`);
     await initEnterpriseBackupCronJobs();
