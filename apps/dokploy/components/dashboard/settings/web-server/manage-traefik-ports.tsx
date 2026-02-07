@@ -1,4 +1,4 @@
-import { standardSchemaResolver } from "@hookform/resolvers/standard-schema";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { ArrowRightLeft, Plus, Trash2 } from "lucide-react";
 import { useTranslation } from "next-i18next";
 import type React from "react";
@@ -58,9 +58,8 @@ export const ManageTraefikPorts = ({ children, serverId }: Props) => {
 	const { t } = useTranslation("settings");
 	const [open, setOpen] = useState(false);
 
-	const form = useForm<TraefikPortsForm>({
-		// @ts-ignore - Zod v4 type inference issue with standardSchemaResolver
-		resolver: standardSchemaResolver(TraefikPortsSchema),
+	const form = useForm({
+		resolver: zodResolver(TraefikPortsSchema),
 		defaultValues: {
 			ports: [],
 		},

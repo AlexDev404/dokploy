@@ -1,4 +1,4 @@
-import { standardSchemaResolver } from "@hookform/resolvers/standard-schema";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { CircuitBoard, HelpCircle } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
@@ -87,15 +87,14 @@ export const AddCompose = ({ environmentId, projectName }: Props) => {
 	// Self-hosted: show only if there are remote servers (Dokploy is default, hide if no remote servers)
 	const shouldShowServerDropdown = hasServers;
 
-	const form = useForm<AddCompose>({
+	const form = useForm({
 		defaultValues: {
 			name: "",
 			description: "",
 			composeType: "docker-compose",
 			appName: `${slug}-`,
 		},
-		// @ts-ignore - Zod v4 type inference issue with standardSchemaResolver
-		resolver: standardSchemaResolver(AddComposeSchema),
+		resolver: zodResolver(AddComposeSchema),
 	});
 
 	useEffect(() => {

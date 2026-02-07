@@ -1,4 +1,4 @@
-import { standardSchemaResolver } from "@hookform/resolvers/standard-schema";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { HelpCircle, Plus, Settings2, X } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
@@ -85,7 +85,7 @@ export const ShowPreviewSettings = ({ applicationId }: Props) => {
 
 	const { data, refetch } = api.application.one.useQuery({ applicationId });
 
-	const form = useForm<Schema>({
+	const form = useForm({
 		defaultValues: {
 			env: "",
 			wildcardDomain: "*.traefik.me",
@@ -97,8 +97,7 @@ export const ShowPreviewSettings = ({ applicationId }: Props) => {
 			previewCertificateType: "none",
 			previewRequireCollaboratorPermissions: true,
 		},
-		// @ts-ignore - Zod v4 type inference issue with standardSchemaResolver
-		resolver: standardSchemaResolver(schema),
+		resolver: zodResolver(schema),
 	});
 
 	const previewHttps = form.watch("previewHttps");

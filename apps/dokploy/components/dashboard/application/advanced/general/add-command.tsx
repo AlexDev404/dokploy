@@ -1,4 +1,4 @@
-import { standardSchemaResolver } from "@hookform/resolvers/standard-schema";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { Plus, Trash2 } from "lucide-react";
 import { useEffect } from "react";
 import { useFieldArray, useForm } from "react-hook-form";
@@ -52,13 +52,12 @@ export const AddCommand = ({ applicationId }: Props) => {
 
 	const { mutateAsync, isLoading } = api.application.update.useMutation();
 
-	const form = useForm<AddCommand>({
+	const form = useForm({
 		defaultValues: {
 			command: "",
 			args: [],
 		},
-		// @ts-ignore - Zod v4 type inference issue with standardSchemaResolver
-		resolver: standardSchemaResolver(AddRedirectSchema),
+		resolver: zodResolver(AddRedirectSchema),
 	});
 
 	const { fields, append, remove } = useFieldArray({

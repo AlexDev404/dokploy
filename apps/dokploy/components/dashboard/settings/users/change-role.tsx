@@ -1,4 +1,4 @@
-import { standardSchemaResolver } from "@hookform/resolvers/standard-schema";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
@@ -52,12 +52,11 @@ export const ChangeRole = ({ memberId, currentRole, userEmail }: Props) => {
 	const { mutateAsync, isError, error, isLoading } =
 		api.organization.updateMemberRole.useMutation();
 
-	const form = useForm<ChangeRoleSchema>({
+	const form = useForm({
 		defaultValues: {
 			role: currentRole,
 		},
-		// @ts-ignore - Zod v4 type inference issue with standardSchemaResolver
-		resolver: standardSchemaResolver(changeRoleSchema),
+		resolver: zodResolver(changeRoleSchema),
 	});
 
 	useEffect(() => {

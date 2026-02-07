@@ -1,6 +1,6 @@
 "use client";
 
-import { standardSchemaResolver } from "@hookform/resolvers/standard-schema";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { Plus, Trash2 } from "lucide-react";
 import { useEffect, useState } from "react";
 import { type FieldArrayPath, useFieldArray, useForm } from "react-hook-form";
@@ -83,9 +83,8 @@ export function RegisterSamlDialog({ children }: RegisterSamlDialogProps) {
 		}
 	}, []);
 
-	const form = useForm<SamlProviderForm>({
-		// @ts-ignore - Zod v4 type inference issue with standardSchemaResolver
-		resolver: standardSchemaResolver(samlProviderSchema),
+	const form = useForm({
+		resolver: zodResolver(samlProviderSchema),
 		defaultValues: formDefaultValues,
 	});
 

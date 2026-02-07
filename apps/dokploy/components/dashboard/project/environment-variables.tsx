@@ -1,4 +1,4 @@
-import { standardSchemaResolver } from "@hookform/resolvers/standard-schema";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { Terminal } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
@@ -52,12 +52,11 @@ export const EnvironmentVariables = ({ environmentId, children }: Props) => {
 		},
 	);
 
-	const form = useForm<UpdateEnvironment>({
+	const form = useForm({
 		defaultValues: {
 			env: data?.env ?? "",
 		},
-		// @ts-ignore - Zod v4 type inference issue with standardSchemaResolver
-		resolver: standardSchemaResolver(updateEnvironmentSchema),
+		resolver: zodResolver(updateEnvironmentSchema),
 	});
 
 	useEffect(() => {

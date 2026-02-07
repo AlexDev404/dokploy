@@ -1,4 +1,4 @@
-import { standardSchemaResolver } from "@hookform/resolvers/standard-schema";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
@@ -68,9 +68,8 @@ export const PlacementForm = ({ id, type }: PlacementFormProps) => {
 		? mutationMap[type]()
 		: api.mongo.update.useMutation();
 
-	const form = useForm<any>({
-		// @ts-ignore - Zod v4 type inference issue with standardSchemaResolver
-		resolver: standardSchemaResolver(placementFormSchema),
+	const form = useForm({
+		resolver: zodResolver(placementFormSchema),
 		defaultValues: {
 			Constraints: [],
 			Preferences: [],

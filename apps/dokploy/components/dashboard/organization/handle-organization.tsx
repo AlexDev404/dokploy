@@ -1,4 +1,4 @@
-import { standardSchemaResolver } from "@hookform/resolvers/standard-schema";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { PenBoxIcon, Plus } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
@@ -58,9 +58,8 @@ export function AddOrganization({ organizationId }: Props) {
 	const { refetch: refetchActiveOrganization } =
 		authClient.useActiveOrganization();
 
-	const form = useForm<OrganizationFormValues>({
-		// @ts-ignore - Zod v4 type inference issue with standardSchemaResolver
-		resolver: standardSchemaResolver(organizationSchema),
+	const form = useForm({
+		resolver: zodResolver(organizationSchema),
 		defaultValues: {
 			name: "",
 			logo: "",

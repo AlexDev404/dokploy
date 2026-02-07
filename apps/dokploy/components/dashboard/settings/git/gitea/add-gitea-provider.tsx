@@ -1,4 +1,4 @@
-import { standardSchemaResolver } from "@hookform/resolvers/standard-schema";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { ExternalLink } from "lucide-react";
 import Link from "next/link";
 import { useEffect, useState } from "react";
@@ -63,7 +63,7 @@ export const AddGiteaProvider = () => {
 	const { mutateAsync, error, isError } = api.gitea.create.useMutation();
 	const webhookUrl = `${baseUrl}/api/providers/gitea/callback`;
 
-	const form = useForm<Schema>({
+	const form = useForm({
 		defaultValues: {
 			clientId: "",
 			clientSecret: "",
@@ -71,8 +71,7 @@ export const AddGiteaProvider = () => {
 			name: "",
 			giteaUrl: "https://gitea.com",
 		},
-		// @ts-ignore - Zod v4 type inference issue with standardSchemaResolver
-		resolver: standardSchemaResolver(Schema),
+		resolver: zodResolver(Schema),
 	});
 
 	const giteaUrl = form.watch("giteaUrl");

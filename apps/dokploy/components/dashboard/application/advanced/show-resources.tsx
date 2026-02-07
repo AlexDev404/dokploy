@@ -1,4 +1,4 @@
-import { standardSchemaResolver } from "@hookform/resolvers/standard-schema";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { InfoIcon } from "lucide-react";
 import { useEffect } from "react";
 import { useForm } from "react-hook-form";
@@ -101,15 +101,14 @@ export const ShowResources = ({ id, type }: Props) => {
 		? mutationMap[type]()
 		: api.mongo.update.useMutation();
 
-	const form = useForm<AddResources>({
+	const form = useForm({
 		defaultValues: {
 			cpuLimit: "",
 			cpuReservation: "",
 			memoryLimit: "",
 			memoryReservation: "",
 		},
-		// @ts-ignore - Zod v4 type inference issue with standardSchemaResolver
-		resolver: standardSchemaResolver(addResourcesSchema),
+		resolver: zodResolver(addResourcesSchema),
 	});
 
 	useEffect(() => {

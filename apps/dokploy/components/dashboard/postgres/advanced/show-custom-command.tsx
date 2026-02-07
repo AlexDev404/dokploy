@@ -1,4 +1,4 @@
-import { standardSchemaResolver } from "@hookform/resolvers/standard-schema";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { Plus, Trash2 } from "lucide-react";
 import { useEffect } from "react";
 import { useFieldArray, useForm } from "react-hook-form";
@@ -65,14 +65,13 @@ export const ShowCustomCommand = ({ id, type }: Props) => {
 		? mutationMap[type]()
 		: api.mongo.update.useMutation();
 
-	const form = useForm<AddDockerImage>({
+	const form = useForm({
 		defaultValues: {
 			dockerImage: "",
 			command: "",
 			args: [],
 		},
-		// @ts-ignore - Zod v4 type inference issue with standardSchemaResolver
-		resolver: standardSchemaResolver(addDockerImage),
+		resolver: zodResolver(addDockerImage),
 	});
 
 	const { fields, append, remove } = useFieldArray({

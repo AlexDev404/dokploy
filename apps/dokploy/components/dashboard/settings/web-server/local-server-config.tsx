@@ -1,4 +1,4 @@
-import { standardSchemaResolver } from "@hookform/resolvers/standard-schema";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { Settings } from "lucide-react";
 import { useTranslation } from "next-i18next";
 import { useForm } from "react-hook-form";
@@ -54,10 +54,9 @@ interface Props {
 const LocalServerConfig = ({ onSave }: Props) => {
 	const { t } = useTranslation("settings");
 
-	const form = useForm<Schema>({
+	const form = useForm({
 		defaultValues: getLocalServerData(),
-		// @ts-ignore - Zod v4 type inference issue with standardSchemaResolver
-		resolver: standardSchemaResolver(Schema),
+		resolver: zodResolver(Schema),
 	});
 
 	const onSubmit = (data: Schema) => {

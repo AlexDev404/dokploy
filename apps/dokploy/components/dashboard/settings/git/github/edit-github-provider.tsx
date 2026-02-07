@@ -1,4 +1,4 @@
-import { standardSchemaResolver } from "@hookform/resolvers/standard-schema";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { PenBoxIcon } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
@@ -55,13 +55,12 @@ export const EditGithubProvider = ({ githubId }: Props) => {
 	const { mutateAsync, error, isError } = api.github.update.useMutation();
 	const { mutateAsync: testConnection, isLoading } =
 		api.github.testConnection.useMutation();
-	const form = useForm<Schema>({
+	const form = useForm({
 		defaultValues: {
 			name: "",
 			appName: "",
 		},
-		// @ts-ignore - Zod v4 type inference issue with standardSchemaResolver
-		resolver: standardSchemaResolver(Schema),
+		resolver: zodResolver(Schema),
 	});
 
 	useEffect(() => {

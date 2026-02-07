@@ -1,4 +1,4 @@
-import { standardSchemaResolver } from "@hookform/resolvers/standard-schema";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { PlusIcon } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
@@ -57,14 +57,13 @@ export const AddInvitation = () => {
 	const [error, setError] = useState<string | null>(null);
 	const { data: activeOrganization } = authClient.useActiveOrganization();
 
-	const form = useForm<AddInvitation>({
+	const form = useForm({
 		defaultValues: {
 			email: "",
 			role: "member",
 			notificationId: "",
 		},
-		// @ts-ignore - Zod v4 type inference issue with standardSchemaResolver
-		resolver: standardSchemaResolver(addInvitation),
+		resolver: zodResolver(addInvitation),
 	});
 	useEffect(() => {
 		form.reset();

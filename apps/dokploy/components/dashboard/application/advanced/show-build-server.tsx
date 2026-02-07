@@ -1,4 +1,4 @@
-import { standardSchemaResolver } from "@hookform/resolvers/standard-schema";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { Server } from "lucide-react";
 import Link from "next/link";
 import { useEffect } from "react";
@@ -76,13 +76,12 @@ export const ShowBuildServer = ({ applicationId }: Props) => {
 
 	const { mutateAsync, isLoading } = api.application.update.useMutation();
 
-	const form = useForm<Schema>({
+	const form = useForm({
 		defaultValues: {
 			buildServerId: data?.buildServerId || "",
 			buildRegistryId: data?.buildRegistryId || "",
 		},
-		// @ts-ignore - Zod v4 type inference issue with standardSchemaResolver
-		resolver: standardSchemaResolver(schema),
+		resolver: zodResolver(schema),
 	});
 
 	useEffect(() => {

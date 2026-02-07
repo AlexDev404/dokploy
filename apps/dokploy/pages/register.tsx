@@ -1,5 +1,5 @@
 import { IS_CLOUD, isAdminPresent, validateRequest } from "@dokploy/server";
-import { standardSchemaResolver } from "@hookform/resolvers/standard-schema";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { AlertTriangle } from "lucide-react";
 import type { GetServerSidePropsContext } from "next";
 import Link from "next/link";
@@ -81,7 +81,7 @@ const Register = ({ isCloud }: Props) => {
 	const [error, setError] = useState<string | null>(null);
 	const [data, setData] = useState<any>(null);
 
-	const form = useForm<Register>({
+	const form = useForm({
 		defaultValues: {
 			name: "",
 			lastName: "",
@@ -89,8 +89,7 @@ const Register = ({ isCloud }: Props) => {
 			password: "",
 			confirmPassword: "",
 		},
-		// @ts-ignore - Zod v4 type inference issue with standardSchemaResolver
-		resolver: standardSchemaResolver(registerSchema),
+		resolver: zodResolver(registerSchema),
 	});
 
 	useEffect(() => {

@@ -1,4 +1,4 @@
-import { standardSchemaResolver } from "@hookform/resolvers/standard-schema";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { CheckIcon, ChevronsUpDown, X } from "lucide-react";
 import Link from "next/link";
 import { useEffect, useMemo } from "react";
@@ -77,7 +77,7 @@ export const SaveGitlabProviderCompose = ({ composeId }: Props) => {
 	const { mutateAsync, isLoading: isSavingGitlabProvider } =
 		api.compose.update.useMutation();
 
-	const form = useForm<GitlabProvider>({
+	const form = useForm({
 		defaultValues: {
 			composePath: "./docker-compose.yml",
 			repository: {
@@ -91,8 +91,7 @@ export const SaveGitlabProviderCompose = ({ composeId }: Props) => {
 			watchPaths: [],
 			enableSubmodules: false,
 		},
-		// @ts-ignore - Zod v4 type inference issue with standardSchemaResolver
-		resolver: standardSchemaResolver(GitlabProviderSchema),
+		resolver: zodResolver(GitlabProviderSchema),
 	});
 
 	const repository = form.watch("repository");

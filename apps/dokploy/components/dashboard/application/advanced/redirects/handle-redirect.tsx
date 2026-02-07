@@ -1,4 +1,4 @@
-import { standardSchemaResolver } from "@hookform/resolvers/standard-schema";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { PenBoxIcon, PlusIcon } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
@@ -104,14 +104,13 @@ export const HandleRedirect = ({
 		? api.redirects.update.useMutation()
 		: api.redirects.create.useMutation();
 
-	const form = useForm<AddRedirect>({
+	const form = useForm({
 		defaultValues: {
 			permanent: false,
 			regex: "",
 			replacement: "",
 		},
-		// @ts-ignore - Zod v4 type inference issue with standardSchemaResolver
-		resolver: standardSchemaResolver(AddRedirectchema),
+		resolver: zodResolver(AddRedirectchema),
 	});
 
 	useEffect(() => {

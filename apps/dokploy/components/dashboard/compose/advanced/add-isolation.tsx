@@ -1,4 +1,4 @@
-import { standardSchemaResolver } from "@hookform/resolvers/standard-schema";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { AlertTriangle, Loader2 } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
@@ -60,12 +60,11 @@ export const IsolatedDeploymentTab = ({ composeId }: Props) => {
 		{ enabled: !!composeId },
 	);
 
-	const form = useForm<IsolatedSchema>({
+	const form = useForm({
 		defaultValues: {
 			isolatedDeployment: false,
 		},
-		// @ts-ignore - Zod v4 type inference issue with standardSchemaResolver
-		resolver: standardSchemaResolver(isolatedSchema),
+		resolver: zodResolver(isolatedSchema),
 	});
 
 	useEffect(() => {

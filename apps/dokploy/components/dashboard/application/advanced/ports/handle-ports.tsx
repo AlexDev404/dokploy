@@ -1,4 +1,4 @@
-import { standardSchemaResolver } from "@hookform/resolvers/standard-schema";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { PenBoxIcon, PlusIcon } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useForm, useWatch } from "react-hook-form";
@@ -72,13 +72,12 @@ export const HandlePorts = ({
 		? api.port.update.useMutation()
 		: api.port.create.useMutation();
 
-	const form = useForm<AddPort>({
+	const form = useForm({
 		defaultValues: {
 			publishedPort: 0,
 			targetPort: 0,
 		},
-		// @ts-ignore - Zod v4 type inference issue with standardSchemaResolver
-		resolver: standardSchemaResolver(AddPortSchema),
+		resolver: zodResolver(AddPortSchema),
 	});
 
 	const publishMode = useWatch({

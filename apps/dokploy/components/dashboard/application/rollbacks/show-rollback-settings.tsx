@@ -1,4 +1,4 @@
-import { standardSchemaResolver } from "@hookform/resolvers/standard-schema";
+import { zodResolver } from "@hookform/resolvers/zod";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
@@ -76,9 +76,8 @@ export const ShowRollbackSettings = ({ applicationId, children }: Props) => {
 
 	const { data: registries } = api.registry.all.useQuery();
 
-	const form = useForm<FormValues>({
-		// @ts-ignore - Zod v4 type inference issue with standardSchemaResolver
-		resolver: standardSchemaResolver(formSchema),
+	const form = useForm({
+		resolver: zodResolver(formSchema),
 		defaultValues: {
 			rollbackActive: application?.rollbackActive ?? false,
 			rollbackRegistryId: application?.rollbackRegistryId || "",

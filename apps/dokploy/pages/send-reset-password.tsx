@@ -1,5 +1,5 @@
 import { IS_CLOUD } from "@dokploy/server";
-import { standardSchemaResolver } from "@hookform/resolvers/standard-schema";
+import { zodResolver } from "@hookform/resolvers/zod";
 import type { GetServerSidePropsContext } from "next";
 import Link from "next/link";
 import { useRouter } from "next/router";
@@ -50,12 +50,11 @@ export default function Home() {
 	const [error, setError] = useState<string | null>(null);
 	const [isLoading, setIsLoading] = useState(false);
 	const _router = useRouter();
-	const form = useForm<Login>({
+	const form = useForm({
 		defaultValues: {
 			email: "",
 		},
-		// @ts-ignore - Zod v4 type inference issue with standardSchemaResolver
-		resolver: standardSchemaResolver(loginSchema),
+		resolver: zodResolver(loginSchema),
 	});
 
 	useEffect(() => {

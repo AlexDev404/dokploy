@@ -57,7 +57,7 @@ export const ModeForm = ({ id, type }: ModeFormProps) => {
 		? mutationMap[type]()
 		: api.mongo.update.useMutation();
 
-	const form = useForm<any>({
+	const form = useForm({
 		defaultValues: {
 			type: undefined,
 			Replicas: undefined,

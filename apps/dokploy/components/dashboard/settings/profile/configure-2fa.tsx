@@ -1,4 +1,4 @@
-import { standardSchemaResolver } from "@hookform/resolvers/standard-schema";
+import { zodResolver } from "@hookform/resolvers/zod";
 import copy from "copy-to-clipboard";
 import {
 	CopyIcon,
@@ -69,9 +69,8 @@ export const Configure2FA = () => {
 	const [isDisabling, setIsDisabling] = useState(false);
 	const [isRegenerating, setIsRegenerating] = useState(false);
 
-	const form = useForm<PasswordForm>({
-		// @ts-ignore - Zod v4 type inference issue with standardSchemaResolver
-		resolver: standardSchemaResolver(PasswordSchema),
+	const form = useForm({
+		resolver: zodResolver(PasswordSchema),
 		defaultValues: {
 			password: "",
 		},

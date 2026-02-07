@@ -1,4 +1,4 @@
-import { standardSchemaResolver } from "@hookform/resolvers/standard-schema";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { DatabaseZap, Dices, RefreshCw } from "lucide-react";
 import Link from "next/link";
 import { useEffect, useState } from "react";
@@ -188,9 +188,8 @@ export const AddDomain = ({ id, type, domainId = "", children }: Props) => {
 		},
 	);
 
-	const form = useForm<Domain>({
-		// @ts-ignore - Zod v4 type inference issue with standardSchemaResolver
-		resolver: standardSchemaResolver(domain),
+	const form = useForm({
+		resolver: zodResolver(domain),
 		defaultValues: {
 			host: "",
 			path: undefined,

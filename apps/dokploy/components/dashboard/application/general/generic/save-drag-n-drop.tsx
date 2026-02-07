@@ -1,4 +1,4 @@
-import { standardSchemaResolver } from "@hookform/resolvers/standard-schema";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { TrashIcon } from "lucide-react";
 import { useEffect } from "react";
 import { useForm } from "react-hook-form";
@@ -27,10 +27,9 @@ export const SaveDragNDrop = ({ applicationId }: Props) => {
 	const { mutateAsync, isLoading } =
 		api.application.dropDeployment.useMutation();
 
-	const form = useForm<UploadFile>({
+	const form = useForm({
 		defaultValues: {},
-		// @ts-ignore - Zod v4 type inference issue with standardSchemaResolver
-		resolver: standardSchemaResolver(uploadFileSchema),
+		resolver: zodResolver(uploadFileSchema),
 	});
 
 	useEffect(() => {

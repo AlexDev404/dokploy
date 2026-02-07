@@ -1,4 +1,4 @@
-import { standardSchemaResolver } from "@hookform/resolvers/standard-schema";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
@@ -68,9 +68,8 @@ export const RollbackConfigForm = ({ id, type }: RollbackConfigFormProps) => {
 		? mutationMap[type]()
 		: api.mongo.update.useMutation();
 
-	const form = useForm<any>({
-		// @ts-ignore - Zod v4 type inference issue with standardSchemaResolver
-		resolver: standardSchemaResolver(rollbackConfigFormSchema),
+	const form = useForm({
+		resolver: zodResolver(rollbackConfigFormSchema),
 		defaultValues: {
 			Parallelism: undefined,
 			Delay: undefined,

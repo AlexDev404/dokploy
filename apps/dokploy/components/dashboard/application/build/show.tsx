@@ -1,4 +1,4 @@
-import { standardSchemaResolver } from "@hookform/resolvers/standard-schema";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { Cog } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
@@ -175,12 +175,11 @@ export const ShowBuildChooseForm = ({ applicationId }: Props) => {
 		{ enabled: !!applicationId },
 	);
 
-	const form = useForm<AddTemplate>({
+	const form = useForm({
 		defaultValues: {
 			buildType: BuildType.nixpacks,
 		},
-		// @ts-ignore - Zod v4 type inference issue with standardSchemaResolver
-		resolver: standardSchemaResolver(mySchema),
+		resolver: zodResolver(mySchema),
 	});
 
 	const buildType = form.watch("buildType");

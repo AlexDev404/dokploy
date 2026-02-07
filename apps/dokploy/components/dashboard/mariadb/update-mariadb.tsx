@@ -1,4 +1,4 @@
-import { standardSchemaResolver } from "@hookform/resolvers/standard-schema";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { PenBoxIcon } from "lucide-react";
 import { useEffect } from "react";
 import { useForm } from "react-hook-form";
@@ -52,13 +52,12 @@ export const UpdateMariadb = ({ mariadbId }: Props) => {
 			enabled: !!mariadbId,
 		},
 	);
-	const form = useForm<UpdateMariadb>({
+	const form = useForm({
 		defaultValues: {
 			description: data?.description ?? "",
 			name: data?.name ?? "",
 		},
-		// @ts-ignore - Zod v4 type inference issue with standardSchemaResolver
-		resolver: standardSchemaResolver(updateMariadbSchema),
+		resolver: zodResolver(updateMariadbSchema),
 	});
 	useEffect(() => {
 		if (data) {

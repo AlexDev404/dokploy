@@ -1,4 +1,4 @@
-import { standardSchemaResolver } from "@hookform/resolvers/standard-schema";
+import { zodResolver } from "@hookform/resolvers/zod";
 import copy from "copy-to-clipboard";
 import { debounce } from "lodash";
 import { CheckIcon, ChevronsUpDown, Copy, RotateCcw } from "lucide-react";
@@ -89,8 +89,7 @@ export const RestoreVolumeBackups = ({ id, type, serverId }: Props) => {
 			backupFile: "",
 			volumeName: "",
 		},
-		// @ts-ignore - Zod v4 type inference issue with standardSchemaResolver
-		resolver: standardSchemaResolver(RestoreBackupSchema),
+		resolver: zodResolver(RestoreBackupSchema),
 	});
 
 	const destinationId = form.watch("destinationId");

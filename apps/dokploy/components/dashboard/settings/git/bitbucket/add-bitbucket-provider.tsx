@@ -1,4 +1,4 @@
-import { standardSchemaResolver } from "@hookform/resolvers/standard-schema";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { ExternalLink } from "lucide-react";
 import Link from "next/link";
 import { useEffect, useState } from "react";
@@ -42,14 +42,13 @@ export const AddBitbucketProvider = () => {
 	const [isOpen, setIsOpen] = useState(false);
 	const { mutateAsync, error, isError } = api.bitbucket.create.useMutation();
 	const { data: auth } = api.user.get.useQuery();
-	const form = useForm<Schema>({
+	const form = useForm({
 		defaultValues: {
 			username: "",
 			apiToken: "",
 			workspaceName: "",
 		},
-		// @ts-ignore - Zod v4 type inference issue with standardSchemaResolver
-		resolver: standardSchemaResolver(Schema),
+		resolver: zodResolver(Schema),
 	});
 
 	useEffect(() => {

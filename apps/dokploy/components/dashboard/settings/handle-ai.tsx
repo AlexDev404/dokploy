@@ -1,5 +1,5 @@
 "use client";
-import { standardSchemaResolver } from "@hookform/resolvers/standard-schema";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { Check, ChevronDown, PenBoxIcon, PlusIcon } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
@@ -73,9 +73,8 @@ export const HandleAi = ({ aiId }: Props) => {
 		? api.ai.update.useMutation()
 		: api.ai.create.useMutation();
 
-	const form = useForm<Schema>({
-		// @ts-ignore - Zod v4 type inference issue with standardSchemaResolver
-		resolver: standardSchemaResolver(Schema),
+	const form = useForm({
+		resolver: zodResolver(Schema),
 		defaultValues: {
 			name: "",
 			apiUrl: "",

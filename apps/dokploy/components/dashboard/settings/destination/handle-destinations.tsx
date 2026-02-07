@@ -1,4 +1,4 @@
-import { standardSchemaResolver } from "@hookform/resolvers/standard-schema";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { PenBoxIcon, PlusIcon } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
@@ -80,7 +80,7 @@ export const HandleDestinations = ({ destinationId }: Props) => {
 		isError: isErrorConnection,
 	} = api.destination.testConnection.useMutation();
 
-	const form = useForm<AddDestination>({
+	const form = useForm({
 		defaultValues: {
 			provider: "",
 			accessKeyId: "",
@@ -90,8 +90,7 @@ export const HandleDestinations = ({ destinationId }: Props) => {
 			secretAccessKey: "",
 			endpoint: "",
 		},
-		// @ts-ignore - Zod v4 type inference issue with standardSchemaResolver
-		resolver: standardSchemaResolver(addDestination),
+		resolver: zodResolver(addDestination),
 	});
 	useEffect(() => {
 		if (destination) {

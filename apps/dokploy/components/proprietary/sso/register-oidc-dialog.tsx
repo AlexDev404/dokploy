@@ -1,6 +1,6 @@
 "use client";
 
-import { standardSchemaResolver } from "@hookform/resolvers/standard-schema";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { Plus, Trash2 } from "lucide-react";
 import { useState } from "react";
 import type { FieldArrayPath } from "react-hook-form";
@@ -75,9 +75,8 @@ export function RegisterOidcDialog({ children }: RegisterOidcDialogProps) {
 	const [open, setOpen] = useState(false);
 	const { mutateAsync, isLoading } = api.sso.register.useMutation();
 
-	const form = useForm<OidcProviderForm>({
-		// @ts-ignore - Zod v4 type inference issue with standardSchemaResolver
-		resolver: standardSchemaResolver(oidcProviderSchema),
+	const form = useForm({
+		resolver: zodResolver(oidcProviderSchema),
 		defaultValues: formDefaultValues,
 	});
 

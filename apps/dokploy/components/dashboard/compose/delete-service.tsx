@@ -1,5 +1,5 @@
 import type { ServiceType } from "@dokploy/server/db/schema";
-import { standardSchemaResolver } from "@hookform/resolvers/standard-schema";
+import { zodResolver } from "@hookform/resolvers/zod";
 import copy from "copy-to-clipboard";
 import { Copy, Trash2 } from "lucide-react";
 import { useRouter } from "next/router";
@@ -78,13 +78,12 @@ export const DeleteService = ({ id, type }: Props) => {
 		? mutationMap[type]()
 		: api.mongo.remove.useMutation();
 	const { push } = useRouter();
-	const form = useForm<DeleteCompose>({
+	const form = useForm({
 		defaultValues: {
 			projectName: "",
 			deleteVolumes: false,
 		},
-		// @ts-ignore - Zod v4 type inference issue with standardSchemaResolver
-		resolver: standardSchemaResolver(deleteComposeSchema),
+		resolver: zodResolver(deleteComposeSchema),
 	});
 
 	const onSubmit = async (formData: DeleteCompose) => {

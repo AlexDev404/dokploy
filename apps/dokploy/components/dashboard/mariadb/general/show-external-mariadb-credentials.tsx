@@ -1,4 +1,4 @@
-import { standardSchemaResolver } from "@hookform/resolvers/standard-schema";
+import { zodResolver } from "@hookform/resolvers/zod";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
@@ -51,10 +51,9 @@ export const ShowExternalMariadbCredentials = ({ mariadbId }: Props) => {
 	const { mutateAsync, isLoading } = api.mariadb.saveExternalPort.useMutation();
 	const [connectionUrl, setConnectionUrl] = useState("");
 	const getIp = data?.server?.ipAddress || ip;
-	const form = useForm<DockerProvider>({
+	const form = useForm({
 		defaultValues: {},
-		// @ts-ignore - Zod v4 type inference issue with standardSchemaResolver
-		resolver: standardSchemaResolver(DockerProviderSchema),
+		resolver: zodResolver(DockerProviderSchema),
 	});
 
 	useEffect(() => {

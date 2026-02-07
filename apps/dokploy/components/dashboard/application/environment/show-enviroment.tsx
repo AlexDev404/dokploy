@@ -1,4 +1,4 @@
-import { standardSchemaResolver } from "@hookform/resolvers/standard-schema";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { EyeIcon, EyeOffIcon } from "lucide-react";
 import { type CSSProperties, useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
@@ -64,12 +64,11 @@ export const ShowEnvironment = ({ id, type }: Props) => {
 		? mutationMap[type]()
 		: api.mongo.update.useMutation();
 
-	const form = useForm<EnvironmentSchema>({
+	const form = useForm({
 		defaultValues: {
 			environment: "",
 		},
-		// @ts-ignore - Zod v4 type inference issue with standardSchemaResolver
-		resolver: standardSchemaResolver(addEnvironmentSchema),
+		resolver: zodResolver(addEnvironmentSchema),
 	});
 
 	// Watch form value

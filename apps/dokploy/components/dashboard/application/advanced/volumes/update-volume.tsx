@@ -1,4 +1,4 @@
-import { standardSchemaResolver } from "@hookform/resolvers/standard-schema";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { PenBoxIcon } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
@@ -96,14 +96,13 @@ export const UpdateVolume = ({
 	const { mutateAsync, isLoading, error, isError } =
 		api.mounts.update.useMutation();
 
-	const form = useForm<UpdateMount>({
+	const form = useForm({
 		defaultValues: {
 			type,
 			hostPath: "",
 			mountPath: "",
 		},
-		// @ts-ignore - Zod v4 type inference issue with standardSchemaResolver
-		resolver: standardSchemaResolver(mySchema),
+		resolver: zodResolver(mySchema),
 	});
 
 	const typeForm = form.watch("type");

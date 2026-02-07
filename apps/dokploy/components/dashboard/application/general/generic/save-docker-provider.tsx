@@ -1,4 +1,4 @@
-import { standardSchemaResolver } from "@hookform/resolvers/standard-schema";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
@@ -34,15 +34,14 @@ export const SaveDockerProvider = ({ applicationId }: Props) => {
 	const { data, refetch } = api.application.one.useQuery({ applicationId });
 
 	const { mutateAsync } = api.application.saveDockerProvider.useMutation();
-	const form = useForm<DockerProvider>({
+	const form = useForm({
 		defaultValues: {
 			dockerImage: "",
 			password: "",
 			username: "",
 			registryURL: "",
 		},
-		// @ts-ignore - Zod v4 type inference issue with standardSchemaResolver
-		resolver: standardSchemaResolver(DockerProviderSchema),
+		resolver: zodResolver(DockerProviderSchema),
 	});
 
 	useEffect(() => {

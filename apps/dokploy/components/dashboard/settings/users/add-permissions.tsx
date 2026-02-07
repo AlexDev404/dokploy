@@ -1,4 +1,4 @@
-import { standardSchemaResolver } from "@hookform/resolvers/standard-schema";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
@@ -187,7 +187,7 @@ export const AddUserPermissions = ({ userId }: Props) => {
 	const { mutateAsync, isError, error, isLoading } =
 		api.user.assignPermissions.useMutation();
 
-	const form = useForm<AddPermissions>({
+	const form = useForm({
 		defaultValues: {
 			accessedProjects: [],
 			accessedEnvironments: [],
@@ -204,8 +204,7 @@ export const AddUserPermissions = ({ userId }: Props) => {
 			canAccessToGitProviders: false,
 			canCreateEnvironments: false,
 		},
-		// @ts-ignore - Zod v4 type inference issue with standardSchemaResolver
-		resolver: standardSchemaResolver(addPermissions),
+		resolver: zodResolver(addPermissions),
 	});
 
 	useEffect(() => {

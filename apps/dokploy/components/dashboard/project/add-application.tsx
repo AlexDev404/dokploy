@@ -1,4 +1,4 @@
-import { standardSchemaResolver } from "@hookform/resolvers/standard-schema";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { Folder, HelpCircle } from "lucide-react";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
@@ -84,14 +84,13 @@ export const AddApplication = ({ environmentId, projectName }: Props) => {
 	const { mutateAsync, isLoading, error, isError } =
 		api.application.create.useMutation();
 
-	const form = useForm<AddTemplate>({
+	const form = useForm({
 		defaultValues: {
 			name: "",
 			appName: `${slug}-`,
 			description: "",
 		},
-		// @ts-ignore - Zod v4 type inference issue with standardSchemaResolver
-		resolver: standardSchemaResolver(AddTemplateSchema),
+		resolver: zodResolver(AddTemplateSchema),
 	});
 
 	const onSubmit = async (data: AddTemplate) => {

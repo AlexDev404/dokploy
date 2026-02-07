@@ -1,4 +1,4 @@
-import { standardSchemaResolver } from "@hookform/resolvers/standard-schema";
+import { zodResolver } from "@hookform/resolvers/zod";
 import {
 	CheckIcon,
 	ChevronsUpDown,
@@ -221,8 +221,7 @@ export const HandleSchedules = ({ id, scheduleId, scheduleType }: Props) => {
 	const [cacheType, setCacheType] = useState<CacheType>("cache");
 	const utils = api.useUtils();
 	const form = useForm<z.infer<typeof formSchema>>({
-		// @ts-ignore - Zod v4 type inference issue with standardSchemaResolver
-		resolver: standardSchemaResolver(formSchema),
+		resolver: zodResolver(formSchema),
 		defaultValues: {
 			name: "",
 			cronExpression: "",

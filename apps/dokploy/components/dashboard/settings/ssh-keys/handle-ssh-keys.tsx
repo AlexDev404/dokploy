@@ -1,4 +1,4 @@
-import { standardSchemaResolver } from "@hookform/resolvers/standard-schema";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { DownloadIcon, PenBoxIcon, PlusIcon } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
@@ -54,9 +54,8 @@ export const HandleSSHKeys = ({ sshKeyId }: Props) => {
 
 	const generateMutation = api.sshKey.generate.useMutation();
 
-	const form = useForm<SSHKey>({
-		// @ts-ignore - Zod v4 type inference issue with standardSchemaResolver
-		resolver: standardSchemaResolver(sshKeyCreate),
+	const form = useForm({
+		resolver: zodResolver(sshKeyCreate),
 		defaultValues: {
 			name: "",
 			description: "",

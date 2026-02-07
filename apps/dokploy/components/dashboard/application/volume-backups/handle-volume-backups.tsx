@@ -1,4 +1,4 @@
-import { standardSchemaResolver } from "@hookform/resolvers/standard-schema";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { DatabaseZap, PenBoxIcon, PlusCircle, RefreshCw } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
@@ -117,8 +117,7 @@ export const HandleVolumeBackups = ({
 
 	const utils = api.useUtils();
 	const form = useForm<z.infer<typeof formSchema>>({
-		// @ts-ignore - Zod v4 type inference issue with standardSchemaResolver
-		resolver: standardSchemaResolver(formSchema),
+		resolver: zodResolver(formSchema),
 		defaultValues: {
 			name: "",
 			cronExpression: "",

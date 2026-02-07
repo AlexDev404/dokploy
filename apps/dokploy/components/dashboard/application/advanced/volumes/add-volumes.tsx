@@ -1,4 +1,4 @@
-import { standardSchemaResolver } from "@hookform/resolvers/standard-schema";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { PlusIcon } from "lucide-react";
 import type React from "react";
 import { useEffect, useState } from "react";
@@ -87,14 +87,13 @@ export const AddVolumes = ({
 }: Props) => {
 	const [isOpen, setIsOpen] = useState(false);
 	const { mutateAsync } = api.mounts.create.useMutation();
-	const form = useForm<AddMount>({
+	const form = useForm({
 		defaultValues: {
 			type: serviceType === "compose" ? "file" : "bind",
 			hostPath: "",
 			mountPath: serviceType === "compose" ? "/" : "",
 		},
-		// @ts-ignore - Zod v4 type inference issue with standardSchemaResolver
-		resolver: standardSchemaResolver(mySchema),
+		resolver: zodResolver(mySchema),
 	});
 	const type = form.watch("type");
 

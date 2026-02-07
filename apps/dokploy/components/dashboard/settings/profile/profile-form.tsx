@@ -1,4 +1,4 @@
-import { standardSchemaResolver } from "@hookform/resolvers/standard-schema";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { Loader2, Palette, User } from "lucide-react";
 import { useTranslation } from "next-i18next";
 import { useEffect, useMemo, useRef, useState } from "react";
@@ -84,7 +84,7 @@ export const ProfileForm = () => {
 		]);
 	}, [gravatarHash]);
 
-	const form = useForm<Profile>({
+	const form = useForm({
 		defaultValues: {
 			email: data?.user?.email || "",
 			password: "",
@@ -94,8 +94,7 @@ export const ProfileForm = () => {
 			firstName: data?.user?.firstName || "",
 			lastName: data?.user?.lastName || "",
 		},
-		// @ts-ignore - Zod v4 type inference issue with standardSchemaResolver
-		resolver: standardSchemaResolver(profileSchema),
+		resolver: zodResolver(profileSchema),
 	});
 
 	useEffect(() => {

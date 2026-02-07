@@ -1,4 +1,4 @@
-import { standardSchemaResolver } from "@hookform/resolvers/standard-schema";
+import { zodResolver } from "@hookform/resolvers/zod";
 import {
 	CheckIcon,
 	ChevronsUpDown,
@@ -220,8 +220,7 @@ export const HandleBackup = ({
 			backupType: backupType,
 			metadata: {},
 		},
-		// @ts-ignore - Zod v4 type inference issue with standardSchemaResolver
-		resolver: standardSchemaResolver(Schema),
+		resolver: zodResolver(Schema),
 	});
 
 	const {

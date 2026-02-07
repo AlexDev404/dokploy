@@ -1,5 +1,5 @@
 import { getUserByToken, IS_CLOUD } from "@dokploy/server";
-import { standardSchemaResolver } from "@hookform/resolvers/standard-schema";
+import { zodResolver } from "@hookform/resolvers/zod";
 import type { GetServerSidePropsContext } from "next";
 import Link from "next/link";
 import { useRouter } from "next/router";
@@ -92,7 +92,7 @@ const Invitation = ({
 		},
 	);
 
-	const form = useForm<Register>({
+	const form = useForm({
 		defaultValues: {
 			name: "",
 			lastName: "",
@@ -100,8 +100,7 @@ const Invitation = ({
 			password: "",
 			confirmPassword: "",
 		},
-		// @ts-ignore - Zod v4 type inference issue with standardSchemaResolver
-		resolver: standardSchemaResolver(registerSchema),
+		resolver: zodResolver(registerSchema),
 	});
 
 	useEffect(() => {

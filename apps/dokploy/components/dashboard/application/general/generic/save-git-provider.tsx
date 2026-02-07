@@ -1,4 +1,4 @@
-import { standardSchemaResolver } from "@hookform/resolvers/standard-schema";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { KeyRoundIcon, LockIcon, X } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/router";
@@ -61,7 +61,7 @@ export const SaveGitProvider = ({ applicationId }: Props) => {
 	const { mutateAsync, isLoading } =
 		api.application.saveGitProvider.useMutation();
 
-	const form = useForm<GitProvider>({
+	const form = useForm({
 		defaultValues: {
 			branch: "",
 			buildPath: "/",
@@ -70,8 +70,7 @@ export const SaveGitProvider = ({ applicationId }: Props) => {
 			watchPaths: [],
 			enableSubmodules: false,
 		},
-		// @ts-ignore - Zod v4 type inference issue with standardSchemaResolver
-		resolver: standardSchemaResolver(GitProviderSchema),
+		resolver: zodResolver(GitProviderSchema),
 	});
 
 	useEffect(() => {

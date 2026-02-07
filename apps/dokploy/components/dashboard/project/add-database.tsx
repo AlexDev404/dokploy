@@ -1,4 +1,4 @@
-import { standardSchemaResolver } from "@hookform/resolvers/standard-schema";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { AlertTriangle, Database, HelpCircle } from "lucide-react";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
@@ -196,7 +196,7 @@ export const AddDatabase = ({ environmentId, projectName }: Props) => {
 	// Self-hosted: show only if there are remote servers (Dokploy is default, hide if no remote servers)
 	const shouldShowServerDropdown = hasServers;
 
-	const form = useForm<AddDatabase>({
+	const form = useForm({
 		defaultValues: {
 			type: "postgres",
 			dockerImage: "",
@@ -208,8 +208,7 @@ export const AddDatabase = ({ environmentId, projectName }: Props) => {
 			databaseUser: "",
 			serverId: null,
 		},
-		// @ts-ignore - Zod v4 type inference issue with standardSchemaResolver
-		resolver: standardSchemaResolver(mySchema),
+		resolver: zodResolver(mySchema),
 	});
 	const type = form.watch("type");
 	const activeMutation = {

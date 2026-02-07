@@ -1,4 +1,4 @@
-import { standardSchemaResolver } from "@hookform/resolvers/standard-schema";
+import { zodResolver } from "@hookform/resolvers/zod";
 import {
 	AlertTriangle,
 	Mail,
@@ -255,15 +255,14 @@ export const HandleNotifications = ({ notificationId }: Props) => {
 		? api.notification.updatePushover.useMutation()
 		: api.notification.createPushover.useMutation();
 
-	const form = useForm<NotificationSchema>({
+	const form = useForm({
 		defaultValues: {
 			type: "slack",
 			webhookUrl: "",
 			channel: "",
 			name: "",
 		},
-		// @ts-ignore - Zod v4 type inference issue with standardSchemaResolver
-		resolver: standardSchemaResolver(notificationSchema),
+		resolver: zodResolver(notificationSchema),
 	});
 	const type = form.watch("type");
 

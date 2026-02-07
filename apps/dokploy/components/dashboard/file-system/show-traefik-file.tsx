@@ -1,4 +1,4 @@
-import { standardSchemaResolver } from "@hookform/resolvers/standard-schema";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { Loader2 } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
@@ -51,13 +51,12 @@ export const ShowTraefikFile = ({ path, serverId }: Props) => {
 	const { mutateAsync, isLoading, error, isError } =
 		api.settings.updateTraefikFile.useMutation();
 
-	const form = useForm<UpdateServerMiddlewareConfig>({
+	const form = useForm({
 		defaultValues: {
 			traefikConfig: "",
 		},
 		disabled: canEdit,
-		// @ts-ignore - Zod v4 type inference issue with standardSchemaResolver
-		resolver: standardSchemaResolver(UpdateServerMiddlewareConfigSchema),
+		resolver: zodResolver(UpdateServerMiddlewareConfigSchema),
 	});
 
 	useEffect(() => {

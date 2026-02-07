@@ -1,4 +1,4 @@
-import { standardSchemaResolver } from "@hookform/resolvers/standard-schema";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { CheckIcon, ChevronsUpDown, HelpCircle, Plus, X } from "lucide-react";
 import Link from "next/link";
 import { useEffect, useMemo } from "react";
@@ -77,7 +77,7 @@ export const SaveGitlabProvider = ({ applicationId }: Props) => {
 	const { mutateAsync, isLoading: isSavingGitlabProvider } =
 		api.application.saveGitlabProvider.useMutation();
 
-	const form = useForm<GitlabProvider>({
+	const form = useForm({
 		defaultValues: {
 			buildPath: "/",
 			repository: {
@@ -90,8 +90,7 @@ export const SaveGitlabProvider = ({ applicationId }: Props) => {
 			branch: "",
 			enableSubmodules: false,
 		},
-		// @ts-ignore - Zod v4 type inference issue with standardSchemaResolver
-		resolver: standardSchemaResolver(GitlabProviderSchema),
+		resolver: zodResolver(GitlabProviderSchema),
 	});
 
 	const repository = form.watch("repository");

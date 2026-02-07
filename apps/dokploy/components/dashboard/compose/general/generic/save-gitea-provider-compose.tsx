@@ -1,4 +1,4 @@
-import { standardSchemaResolver } from "@hookform/resolvers/standard-schema";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { CheckIcon, ChevronsUpDown, Plus, X } from "lucide-react";
 import Link from "next/link";
 import { useEffect } from "react";
@@ -75,7 +75,7 @@ export const SaveGiteaProviderCompose = ({ composeId }: Props) => {
 	const { mutateAsync, isLoading: isSavingGiteaProvider } =
 		api.compose.update.useMutation();
 
-	const form = useForm<GiteaProvider>({
+	const form = useForm({
 		defaultValues: {
 			composePath: "./docker-compose.yml",
 			repository: {
@@ -87,8 +87,7 @@ export const SaveGiteaProviderCompose = ({ composeId }: Props) => {
 			watchPaths: [],
 			enableSubmodules: false,
 		},
-		// @ts-ignore - Zod v4 type inference issue with standardSchemaResolver
-		resolver: standardSchemaResolver(GiteaProviderSchema),
+		resolver: zodResolver(GiteaProviderSchema),
 	});
 
 	const repository = form.watch("repository");

@@ -1,6 +1,6 @@
 "use client";
 
-import { standardSchemaResolver } from "@hookform/resolvers/standard-schema";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { Loader2, LogIn } from "lucide-react";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
@@ -35,9 +35,8 @@ interface SignInWithSSOProps {
 export function SignInWithSSO({ children }: SignInWithSSOProps) {
 	const [expanded, setExpanded] = useState(false);
 
-	const form = useForm<SSOEmailForm>({
-		// @ts-ignore - Zod v4 type inference issue with standardSchemaResolver
-		resolver: standardSchemaResolver(ssoEmailSchema),
+	const form = useForm({
+		resolver: zodResolver(ssoEmailSchema),
 		defaultValues: { email: "" },
 	});
 

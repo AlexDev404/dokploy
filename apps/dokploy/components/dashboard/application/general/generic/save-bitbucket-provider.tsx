@@ -1,4 +1,4 @@
-import { standardSchemaResolver } from "@hookform/resolvers/standard-schema";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { CheckIcon, ChevronsUpDown, X } from "lucide-react";
 import Link from "next/link";
 import { useEffect } from "react";
@@ -77,7 +77,7 @@ export const SaveBitbucketProvider = ({ applicationId }: Props) => {
 	const { mutateAsync, isLoading: isSavingBitbucketProvider } =
 		api.application.saveBitbucketProvider.useMutation();
 
-	const form = useForm<BitbucketProvider>({
+	const form = useForm({
 		defaultValues: {
 			buildPath: "/",
 			repository: {
@@ -90,8 +90,7 @@ export const SaveBitbucketProvider = ({ applicationId }: Props) => {
 			watchPaths: [],
 			enableSubmodules: false,
 		},
-		// @ts-ignore - Zod v4 type inference issue with standardSchemaResolver
-		resolver: standardSchemaResolver(BitbucketProviderSchema),
+		resolver: zodResolver(BitbucketProviderSchema),
 	});
 
 	const repository = form.watch("repository");

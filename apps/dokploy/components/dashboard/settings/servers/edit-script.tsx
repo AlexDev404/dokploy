@@ -1,4 +1,4 @@
-import { standardSchemaResolver } from "@hookform/resolvers/standard-schema";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { FileTerminal } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
@@ -60,12 +60,11 @@ export const EditScript = ({ serverId }: Props) => {
 		},
 	);
 
-	const form = useForm<Schema>({
+	const form = useForm({
 		defaultValues: {
 			command: "",
 		},
-		// @ts-ignore - Zod v4 type inference issue with standardSchemaResolver
-		resolver: standardSchemaResolver(schema),
+		resolver: zodResolver(schema),
 	});
 
 	useEffect(() => {

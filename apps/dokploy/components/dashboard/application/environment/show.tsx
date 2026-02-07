@@ -1,4 +1,4 @@
-import { standardSchemaResolver } from "@hookform/resolvers/standard-schema";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
@@ -43,15 +43,14 @@ export const ShowEnvironment = ({ applicationId }: Props) => {
 		},
 	);
 
-	const form = useForm<EnvironmentSchema>({
+	const form = useForm({
 		defaultValues: {
 			env: "",
 			buildArgs: "",
 			buildSecrets: "",
 			createEnvFile: true,
 		},
-		// @ts-ignore - Zod v4 type inference issue with standardSchemaResolver
-		resolver: standardSchemaResolver(addEnvironmentSchema),
+		resolver: zodResolver(addEnvironmentSchema),
 	});
 
 	// Watch form values

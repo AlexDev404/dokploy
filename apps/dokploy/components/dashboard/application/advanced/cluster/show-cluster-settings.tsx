@@ -1,4 +1,4 @@
-import { standardSchemaResolver } from "@hookform/resolvers/standard-schema";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { Server } from "lucide-react";
 import Link from "next/link";
 import { useEffect } from "react";
@@ -77,7 +77,7 @@ export const ShowClusterSettings = ({ id, type }: Props) => {
 		? mutationMap[type]()
 		: api.mongo.update.useMutation();
 
-	const form = useForm<AddCommand>({
+	const form = useForm({
 		defaultValues: {
 			...(type === "application" && data && "registryId" in data
 				? {
@@ -86,8 +86,7 @@ export const ShowClusterSettings = ({ id, type }: Props) => {
 				: {}),
 			replicas: data?.replicas || 1,
 		},
-		// @ts-ignore - Zod v4 type inference issue with standardSchemaResolver
-		resolver: standardSchemaResolver(AddRedirectchema),
+		resolver: zodResolver(AddRedirectchema),
 	});
 
 	useEffect(() => {

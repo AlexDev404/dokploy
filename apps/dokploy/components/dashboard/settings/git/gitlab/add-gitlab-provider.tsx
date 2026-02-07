@@ -1,4 +1,4 @@
-import { standardSchemaResolver } from "@hookform/resolvers/standard-schema";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { ExternalLink } from "lucide-react";
 import Link from "next/link";
 import { useEffect, useState } from "react";
@@ -58,7 +58,7 @@ export const AddGitlabProvider = () => {
 	const { mutateAsync, error, isError } = api.gitlab.create.useMutation();
 	const webhookUrl = `${url}/api/providers/gitlab/callback`;
 
-	const form = useForm<Schema>({
+	const form = useForm({
 		defaultValues: {
 			applicationId: "",
 			applicationSecret: "",
@@ -67,8 +67,7 @@ export const AddGitlabProvider = () => {
 			name: "",
 			gitlabUrl: "https://gitlab.com",
 		},
-		// @ts-ignore - Zod v4 type inference issue with standardSchemaResolver
-		resolver: standardSchemaResolver(Schema),
+		resolver: zodResolver(Schema),
 	});
 
 	const gitlabUrl = form.watch("gitlabUrl");

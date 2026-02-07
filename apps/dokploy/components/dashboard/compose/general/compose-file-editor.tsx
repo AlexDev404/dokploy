@@ -1,4 +1,4 @@
-import { standardSchemaResolver } from "@hookform/resolvers/standard-schema";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
@@ -37,12 +37,11 @@ export const ComposeFileEditor = ({ composeId }: Props) => {
 	const { mutateAsync, isLoading } = api.compose.update.useMutation();
 	const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
 
-	const form = useForm<AddComposeFile>({
+	const form = useForm({
 		defaultValues: {
 			composeFile: "",
 		},
-		// @ts-ignore - Zod v4 type inference issue with standardSchemaResolver
-		resolver: standardSchemaResolver(AddComposeFile),
+		resolver: zodResolver(AddComposeFile),
 	});
 
 	const composeFile = form.watch("composeFile");

@@ -1,4 +1,4 @@
-import { standardSchemaResolver } from "@hookform/resolvers/standard-schema";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { Pencil, PlusIcon } from "lucide-react";
 import Link from "next/link";
 import { useTranslation } from "next-i18next";
@@ -83,7 +83,7 @@ export const HandleServers = ({ serverId, asButton = false }: Props) => {
 	const { mutateAsync, error, isLoading, isError } = serverId
 		? api.server.update.useMutation()
 		: api.server.create.useMutation();
-	const form = useForm<Schema>({
+	const form = useForm({
 		defaultValues: {
 			description: "",
 			name: "",
@@ -93,8 +93,7 @@ export const HandleServers = ({ serverId, asButton = false }: Props) => {
 			sshKeyId: "",
 			serverType: "deploy",
 		},
-		// @ts-ignore - Zod v4 type inference issue with standardSchemaResolver
-		resolver: standardSchemaResolver(Schema),
+		resolver: zodResolver(Schema),
 	});
 
 	useEffect(() => {

@@ -1,4 +1,4 @@
-import { standardSchemaResolver } from "@hookform/resolvers/standard-schema";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
@@ -69,12 +69,11 @@ export const UpdateTraefikConfig = ({ applicationId }: Props) => {
 	const { mutateAsync, isLoading, error, isError } =
 		api.application.updateTraefikConfig.useMutation();
 
-	const form = useForm<UpdateTraefikConfig>({
+	const form = useForm({
 		defaultValues: {
 			traefikConfig: "",
 		},
-		// @ts-ignore - Zod v4 type inference issue with standardSchemaResolver
-		resolver: standardSchemaResolver(UpdateTraefikConfigSchema),
+		resolver: zodResolver(UpdateTraefikConfigSchema),
 	});
 
 	useEffect(() => {

@@ -1,4 +1,4 @@
-import { standardSchemaResolver } from "@hookform/resolvers/standard-schema";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { AlertTriangle } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
@@ -50,13 +50,12 @@ export const RandomizeCompose = ({ composeId }: Props) => {
 		{ enabled: !!composeId },
 	);
 
-	const form = useForm<Schema>({
+	const form = useForm({
 		defaultValues: {
 			suffix: "",
 			randomize: false,
 		},
-		// @ts-ignore - Zod v4 type inference issue with standardSchemaResolver
-		resolver: standardSchemaResolver(schema),
+		resolver: zodResolver(schema),
 	});
 
 	const suffix = form.watch("suffix");

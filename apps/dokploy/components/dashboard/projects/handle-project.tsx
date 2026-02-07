@@ -1,4 +1,4 @@
-import { standardSchemaResolver } from "@hookform/resolvers/standard-schema";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { PlusIcon, SquarePen } from "lucide-react";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
@@ -75,13 +75,12 @@ export const HandleProject = ({ projectId }: Props) => {
 		},
 	);
 	const router = useRouter();
-	const form = useForm<AddProject>({
+	const form = useForm({
 		defaultValues: {
 			description: "",
 			name: "",
 		},
-		// @ts-ignore - Zod v4 type inference issue with standardSchemaResolver
-		resolver: standardSchemaResolver(AddProjectSchema),
+		resolver: zodResolver(AddProjectSchema),
 	});
 
 	useEffect(() => {

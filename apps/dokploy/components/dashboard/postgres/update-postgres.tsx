@@ -1,4 +1,4 @@
-import { standardSchemaResolver } from "@hookform/resolvers/standard-schema";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { PenBox } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
@@ -53,13 +53,12 @@ export const UpdatePostgres = ({ postgresId }: Props) => {
 			enabled: !!postgresId,
 		},
 	);
-	const form = useForm<UpdatePostgres>({
+	const form = useForm({
 		defaultValues: {
 			description: data?.description ?? "",
 			name: data?.name ?? "",
 		},
-		// @ts-ignore - Zod v4 type inference issue with standardSchemaResolver
-		resolver: standardSchemaResolver(updatePostgresSchema),
+		resolver: zodResolver(updatePostgresSchema),
 	});
 	useEffect(() => {
 		if (data) {

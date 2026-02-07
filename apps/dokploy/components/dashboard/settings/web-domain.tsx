@@ -1,4 +1,4 @@
-import { standardSchemaResolver } from "@hookform/resolvers/standard-schema";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { GlobeIcon } from "lucide-react";
 import { useTranslation } from "next-i18next";
 import { useEffect } from "react";
@@ -71,15 +71,14 @@ export const WebDomain = () => {
 	const { mutateAsync, isLoading } =
 		api.settings.assignDomainServer.useMutation();
 
-	const form = useForm<AddServerDomain>({
+	const form = useForm({
 		defaultValues: {
 			domain: "",
 			certificateType: "none",
 			letsEncryptEmail: "",
 			https: false,
 		},
-		// @ts-ignore - Zod v4 type inference issue with standardSchemaResolver
-		resolver: standardSchemaResolver(addServerDomain),
+		resolver: zodResolver(addServerDomain),
 	});
 	const https = form.watch("https");
 	const domain = form.watch("domain") || "";

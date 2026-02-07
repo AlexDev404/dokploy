@@ -1,4 +1,4 @@
-import { standardSchemaResolver } from "@hookform/resolvers/standard-schema";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { PenBoxIcon } from "lucide-react";
 import { useEffect } from "react";
 import { useForm } from "react-hook-form";
@@ -52,13 +52,12 @@ export const UpdateRedis = ({ redisId }: Props) => {
 			enabled: !!redisId,
 		},
 	);
-	const form = useForm<UpdateRedis>({
+	const form = useForm({
 		defaultValues: {
 			description: data?.description ?? "",
 			name: data?.name ?? "",
 		},
-		// @ts-ignore - Zod v4 type inference issue with standardSchemaResolver
-		resolver: standardSchemaResolver(updateRedisSchema),
+		resolver: zodResolver(updateRedisSchema),
 	});
 	useEffect(() => {
 		if (data) {

@@ -1,4 +1,4 @@
-import { standardSchemaResolver } from "@hookform/resolvers/standard-schema";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { AlertTriangle, PenBoxIcon, PlusIcon } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
@@ -115,7 +115,7 @@ export const HandleRegistry = ({ registryId }: Props) => {
 		error: testRegistryByIdError,
 		isError: testRegistryByIdIsError,
 	} = api.registry.testRegistryById.useMutation();
-	const form = useForm<AddRegistry>({
+	const form = useForm({
 		defaultValues: {
 			username: "",
 			password: "",
@@ -125,8 +125,7 @@ export const HandleRegistry = ({ registryId }: Props) => {
 			serverId: "",
 			isEditing: !!registryId,
 		},
-		// @ts-ignore - Zod v4 type inference issue with standardSchemaResolver
-		resolver: standardSchemaResolver(
+		resolver: zodResolver(
 			AddRegistrySchema.refine(
 				(data) => {
 					// When creating a new registry, password is required

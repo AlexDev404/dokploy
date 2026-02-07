@@ -1,4 +1,4 @@
-import { standardSchemaResolver } from "@hookform/resolvers/standard-schema";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
@@ -54,12 +54,11 @@ export const AddCommandCompose = ({ composeId }: Props) => {
 
 	const { mutateAsync, isLoading } = api.compose.update.useMutation();
 
-	const form = useForm<AddCommand>({
+	const form = useForm({
 		defaultValues: {
 			command: "",
 		},
-		// @ts-ignore - Zod v4 type inference issue with standardSchemaResolver
-		resolver: standardSchemaResolver(AddRedirectSchema),
+		resolver: zodResolver(AddRedirectSchema),
 	});
 
 	useEffect(() => {

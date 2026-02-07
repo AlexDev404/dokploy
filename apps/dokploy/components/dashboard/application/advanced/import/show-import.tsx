@@ -1,4 +1,4 @@
-import { standardSchemaResolver } from "@hookform/resolvers/standard-schema";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { Code2, Globe2, HardDrive } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
@@ -77,12 +77,11 @@ export const ShowImport = ({ composeId }: Props) => {
 		isSuccess: isImportSuccess,
 	} = api.compose.import.useMutation();
 
-	const form = useForm<ImportType>({
+	const form = useForm({
 		defaultValues: {
 			base64: "",
 		},
-		// @ts-ignore - Zod v4 type inference issue with standardSchemaResolver
-		resolver: standardSchemaResolver(ImportSchema),
+		resolver: zodResolver(ImportSchema),
 	});
 
 	useEffect(() => {
