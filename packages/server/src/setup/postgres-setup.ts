@@ -105,7 +105,7 @@ export const initializePostgres = async () => {
       if (error?.statusCode !== 409) {
         throw error;
       }
-      console.log("📦 Postgres service already exists");
+      console.log(`📦 Postgres service already exists: ${error}`);
     }
   }
 

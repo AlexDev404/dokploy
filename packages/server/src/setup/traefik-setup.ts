@@ -21,7 +21,7 @@ export const TRAEFIK_PORT =
   Number.parseInt(process.env.TRAEFIK_PORT!, 10) || 80;
 export const TRAEFIK_HTTP3_PORT =
   Number.parseInt(process.env.TRAEFIK_HTTP3_PORT!, 10) || 443;
-export const TRAEFIK_VERSION = process.env.TRAEFIK_VERSION || "3.6.4";
+export const TRAEFIK_VERSION = process.env.TRAEFIK_VERSION || "3.6.7";
 
 export interface TraefikOptions {
   env?: string[];
@@ -95,7 +95,7 @@ export const initializeStandaloneTraefik = async ({
   };
 
   const docker = await getRemoteDocker(serverId);
-  
+
   // Pull image without unnecessary delay
   try {
     await docker.pull(imageName);
@@ -103,7 +103,7 @@ export const initializeStandaloneTraefik = async ({
   } catch (error) {
     console.log("Traefik Image Pull Warning:", error);
   }
-  
+
   // Remove existing container if present
   try {
     const container = docker.getContainer(containerName);
@@ -117,7 +117,7 @@ export const initializeStandaloneTraefik = async ({
     await docker.createContainer(settings);
     const newContainer = docker.getContainer(containerName);
     await newContainer.start();
-    
+
     // Wait for Traefik to be actually ready
     await waitForTraefikReady(docker, containerName);
     console.log("Traefik Started ✅");
@@ -129,21 +129,24 @@ export const initializeStandaloneTraefik = async ({
 /**
  * Wait for Traefik container to be healthy and ready
  */
-const waitForTraefikReady = async (dockerClient: any, containerName: string): Promise<void> => {
+const waitForTraefikReady = async (
+  dockerClient: any,
+  containerName: string,
+): Promise<void> => {
   const maxAttempts = 30;
   const checkInterval = 1000;
-  
+
   for (let attempt = 0; attempt < maxAttempts; attempt++) {
     try {
       const container = dockerClient.getContainer(containerName);
       const inspect = await container.inspect();
-      
+
       // Check if container is running
       if (inspect.State?.Running) {
         // If it's been running for at least 2 seconds, consider it ready
         const startedAt = new Date(inspect.State.StartedAt).getTime();
         const uptime = Date.now() - startedAt;
-        
+
         if (uptime >= 2000) {
           return;
         }
@@ -151,10 +154,10 @@ const waitForTraefikReady = async (dockerClient: any, containerName: string): Pr
     } catch (error) {
       // Container not ready yet
     }
-    
+
     await new Promise((resolve) => setTimeout(resolve, checkInterval));
   }
-  
+
   console.warn("Traefik health check timeout - proceeding anyway");
 };
 
