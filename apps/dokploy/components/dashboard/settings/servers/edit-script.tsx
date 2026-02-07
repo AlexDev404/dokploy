@@ -64,6 +64,7 @@ export const EditScript = ({ serverId }: Props) => {
 		defaultValues: {
 			command: "",
 		},
+		// @ts-ignore - Zod v4 type inference issue with standardSchemaResolver
 		resolver: standardSchemaResolver(schema),
 	});
 

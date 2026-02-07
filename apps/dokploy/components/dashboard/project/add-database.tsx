@@ -208,6 +208,7 @@ export const AddDatabase = ({ environmentId, projectName }: Props) => {
 			databaseUser: "",
 			serverId: null,
 		},
+		// @ts-ignore - Zod v4 type inference issue with standardSchemaResolver
 		resolver: standardSchemaResolver(mySchema),
 	});
 	const type = form.watch("type");

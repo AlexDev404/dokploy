@@ -102,6 +102,7 @@ export const UpdateVolume = ({
 			hostPath: "",
 			mountPath: "",
 		},
+		// @ts-ignore - Zod v4 type inference issue with standardSchemaResolver
 		resolver: standardSchemaResolver(mySchema),
 	});
 

@@ -77,6 +77,7 @@ export const HandlePorts = ({
 			publishedPort: 0,
 			targetPort: 0,
 		},
+		// @ts-ignore - Zod v4 type inference issue with standardSchemaResolver
 		resolver: standardSchemaResolver(AddPortSchema),
 	});
 

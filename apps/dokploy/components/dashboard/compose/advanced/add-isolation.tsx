@@ -64,6 +64,7 @@ export const IsolatedDeploymentTab = ({ composeId }: Props) => {
 		defaultValues: {
 			isolatedDeployment: false,
 		},
+		// @ts-ignore - Zod v4 type inference issue with standardSchemaResolver
 		resolver: standardSchemaResolver(isolatedSchema),
 	});
 

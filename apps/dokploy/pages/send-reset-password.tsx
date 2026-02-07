@@ -54,6 +54,7 @@ export default function Home() {
 		defaultValues: {
 			email: "",
 		},
+		// @ts-ignore - Zod v4 type inference issue with standardSchemaResolver
 		resolver: standardSchemaResolver(loginSchema),
 	});
 

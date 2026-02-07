@@ -36,6 +36,7 @@ export function SignInWithSSO({ children }: SignInWithSSOProps) {
 	const [expanded, setExpanded] = useState(false);
 
 	const form = useForm<SSOEmailForm>({
+		// @ts-ignore - Zod v4 type inference issue with standardSchemaResolver
 		resolver: standardSchemaResolver(ssoEmailSchema),
 		defaultValues: { email: "" },
 	});

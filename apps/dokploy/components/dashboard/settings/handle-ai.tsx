@@ -74,6 +74,7 @@ export const HandleAi = ({ aiId }: Props) => {
 		: api.ai.create.useMutation();
 
 	const form = useForm<Schema>({
+		// @ts-ignore - Zod v4 type inference issue with standardSchemaResolver
 		resolver: standardSchemaResolver(Schema),
 		defaultValues: {
 			name: "",

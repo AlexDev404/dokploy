@@ -100,6 +100,7 @@ export const AddApiKey = () => {
 	});
 
 	const form = useForm<FormValues>({
+		// @ts-ignore - Zod v4 type inference issue with standardSchemaResolver
 		resolver: standardSchemaResolver(formSchema),
 		defaultValues: {
 			name: "",

@@ -68,6 +68,7 @@ export const EditBitbucketProvider = ({ bitbucketId }: Props) => {
 			apiToken: "",
 			appPassword: "",
 		},
+		// @ts-ignore - Zod v4 type inference issue with standardSchemaResolver
 		resolver: standardSchemaResolver(Schema),
 	});
 

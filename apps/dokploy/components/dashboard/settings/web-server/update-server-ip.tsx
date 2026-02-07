@@ -56,6 +56,7 @@ export const UpdateServerIp = ({ children }: Props) => {
 		defaultValues: {
 			serverIp: data?.serverIp || "",
 		},
+		// @ts-ignore - Zod v4 type inference issue with standardSchemaResolver
 		resolver: standardSchemaResolver(schema),
 	});
 

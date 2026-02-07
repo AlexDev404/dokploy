@@ -59,6 +59,7 @@ export function AddOrganization({ organizationId }: Props) {
 		authClient.useActiveOrganization();
 
 	const form = useForm<OrganizationFormValues>({
+		// @ts-ignore - Zod v4 type inference issue with standardSchemaResolver
 		resolver: standardSchemaResolver(organizationSchema),
 		defaultValues: {
 			name: "",

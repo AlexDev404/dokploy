@@ -73,6 +73,7 @@ export const UpdateTraefikConfig = ({ applicationId }: Props) => {
 		defaultValues: {
 			traefikConfig: "",
 		},
+		// @ts-ignore - Zod v4 type inference issue with standardSchemaResolver
 		resolver: standardSchemaResolver(UpdateTraefikConfigSchema),
 	});
 

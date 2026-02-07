@@ -58,6 +58,7 @@ export const AddCommandCompose = ({ composeId }: Props) => {
 		defaultValues: {
 			command: "",
 		},
+		// @ts-ignore - Zod v4 type inference issue with standardSchemaResolver
 		resolver: standardSchemaResolver(AddRedirectSchema),
 	});
 

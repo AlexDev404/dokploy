@@ -204,6 +204,7 @@ export const AddUserPermissions = ({ userId }: Props) => {
 			canAccessToGitProviders: false,
 			canCreateEnvironments: false,
 		},
+		// @ts-ignore - Zod v4 type inference issue with standardSchemaResolver
 		resolver: standardSchemaResolver(addPermissions),
 	});
 

@@ -90,6 +90,7 @@ export const SaveBitbucketProviderCompose = ({ composeId }: Props) => {
 			watchPaths: [],
 			enableSubmodules: false,
 		},
+		// @ts-ignore - Zod v4 type inference issue with standardSchemaResolver
 		resolver: standardSchemaResolver(BitbucketProviderSchema),
 	});
 

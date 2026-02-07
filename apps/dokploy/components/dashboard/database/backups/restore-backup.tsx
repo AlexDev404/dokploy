@@ -229,6 +229,7 @@ export const RestoreBackup = ({
 			backupType: backupType,
 			metadata: {},
 		},
+		// @ts-ignore - Zod v4 type inference issue with standardSchemaResolver
 		resolver: standardSchemaResolver(RestoreBackupSchema),
 	});
 

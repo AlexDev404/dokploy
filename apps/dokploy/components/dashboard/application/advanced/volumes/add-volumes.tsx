@@ -93,6 +93,7 @@ export const AddVolumes = ({
 			hostPath: "",
 			mountPath: serviceType === "compose" ? "/" : "",
 		},
+		// @ts-ignore - Zod v4 type inference issue with standardSchemaResolver
 		resolver: standardSchemaResolver(mySchema),
 	});
 	const type = form.watch("type");

@@ -56,6 +56,7 @@ export const EnvironmentVariables = ({ environmentId, children }: Props) => {
 		defaultValues: {
 			env: data?.env ?? "",
 		},
+		// @ts-ignore - Zod v4 type inference issue with standardSchemaResolver
 		resolver: standardSchemaResolver(updateEnvironmentSchema),
 	});
 

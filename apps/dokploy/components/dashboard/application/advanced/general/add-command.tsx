@@ -57,6 +57,7 @@ export const AddCommand = ({ applicationId }: Props) => {
 			command: "",
 			args: [],
 		},
+		// @ts-ignore - Zod v4 type inference issue with standardSchemaResolver
 		resolver: standardSchemaResolver(AddRedirectSchema),
 	});
 

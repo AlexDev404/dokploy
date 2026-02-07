@@ -220,6 +220,7 @@ export const HandleBackup = ({
 			backupType: backupType,
 			metadata: {},
 		},
+		// @ts-ignore - Zod v4 type inference issue with standardSchemaResolver
 		resolver: standardSchemaResolver(Schema),
 	});
 

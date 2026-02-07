@@ -78,6 +78,7 @@ export const WebDomain = () => {
 			letsEncryptEmail: "",
 			https: false,
 		},
+		// @ts-ignore - Zod v4 type inference issue with standardSchemaResolver
 		resolver: standardSchemaResolver(addServerDomain),
 	});
 	const https = form.watch("https");

@@ -125,6 +125,7 @@ export const HandleRegistry = ({ registryId }: Props) => {
 			serverId: "",
 			isEditing: !!registryId,
 		},
+		// @ts-ignore - Zod v4 type inference issue with standardSchemaResolver
 		resolver: standardSchemaResolver(
 			AddRegistrySchema.refine(
 				(data) => {

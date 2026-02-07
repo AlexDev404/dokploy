@@ -90,6 +90,7 @@ export const EditGiteaProvider = ({ giteaId }: Props) => {
 	}, [router.query, router.isReady, refetch]);
 
 	const form = useForm<z.infer<typeof formSchema>>({
+		// @ts-ignore - Zod v4 type inference issue with standardSchemaResolver
 		resolver: standardSchemaResolver(formSchema),
 		defaultValues: {
 			name: "",

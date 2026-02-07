@@ -51,6 +51,7 @@ export const EditTraefikEnv = ({ children, serverId }: Props) => {
 			env: data || "",
 		},
 		disabled: canEdit,
+		// @ts-ignore - Zod v4 type inference issue with standardSchemaResolver
 		resolver: standardSchemaResolver(schema),
 	});
 

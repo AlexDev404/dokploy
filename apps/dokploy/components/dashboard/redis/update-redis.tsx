@@ -57,6 +57,7 @@ export const UpdateRedis = ({ redisId }: Props) => {
 			description: data?.description ?? "",
 			name: data?.name ?? "",
 		},
+		// @ts-ignore - Zod v4 type inference issue with standardSchemaResolver
 		resolver: standardSchemaResolver(updateRedisSchema),
 	});
 	useEffect(() => {

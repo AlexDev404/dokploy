@@ -68,6 +68,7 @@ export default function Home({ IS_CLOUD }: Props) {
 	const [isBackupCodeModalOpen, setIsBackupCodeModalOpen] = useState(false);
 	const [backupCode, setBackupCode] = useState("");
 	const loginForm = useForm<LoginForm>({
+		// @ts-ignore - Zod v4 type inference issue with standardSchemaResolver
 		resolver: standardSchemaResolver(LoginSchema),
 		defaultValues: {
 			email: "",

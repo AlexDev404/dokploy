@@ -94,6 +94,7 @@ export const AddCompose = ({ environmentId, projectName }: Props) => {
 			composeType: "docker-compose",
 			appName: `${slug}-`,
 		},
+		// @ts-ignore - Zod v4 type inference issue with standardSchemaResolver
 		resolver: standardSchemaResolver(AddComposeSchema),
 	});
 

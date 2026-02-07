@@ -56,6 +56,7 @@ export const ChangeRole = ({ memberId, currentRole, userEmail }: Props) => {
 		defaultValues: {
 			role: currentRole,
 		},
+		// @ts-ignore - Zod v4 type inference issue with standardSchemaResolver
 		resolver: standardSchemaResolver(changeRoleSchema),
 	});
 

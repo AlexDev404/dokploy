@@ -179,6 +179,7 @@ export const ShowBuildChooseForm = ({ applicationId }: Props) => {
 		defaultValues: {
 			buildType: BuildType.nixpacks,
 		},
+		// @ts-ignore - Zod v4 type inference issue with standardSchemaResolver
 		resolver: standardSchemaResolver(mySchema),
 	});
 

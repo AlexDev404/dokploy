@@ -122,6 +122,7 @@ export const SetupMonitoring = ({ serverId }: Props) => {
 	const services = extractServicesFromProjects();
 
 	const form = useForm<Schema>({
+		// @ts-ignore - Zod v4 type inference issue with standardSchemaResolver
 		resolver: standardSchemaResolver(Schema),
 		defaultValues: {
 			metricsConfig: {

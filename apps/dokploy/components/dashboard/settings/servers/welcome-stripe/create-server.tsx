@@ -69,6 +69,7 @@ export const CreateServer = ({ stepper }: Props) => {
 			username: "root",
 			sshKeyId: cloudSSHKey?.sshKeyId || "",
 		},
+		// @ts-ignore - Zod v4 type inference issue with standardSchemaResolver
 		resolver: standardSchemaResolver(Schema),
 	});
 

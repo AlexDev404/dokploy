@@ -56,6 +56,7 @@ export const ShowTraefikFile = ({ path, serverId }: Props) => {
 			traefikConfig: "",
 		},
 		disabled: canEdit,
+		// @ts-ignore - Zod v4 type inference issue with standardSchemaResolver
 		resolver: standardSchemaResolver(UpdateServerMiddlewareConfigSchema),
 	});
 

@@ -60,6 +60,7 @@ export const EditGithubProvider = ({ githubId }: Props) => {
 			name: "",
 			appName: "",
 		},
+		// @ts-ignore - Zod v4 type inference issue with standardSchemaResolver
 		resolver: standardSchemaResolver(Schema),
 	});
 

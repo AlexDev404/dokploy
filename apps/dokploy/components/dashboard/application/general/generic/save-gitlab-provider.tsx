@@ -90,6 +90,7 @@ export const SaveGitlabProvider = ({ applicationId }: Props) => {
 			branch: "",
 			enableSubmodules: false,
 		},
+		// @ts-ignore - Zod v4 type inference issue with standardSchemaResolver
 		resolver: standardSchemaResolver(GitlabProviderSchema),
 	});
 

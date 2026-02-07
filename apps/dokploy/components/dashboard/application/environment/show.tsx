@@ -50,6 +50,7 @@ export const ShowEnvironment = ({ applicationId }: Props) => {
 			buildSecrets: "",
 			createEnvFile: true,
 		},
+		// @ts-ignore - Zod v4 type inference issue with standardSchemaResolver
 		resolver: standardSchemaResolver(addEnvironmentSchema),
 	});
 

@@ -97,6 +97,7 @@ export const ShowPreviewSettings = ({ applicationId }: Props) => {
 			previewCertificateType: "none",
 			previewRequireCollaboratorPermissions: true,
 		},
+		// @ts-ignore - Zod v4 type inference issue with standardSchemaResolver
 		resolver: standardSchemaResolver(schema),
 	});
 

@@ -90,6 +90,7 @@ export const AddApplication = ({ environmentId, projectName }: Props) => {
 			appName: `${slug}-`,
 			description: "",
 		},
+		// @ts-ignore - Zod v4 type inference issue with standardSchemaResolver
 		resolver: standardSchemaResolver(AddTemplateSchema),
 	});
 

@@ -131,6 +131,7 @@ export const Enable2FA = () => {
 	};
 
 	const passwordForm = useForm<PasswordForm>({
+		// @ts-ignore - Zod v4 type inference issue with standardSchemaResolver
 		resolver: standardSchemaResolver(PasswordSchema),
 		defaultValues: {
 			password: "",
@@ -138,6 +139,7 @@ export const Enable2FA = () => {
 	});
 
 	const pinForm = useForm<PinForm>({
+		// @ts-ignore - Zod v4 type inference issue with standardSchemaResolver
 		resolver: standardSchemaResolver(PinSchema),
 		defaultValues: {
 			pin: "",

@@ -63,6 +63,7 @@ export const AddInvitation = () => {
 			role: "member",
 			notificationId: "",
 		},
+		// @ts-ignore - Zod v4 type inference issue with standardSchemaResolver
 		resolver: standardSchemaResolver(addInvitation),
 	});
 	useEffect(() => {

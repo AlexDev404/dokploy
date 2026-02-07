@@ -57,6 +57,7 @@ export const UpdateMysql = ({ mysqlId }: Props) => {
 			description: data?.description ?? "",
 			name: data?.name ?? "",
 		},
+		// @ts-ignore - Zod v4 type inference issue with standardSchemaResolver
 		resolver: standardSchemaResolver(updateMysqlSchema),
 	});
 	useEffect(() => {

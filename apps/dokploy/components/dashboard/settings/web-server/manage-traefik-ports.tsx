@@ -59,6 +59,7 @@ export const ManageTraefikPorts = ({ children, serverId }: Props) => {
 	const [open, setOpen] = useState(false);
 
 	const form = useForm<TraefikPortsForm>({
+		// @ts-ignore - Zod v4 type inference issue with standardSchemaResolver
 		resolver: standardSchemaResolver(TraefikPortsSchema),
 		defaultValues: {
 			ports: [],

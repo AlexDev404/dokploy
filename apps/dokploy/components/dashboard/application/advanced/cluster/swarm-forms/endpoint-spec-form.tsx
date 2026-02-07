@@ -63,6 +63,7 @@ export const EndpointSpecForm = ({ id, type }: EndpointSpecFormProps) => {
 		: api.mongo.update.useMutation();
 
 	const form = useForm<any>({
+		// @ts-ignore - Zod v4 type inference issue with standardSchemaResolver
 		resolver: standardSchemaResolver(endpointSpecFormSchema),
 		defaultValues: {
 			Mode: undefined,

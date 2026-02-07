@@ -41,6 +41,7 @@ export const ComposeFileEditor = ({ composeId }: Props) => {
 		defaultValues: {
 			composeFile: "",
 		},
+		// @ts-ignore - Zod v4 type inference issue with standardSchemaResolver
 		resolver: standardSchemaResolver(AddComposeFile),
 	});
 

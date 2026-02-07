@@ -117,6 +117,7 @@ export const HandleVolumeBackups = ({
 
 	const utils = api.useUtils();
 	const form = useForm<z.infer<typeof formSchema>>({
+		// @ts-ignore - Zod v4 type inference issue with standardSchemaResolver
 		resolver: standardSchemaResolver(formSchema),
 		defaultValues: {
 			name: "",

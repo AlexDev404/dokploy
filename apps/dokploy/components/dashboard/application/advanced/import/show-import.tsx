@@ -81,6 +81,7 @@ export const ShowImport = ({ composeId }: Props) => {
 		defaultValues: {
 			base64: "",
 		},
+		// @ts-ignore - Zod v4 type inference issue with standardSchemaResolver
 		resolver: standardSchemaResolver(ImportSchema),
 	});
 

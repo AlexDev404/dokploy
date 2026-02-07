@@ -29,6 +29,7 @@ export const SaveDragNDrop = ({ applicationId }: Props) => {
 
 	const form = useForm<UploadFile>({
 		defaultValues: {},
+		// @ts-ignore - Zod v4 type inference issue with standardSchemaResolver
 		resolver: standardSchemaResolver(uploadFileSchema),
 	});
 

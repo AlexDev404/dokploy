@@ -90,6 +90,7 @@ export const HandleDestinations = ({ destinationId }: Props) => {
 			secretAccessKey: "",
 			endpoint: "",
 		},
+		// @ts-ignore - Zod v4 type inference issue with standardSchemaResolver
 		resolver: standardSchemaResolver(addDestination),
 	});
 	useEffect(() => {

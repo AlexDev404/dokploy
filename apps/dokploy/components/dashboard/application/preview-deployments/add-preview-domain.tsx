@@ -83,6 +83,7 @@ export const AddPreviewDomain = ({
 		api.domain.generateDomain.useMutation();
 
 	const form = useForm<Domain>({
+		// @ts-ignore - Zod v4 type inference issue with standardSchemaResolver
 		resolver: standardSchemaResolver(domain),
 	});
 

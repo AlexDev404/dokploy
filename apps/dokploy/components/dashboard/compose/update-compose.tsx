@@ -58,6 +58,7 @@ export const UpdateCompose = ({ composeId }: Props) => {
 			description: data?.description ?? "",
 			name: data?.name ?? "",
 		},
+		// @ts-ignore - Zod v4 type inference issue with standardSchemaResolver
 		resolver: standardSchemaResolver(updateComposeSchema),
 	});
 	useEffect(() => {

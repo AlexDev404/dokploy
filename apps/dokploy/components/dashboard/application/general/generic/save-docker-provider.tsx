@@ -41,6 +41,7 @@ export const SaveDockerProvider = ({ applicationId }: Props) => {
 			username: "",
 			registryURL: "",
 		},
+		// @ts-ignore - Zod v4 type inference issue with standardSchemaResolver
 		resolver: standardSchemaResolver(DockerProviderSchema),
 	});
 

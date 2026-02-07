@@ -55,6 +55,7 @@ export const ShowExternalPostgresCredentials = ({ postgresId }: Props) => {
 
 	const form = useForm<DockerProvider>({
 		defaultValues: {},
+		// @ts-ignore - Zod v4 type inference issue with standardSchemaResolver
 		resolver: standardSchemaResolver(DockerProviderSchema),
 	});
 

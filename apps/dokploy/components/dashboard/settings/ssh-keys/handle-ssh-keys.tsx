@@ -55,6 +55,7 @@ export const HandleSSHKeys = ({ sshKeyId }: Props) => {
 	const generateMutation = api.sshKey.generate.useMutation();
 
 	const form = useForm<SSHKey>({
+		// @ts-ignore - Zod v4 type inference issue with standardSchemaResolver
 		resolver: standardSchemaResolver(sshKeyCreate),
 		defaultValues: {
 			name: "",

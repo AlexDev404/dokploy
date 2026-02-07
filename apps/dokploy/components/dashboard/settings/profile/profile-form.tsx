@@ -94,6 +94,7 @@ export const ProfileForm = () => {
 			firstName: data?.user?.firstName || "",
 			lastName: data?.user?.lastName || "",
 		},
+		// @ts-ignore - Zod v4 type inference issue with standardSchemaResolver
 		resolver: standardSchemaResolver(profileSchema),
 	});
 

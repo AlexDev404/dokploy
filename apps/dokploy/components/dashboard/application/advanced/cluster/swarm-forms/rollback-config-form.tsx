@@ -69,6 +69,7 @@ export const RollbackConfigForm = ({ id, type }: RollbackConfigFormProps) => {
 		: api.mongo.update.useMutation();
 
 	const form = useForm<any>({
+		// @ts-ignore - Zod v4 type inference issue with standardSchemaResolver
 		resolver: standardSchemaResolver(rollbackConfigFormSchema),
 		defaultValues: {
 			Parallelism: undefined,

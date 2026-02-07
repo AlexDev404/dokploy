@@ -78,6 +78,7 @@ export const AddCertificate = () => {
 			privateKey: "",
 			autoRenew: false,
 		},
+		// @ts-ignore - Zod v4 type inference issue with standardSchemaResolver
 		resolver: standardSchemaResolver(addCertificate),
 	});
 	useEffect(() => {

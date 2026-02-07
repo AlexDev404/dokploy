@@ -57,6 +57,7 @@ export const UpdateMariadb = ({ mariadbId }: Props) => {
 			description: data?.description ?? "",
 			name: data?.name ?? "",
 		},
+		// @ts-ignore - Zod v4 type inference issue with standardSchemaResolver
 		resolver: standardSchemaResolver(updateMariadbSchema),
 	});
 	useEffect(() => {

@@ -68,6 +68,7 @@ export const ShowEnvironment = ({ id, type }: Props) => {
 		defaultValues: {
 			environment: "",
 		},
+		// @ts-ignore - Zod v4 type inference issue with standardSchemaResolver
 		resolver: standardSchemaResolver(addEnvironmentSchema),
 	});
 

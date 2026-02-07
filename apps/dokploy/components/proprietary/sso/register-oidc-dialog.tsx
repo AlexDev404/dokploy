@@ -76,6 +76,7 @@ export function RegisterOidcDialog({ children }: RegisterOidcDialogProps) {
 	const { mutateAsync, isLoading } = api.sso.register.useMutation();
 
 	const form = useForm<OidcProviderForm>({
+		// @ts-ignore - Zod v4 type inference issue with standardSchemaResolver
 		resolver: standardSchemaResolver(oidcProviderSchema),
 		defaultValues: formDefaultValues,
 	});

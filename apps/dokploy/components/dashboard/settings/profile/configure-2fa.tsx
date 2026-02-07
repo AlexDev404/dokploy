@@ -70,6 +70,7 @@ export const Configure2FA = () => {
 	const [isRegenerating, setIsRegenerating] = useState(false);
 
 	const form = useForm<PasswordForm>({
+		// @ts-ignore - Zod v4 type inference issue with standardSchemaResolver
 		resolver: standardSchemaResolver(PasswordSchema),
 		defaultValues: {
 			password: "",
