@@ -5,26 +5,46 @@ import * as schema from "./schema";
 import { sanitizeDbUrl } from "./utils";
 
 declare global {
-	var db: PostgresJsDatabase<typeof schema> | undefined;
+  var db: PostgresJsDatabase<typeof schema> | undefined;
 }
 
-// Log database connection for debugging (only in non-production or when DEBUG is set)
-if (process.env.NODE_ENV !== "production" || process.env.DEBUG) {
-	console.log(`[RUNTIME] Connecting to database: ${sanitizeDbUrl(dbUrl)}`);
+let _db: PostgresJsDatabase<typeof schema> | undefined;
+
+function getDbInstance(): PostgresJsDatabase<typeof schema> {
+  if (_db) return _db;
+
+  try {
+    if (process.env.NODE_ENV === "production") {
+      if (process.env.DEBUG) {
+        console.log(`[DB] Connecting to database: ${sanitizeDbUrl(dbUrl)}`);
+      }
+      _db = drizzle(postgres(dbUrl), { schema });
+    } else {
+      if (!global.db) {
+        if (process.env.DEBUG || process.env.NODE_ENV !== "production") {
+          console.log(
+            `[RUNTIME] Connecting to database: ${sanitizeDbUrl(dbUrl)}`,
+          );
+        }
+        global.db = drizzle(postgres(dbUrl), { schema });
+      }
+      _db = global.db;
+    }
+  } catch (error) {
+    console.error(
+      "[@DOKPLOY] A caller tried to connect to the database:",
+      error,
+    );
+    throw error; // Rethrow to prevent starting the app in a broken state
+  }
+  return _db;
 }
 
-export let db: PostgresJsDatabase<typeof schema>;
-if (process.env.NODE_ENV === "production") {
-	db = drizzle(postgres(dbUrl), {
-		schema,
-	});
-} else {
-	if (!global.db)
-		global.db = drizzle(postgres(dbUrl), {
-			schema,
-		});
-
-	db = global.db;
-}
+// Export as a getter - only runs when accessed
+export const db = new Proxy({} as PostgresJsDatabase<typeof schema>, {
+  get(_, prop) {
+    return getDbInstance()[prop as keyof PostgresJsDatabase<typeof schema>];
+  },
+});
 
 export { dbUrl };
