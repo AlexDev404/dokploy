@@ -56,7 +56,7 @@ export const EditGitlabProvider = ({ gitlabId }: Props) => {
 	const { mutateAsync, error, isError } = api.gitlab.update.useMutation();
 	const { mutateAsync: testConnection, isLoading } =
 		api.gitlab.testConnection.useMutation();
-	const form = useForm<Schema>({
+	const form = useForm({
 		defaultValues: {
 			groupName: "",
 			name: "",

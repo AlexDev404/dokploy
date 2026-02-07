@@ -61,7 +61,7 @@ export const SaveGitProvider = ({ applicationId }: Props) => {
 	const { mutateAsync, isLoading } =
 		api.application.saveGitProvider.useMutation();
 
-	const form = useForm<GitProvider>({
+	const form = useForm({
 		defaultValues: {
 			branch: "",
 			buildPath: "/",

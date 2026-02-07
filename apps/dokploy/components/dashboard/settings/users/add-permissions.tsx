@@ -187,7 +187,7 @@ export const AddUserPermissions = ({ userId }: Props) => {
 	const { mutateAsync, isError, error, isLoading } =
 		api.user.assignPermissions.useMutation();
 
-	const form = useForm<AddPermissions>({
+	const form = useForm({
 		defaultValues: {
 			accessedProjects: [],
 			accessedEnvironments: [],

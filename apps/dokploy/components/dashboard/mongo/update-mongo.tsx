@@ -53,7 +53,7 @@ export const UpdateMongo = ({ mongoId }: Props) => {
 			enabled: !!mongoId,
 		},
 	);
-	const form = useForm<UpdateMongo>({
+	const form = useForm({
 		defaultValues: {
 			description: data?.description ?? "",
 			name: data?.name ?? "",

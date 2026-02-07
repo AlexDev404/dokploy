@@ -84,7 +84,7 @@ export const AddApplication = ({ environmentId, projectName }: Props) => {
 	const { mutateAsync, isLoading, error, isError } =
 		api.application.create.useMutation();
 
-	const form = useForm<AddTemplate>({
+	const form = useForm({
 		defaultValues: {
 			name: "",
 			appName: `${slug}-`,

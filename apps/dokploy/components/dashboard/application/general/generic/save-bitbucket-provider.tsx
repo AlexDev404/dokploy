@@ -77,7 +77,7 @@ export const SaveBitbucketProvider = ({ applicationId }: Props) => {
 	const { mutateAsync, isLoading: isSavingBitbucketProvider } =
 		api.application.saveBitbucketProvider.useMutation();
 
-	const form = useForm<BitbucketProvider>({
+	const form = useForm({
 		defaultValues: {
 			buildPath: "/",
 			repository: {

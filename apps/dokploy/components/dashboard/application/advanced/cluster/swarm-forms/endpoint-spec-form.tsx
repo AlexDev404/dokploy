@@ -62,7 +62,7 @@ export const EndpointSpecForm = ({ id, type }: EndpointSpecFormProps) => {
 		? mutationMap[type]()
 		: api.mongo.update.useMutation();
 
-	const form = useForm<any>({
+	const form = useForm({
 		resolver: zodResolver(endpointSpecFormSchema),
 		defaultValues: {
 			Mode: undefined,

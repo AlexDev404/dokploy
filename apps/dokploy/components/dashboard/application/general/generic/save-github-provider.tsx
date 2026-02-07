@@ -75,7 +75,7 @@ export const SaveGithubProvider = ({ applicationId }: Props) => {
 	const { mutateAsync, isLoading: isSavingGithubProvider } =
 		api.application.saveGithubProvider.useMutation();
 
-	const form = useForm<GithubProvider>({
+	const form = useForm({
 		defaultValues: {
 			buildPath: "/",
 			repository: {

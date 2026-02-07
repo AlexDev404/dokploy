@@ -130,14 +130,14 @@ export const Enable2FA = () => {
 		}
 	};
 
-	const passwordForm = useForm<PasswordForm>({
+	const passwordForm = useForm({
 		resolver: zodResolver(PasswordSchema),
 		defaultValues: {
 			password: "",
 		},
 	});
 
-	const pinForm = useForm<PinForm>({
+	const pinForm = useForm({
 		resolver: zodResolver(PinSchema),
 		defaultValues: {
 			pin: "",

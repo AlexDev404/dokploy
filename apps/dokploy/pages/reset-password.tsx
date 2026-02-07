@@ -57,7 +57,7 @@ export default function Home({ tokenResetPassword }: Props) {
 	const [isLoading, setIsLoading] = useState(false);
 	const [error, setError] = useState<string | null>(null);
 	const router = useRouter();
-	const form = useForm<Login>({
+	const form = useForm({
 		defaultValues: {
 			password: "",
 			confirmPassword: "",

@@ -67,7 +67,7 @@ export default function Home({ IS_CLOUD }: Props) {
 	const [twoFactorCode, setTwoFactorCode] = useState("");
 	const [isBackupCodeModalOpen, setIsBackupCodeModalOpen] = useState(false);
 	const [backupCode, setBackupCode] = useState("");
-	const loginForm = useForm<LoginForm>({
+	const loginForm = useForm({
 		resolver: zodResolver(LoginSchema),
 		defaultValues: {
 			email: "",

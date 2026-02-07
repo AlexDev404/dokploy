@@ -54,7 +54,7 @@ interface Props {
 const LocalServerConfig = ({ onSave }: Props) => {
 	const { t } = useTranslation("settings");
 
-	const form = useForm<Schema>({
+	const form = useForm({
 		defaultValues: getLocalServerData(),
 		resolver: zodResolver(Schema),
 	});

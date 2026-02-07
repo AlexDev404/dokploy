@@ -121,7 +121,7 @@ export const SetupMonitoring = ({ serverId }: Props) => {
 
 	const services = extractServicesFromProjects();
 
-	const form = useForm<Schema>({
+	const form = useForm({
 		resolver: zodResolver(Schema),
 		defaultValues: {
 			metricsConfig: {

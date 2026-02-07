@@ -52,7 +52,7 @@ export const EnvironmentVariables = ({ environmentId, children }: Props) => {
 		},
 	);
 
-	const form = useForm<UpdateEnvironment>({
+	const form = useForm({
 		defaultValues: {
 			env: data?.env ?? "",
 		},

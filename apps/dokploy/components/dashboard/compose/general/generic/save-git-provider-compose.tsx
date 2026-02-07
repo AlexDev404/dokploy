@@ -60,7 +60,7 @@ export const SaveGitProviderCompose = ({ composeId }: Props) => {
 
 	const { mutateAsync, isLoading } = api.compose.update.useMutation();
 
-	const form = useForm<GitProvider>({
+	const form = useForm({
 		defaultValues: {
 			branch: "",
 			repositoryURL: "",

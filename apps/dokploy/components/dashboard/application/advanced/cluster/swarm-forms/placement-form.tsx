@@ -68,7 +68,7 @@ export const PlacementForm = ({ id, type }: PlacementFormProps) => {
 		? mutationMap[type]()
 		: api.mongo.update.useMutation();
 
-	const form = useForm<any>({
+	const form = useForm({
 		resolver: zodResolver(placementFormSchema),
 		defaultValues: {
 			Constraints: [],

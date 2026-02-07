@@ -69,7 +69,7 @@ export const UpdateTraefikConfig = ({ applicationId }: Props) => {
 	const { mutateAsync, isLoading, error, isError } =
 		api.application.updateTraefikConfig.useMutation();
 
-	const form = useForm<UpdateTraefikConfig>({
+	const form = useForm({
 		defaultValues: {
 			traefikConfig: "",
 		},

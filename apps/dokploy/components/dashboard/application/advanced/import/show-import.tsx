@@ -77,7 +77,7 @@ export const ShowImport = ({ composeId }: Props) => {
 		isSuccess: isImportSuccess,
 	} = api.compose.import.useMutation();
 
-	const form = useForm<ImportType>({
+	const form = useForm({
 		defaultValues: {
 			base64: "",
 		},

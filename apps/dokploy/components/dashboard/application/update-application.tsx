@@ -53,7 +53,7 @@ export const UpdateApplication = ({ applicationId }: Props) => {
 			enabled: !!applicationId,
 		},
 	);
-	const form = useForm<UpdateApplication>({
+	const form = useForm({
 		defaultValues: {
 			description: data?.description ?? "",
 			name: data?.name ?? "",

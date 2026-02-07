@@ -71,7 +71,7 @@ export const WebDomain = () => {
 	const { mutateAsync, isLoading } =
 		api.settings.assignDomainServer.useMutation();
 
-	const form = useForm<AddServerDomain>({
+	const form = useForm({
 		defaultValues: {
 			domain: "",
 			certificateType: "none",

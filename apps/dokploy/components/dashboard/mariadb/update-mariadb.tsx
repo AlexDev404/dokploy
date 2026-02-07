@@ -52,7 +52,7 @@ export const UpdateMariadb = ({ mariadbId }: Props) => {
 			enabled: !!mariadbId,
 		},
 	);
-	const form = useForm<UpdateMariadb>({
+	const form = useForm({
 		defaultValues: {
 			description: data?.description ?? "",
 			name: data?.name ?? "",

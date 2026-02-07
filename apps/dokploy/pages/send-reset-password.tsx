@@ -50,7 +50,7 @@ export default function Home() {
 	const [error, setError] = useState<string | null>(null);
 	const [isLoading, setIsLoading] = useState(false);
 	const _router = useRouter();
-	const form = useForm<Login>({
+	const form = useForm({
 		defaultValues: {
 			email: "",
 		},

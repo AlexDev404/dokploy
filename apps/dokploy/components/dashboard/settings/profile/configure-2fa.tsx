@@ -69,7 +69,7 @@ export const Configure2FA = () => {
 	const [isDisabling, setIsDisabling] = useState(false);
 	const [isRegenerating, setIsRegenerating] = useState(false);
 
-	const form = useForm<PasswordForm>({
+	const form = useForm({
 		resolver: zodResolver(PasswordSchema),
 		defaultValues: {
 			password: "",

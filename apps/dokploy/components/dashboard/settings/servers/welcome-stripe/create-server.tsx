@@ -60,7 +60,7 @@ export const CreateServer = ({ stepper }: Props) => {
 		(sshKey) => sshKey.name === "dokploy-cloud-ssh-key",
 	);
 
-	const form = useForm<Schema>({
+	const form = useForm({
 		defaultValues: {
 			description: "Dokploy Cloud Server",
 			name: "My First Server",

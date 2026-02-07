@@ -60,7 +60,7 @@ export const IsolatedDeploymentTab = ({ composeId }: Props) => {
 		{ enabled: !!composeId },
 	);
 
-	const form = useForm<IsolatedSchema>({
+	const form = useForm({
 		defaultValues: {
 			isolatedDeployment: false,
 		},

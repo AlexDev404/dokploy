@@ -188,7 +188,7 @@ export const AddDomain = ({ id, type, domainId = "", children }: Props) => {
 		},
 	);
 
-	const form = useForm<Domain>({
+	const form = useForm({
 		resolver: zodResolver(domain),
 		defaultValues: {
 			host: "",

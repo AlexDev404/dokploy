@@ -52,7 +52,7 @@ export const ShowExternalRedisCredentials = ({ redisId }: Props) => {
 	const [connectionUrl, setConnectionUrl] = useState("");
 	const getIp = data?.server?.ipAddress || ip;
 
-	const form = useForm<DockerProvider>({
+	const form = useForm({
 		defaultValues: {},
 		resolver: zodResolver(DockerProviderSchema),
 	});

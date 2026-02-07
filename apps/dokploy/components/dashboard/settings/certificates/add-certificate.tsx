@@ -71,7 +71,7 @@ export const AddCertificate = () => {
 	// Self-hosted: show only if there are remote servers (Dokploy is default, hide if no remote servers)
 	const shouldShowServerDropdown = hasServers;
 
-	const form = useForm<AddCertificate>({
+	const form = useForm({
 		defaultValues: {
 			name: "",
 			certificateData: "",

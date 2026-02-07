@@ -83,7 +83,7 @@ export function RegisterSamlDialog({ children }: RegisterSamlDialogProps) {
 		}
 	}, []);
 
-	const form = useForm<SamlProviderForm>({
+	const form = useForm({
 		resolver: zodResolver(samlProviderSchema),
 		defaultValues: formDefaultValues,
 	});
