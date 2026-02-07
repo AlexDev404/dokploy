@@ -126,9 +126,14 @@ handle_sigterm() {
     
     [ -n "$APP_PID" ] && kill -0 $APP_PID 2>/dev/null && kill -TERM $APP_PID
     
-    if [ "$MODE" = "dind" ] && [ -n "$DOCKERD_PID" ]; then
+    if [ "$MODE" = "dind" ]; then
+        echo "[Dokploy-Init] Running DIND shutdown sequence"
+        rm -f /var/run/docker.pid
+        docker stop $(docker ps -q)
+        killall dockerd
         killall containerd
         kill -TERM $DOCKERD_PID 2>/dev/null || true
+        sleep 5
     fi
     
     exit 0
