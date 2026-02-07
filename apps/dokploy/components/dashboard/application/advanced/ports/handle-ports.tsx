@@ -1,4 +1,4 @@
-import { zodResolver } from "@hookform/resolvers/zod";
+import { standardSchemaResolver } from "@hookform/resolvers/standard-schema";
 import { PenBoxIcon, PlusIcon } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useForm, useWatch } from "react-hook-form";
@@ -36,11 +36,11 @@ import { api } from "@/utils/api";
 const AddPortSchema = z.object({
 	publishedPort: z.number().int().min(1).max(65535),
 	publishMode: z.enum(["ingress", "host"], {
-		required_error: "Publish mode is required",
+		error: "Publish mode is required",
 	}),
 	targetPort: z.number().int().min(1).max(65535),
 	protocol: z.enum(["tcp", "udp"], {
-		required_error: "Protocol is required",
+		error: "Protocol is required",
 	}),
 });
 
@@ -77,7 +77,7 @@ export const HandlePorts = ({
 			publishedPort: 0,
 			targetPort: 0,
 		},
-		resolver: zodResolver(AddPortSchema),
+		resolver: standardSchemaResolver(AddPortSchema),
 	});
 
 	const publishMode = useWatch({

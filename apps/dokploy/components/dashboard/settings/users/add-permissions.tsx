@@ -1,4 +1,4 @@
-import { zodResolver } from "@hookform/resolvers/zod";
+import { standardSchemaResolver } from "@hookform/resolvers/standard-schema";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
@@ -204,7 +204,7 @@ export const AddUserPermissions = ({ userId }: Props) => {
 			canAccessToGitProviders: false,
 			canCreateEnvironments: false,
 		},
-		resolver: zodResolver(addPermissions),
+		resolver: standardSchemaResolver(addPermissions),
 	});
 
 	useEffect(() => {

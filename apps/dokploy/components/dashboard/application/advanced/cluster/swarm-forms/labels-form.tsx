@@ -1,4 +1,4 @@
-import { zodResolver } from "@hookform/resolvers/zod";
+import { standardSchemaResolver } from "@hookform/resolvers/standard-schema";
 import { useEffect, useState } from "react";
 import { useFieldArray, useForm } from "react-hook-form";
 import { toast } from "sonner";
@@ -64,7 +64,7 @@ export const LabelsForm = ({ id, type }: LabelsFormProps) => {
 		: api.mongo.update.useMutation();
 
 	const form = useForm<any>({
-		resolver: zodResolver(labelsFormSchema),
+		resolver: standardSchemaResolver(labelsFormSchema),
 		defaultValues: {
 			labels: [],
 		},

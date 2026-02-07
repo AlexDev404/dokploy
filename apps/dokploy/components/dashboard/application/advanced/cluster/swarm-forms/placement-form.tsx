@@ -1,4 +1,4 @@
-import { zodResolver } from "@hookform/resolvers/zod";
+import { standardSchemaResolver } from "@hookform/resolvers/standard-schema";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
@@ -69,7 +69,7 @@ export const PlacementForm = ({ id, type }: PlacementFormProps) => {
 		: api.mongo.update.useMutation();
 
 	const form = useForm<any>({
-		resolver: zodResolver(placementFormSchema),
+		resolver: standardSchemaResolver(placementFormSchema),
 		defaultValues: {
 			Constraints: [],
 			Preferences: [],

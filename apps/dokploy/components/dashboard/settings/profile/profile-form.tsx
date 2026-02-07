@@ -1,4 +1,4 @@
-import { zodResolver } from "@hookform/resolvers/zod";
+import { standardSchemaResolver } from "@hookform/resolvers/standard-schema";
 import { Loader2, Palette, User } from "lucide-react";
 import { useTranslation } from "next-i18next";
 import { useEffect, useMemo, useRef, useState } from "react";
@@ -94,7 +94,7 @@ export const ProfileForm = () => {
 			firstName: data?.user?.firstName || "",
 			lastName: data?.user?.lastName || "",
 		},
-		resolver: zodResolver(profileSchema),
+		resolver: standardSchemaResolver(profileSchema),
 	});
 
 	useEffect(() => {

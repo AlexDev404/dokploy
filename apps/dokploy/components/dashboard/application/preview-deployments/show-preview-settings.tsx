@@ -1,4 +1,4 @@
-import { zodResolver } from "@hookform/resolvers/zod";
+import { standardSchemaResolver } from "@hookform/resolvers/standard-schema";
 import { HelpCircle, Plus, Settings2, X } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
@@ -97,7 +97,7 @@ export const ShowPreviewSettings = ({ applicationId }: Props) => {
 			previewCertificateType: "none",
 			previewRequireCollaboratorPermissions: true,
 		},
-		resolver: zodResolver(schema),
+		resolver: standardSchemaResolver(schema),
 	});
 
 	const previewHttps = form.watch("previewHttps");

@@ -1,4 +1,4 @@
-import { zodResolver } from "@hookform/resolvers/zod";
+import { standardSchemaResolver } from "@hookform/resolvers/standard-schema";
 import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
@@ -50,7 +50,7 @@ export const ShowEnvironment = ({ applicationId }: Props) => {
 			buildSecrets: "",
 			createEnvFile: true,
 		},
-		resolver: zodResolver(addEnvironmentSchema),
+		resolver: standardSchemaResolver(addEnvironmentSchema),
 	});
 
 	// Watch form values

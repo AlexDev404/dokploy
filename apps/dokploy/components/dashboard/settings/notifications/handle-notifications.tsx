@@ -1,4 +1,4 @@
-import { zodResolver } from "@hookform/resolvers/zod";
+import { standardSchemaResolver } from "@hookform/resolvers/standard-schema";
 import {
 	AlertTriangle,
 	Mail,
@@ -262,7 +262,7 @@ export const HandleNotifications = ({ notificationId }: Props) => {
 			channel: "",
 			name: "",
 		},
-		resolver: zodResolver(notificationSchema),
+		resolver: standardSchemaResolver(notificationSchema),
 	});
 	const type = form.watch("type");
 

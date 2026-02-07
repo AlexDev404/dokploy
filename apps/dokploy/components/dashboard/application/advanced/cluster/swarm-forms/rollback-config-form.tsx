@@ -1,4 +1,4 @@
-import { zodResolver } from "@hookform/resolvers/zod";
+import { standardSchemaResolver } from "@hookform/resolvers/standard-schema";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
@@ -69,7 +69,7 @@ export const RollbackConfigForm = ({ id, type }: RollbackConfigFormProps) => {
 		: api.mongo.update.useMutation();
 
 	const form = useForm<any>({
-		resolver: zodResolver(rollbackConfigFormSchema),
+		resolver: standardSchemaResolver(rollbackConfigFormSchema),
 		defaultValues: {
 			Parallelism: undefined,
 			Delay: undefined,

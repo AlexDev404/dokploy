@@ -1,4 +1,4 @@
-import { zodResolver } from "@hookform/resolvers/zod";
+import { standardSchemaResolver } from "@hookform/resolvers/standard-schema";
 import { Plus, Trash2 } from "lucide-react";
 import { useEffect } from "react";
 import { useFieldArray, useForm } from "react-hook-form";
@@ -57,7 +57,7 @@ export const AddCommand = ({ applicationId }: Props) => {
 			command: "",
 			args: [],
 		},
-		resolver: zodResolver(AddRedirectSchema),
+		resolver: standardSchemaResolver(AddRedirectSchema),
 	});
 
 	const { fields, append, remove } = useFieldArray({

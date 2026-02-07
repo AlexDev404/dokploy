@@ -1,6 +1,6 @@
 "use client";
 
-import { zodResolver } from "@hookform/resolvers/zod";
+import { standardSchemaResolver } from "@hookform/resolvers/standard-schema";
 import { Loader2, LogIn } from "lucide-react";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
@@ -36,7 +36,7 @@ export function SignInWithSSO({ children }: SignInWithSSOProps) {
 	const [expanded, setExpanded] = useState(false);
 
 	const form = useForm<SSOEmailForm>({
-		resolver: zodResolver(ssoEmailSchema),
+		resolver: standardSchemaResolver(ssoEmailSchema),
 		defaultValues: { email: "" },
 	});
 

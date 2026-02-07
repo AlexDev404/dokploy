@@ -1,4 +1,4 @@
-import { zodResolver } from "@hookform/resolvers/zod";
+import { standardSchemaResolver } from "@hookform/resolvers/standard-schema";
 import { CheckIcon, ChevronsUpDown, X } from "lucide-react";
 import Link from "next/link";
 import { useEffect } from "react";
@@ -90,7 +90,7 @@ export const SaveBitbucketProviderCompose = ({ composeId }: Props) => {
 			watchPaths: [],
 			enableSubmodules: false,
 		},
-		resolver: zodResolver(BitbucketProviderSchema),
+		resolver: standardSchemaResolver(BitbucketProviderSchema),
 	});
 
 	const repository = form.watch("repository");

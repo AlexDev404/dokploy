@@ -1,4 +1,4 @@
-import { zodResolver } from "@hookform/resolvers/zod";
+import { standardSchemaResolver } from "@hookform/resolvers/standard-schema";
 import { AlertTriangle, PenBoxIcon, PlusIcon } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
@@ -125,7 +125,7 @@ export const HandleRegistry = ({ registryId }: Props) => {
 			serverId: "",
 			isEditing: !!registryId,
 		},
-		resolver: zodResolver(
+		resolver: standardSchemaResolver(
 			AddRegistrySchema.refine(
 				(data) => {
 					// When creating a new registry, password is required

@@ -1,4 +1,4 @@
-import { zodResolver } from "@hookform/resolvers/zod";
+import { standardSchemaResolver } from "@hookform/resolvers/standard-schema";
 import { Server } from "lucide-react";
 import Link from "next/link";
 import { useEffect } from "react";
@@ -81,7 +81,7 @@ export const ShowBuildServer = ({ applicationId }: Props) => {
 			buildServerId: data?.buildServerId || "",
 			buildRegistryId: data?.buildRegistryId || "",
 		},
-		resolver: zodResolver(schema),
+		resolver: standardSchemaResolver(schema),
 	});
 
 	useEffect(() => {

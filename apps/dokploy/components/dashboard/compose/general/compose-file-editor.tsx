@@ -1,4 +1,4 @@
-import { zodResolver } from "@hookform/resolvers/zod";
+import { standardSchemaResolver } from "@hookform/resolvers/standard-schema";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
@@ -41,7 +41,7 @@ export const ComposeFileEditor = ({ composeId }: Props) => {
 		defaultValues: {
 			composeFile: "",
 		},
-		resolver: zodResolver(AddComposeFile),
+		resolver: standardSchemaResolver(AddComposeFile),
 	});
 
 	const composeFile = form.watch("composeFile");

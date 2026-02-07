@@ -1,6 +1,6 @@
 "use client";
 
-import { zodResolver } from "@hookform/resolvers/zod";
+import { standardSchemaResolver } from "@hookform/resolvers/standard-schema";
 import { Plus, Trash2 } from "lucide-react";
 import { useState } from "react";
 import type { FieldArrayPath } from "react-hook-form";
@@ -76,7 +76,7 @@ export function RegisterOidcDialog({ children }: RegisterOidcDialogProps) {
 	const { mutateAsync, isLoading } = api.sso.register.useMutation();
 
 	const form = useForm<OidcProviderForm>({
-		resolver: zodResolver(oidcProviderSchema),
+		resolver: standardSchemaResolver(oidcProviderSchema),
 		defaultValues: formDefaultValues,
 	});
 

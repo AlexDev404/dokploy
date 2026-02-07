@@ -1,4 +1,4 @@
-import { zodResolver } from "@hookform/resolvers/zod";
+import { standardSchemaResolver } from "@hookform/resolvers/standard-schema";
 import copy from "copy-to-clipboard";
 import {
 	CopyIcon,
@@ -70,7 +70,7 @@ export const Configure2FA = () => {
 	const [isRegenerating, setIsRegenerating] = useState(false);
 
 	const form = useForm<PasswordForm>({
-		resolver: zodResolver(PasswordSchema),
+		resolver: standardSchemaResolver(PasswordSchema),
 		defaultValues: {
 			password: "",
 		},

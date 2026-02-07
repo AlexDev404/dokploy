@@ -1,4 +1,4 @@
-import { zodResolver } from "@hookform/resolvers/zod";
+import { standardSchemaResolver } from "@hookform/resolvers/standard-schema";
 import { Cog } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
@@ -76,8 +76,8 @@ const mySchema = z.discriminatedUnion("buildType", [
 		buildType: z.literal(BuildType.dockerfile),
 		dockerfile: z
 			.string({
-				required_error: "Dockerfile path is required",
-				invalid_type_error: "Dockerfile path is required",
+				error: "Dockerfile path is required",
+				error: "Dockerfile path is required",
 			})
 			.min(1, "Dockerfile required"),
 		dockerContextPath: z.string().nullable().default(""),
@@ -179,7 +179,7 @@ export const ShowBuildChooseForm = ({ applicationId }: Props) => {
 		defaultValues: {
 			buildType: BuildType.nixpacks,
 		},
-		resolver: zodResolver(mySchema),
+		resolver: standardSchemaResolver(mySchema),
 	});
 
 	const buildType = form.watch("buildType");

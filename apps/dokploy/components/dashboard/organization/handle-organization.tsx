@@ -1,4 +1,4 @@
-import { zodResolver } from "@hookform/resolvers/zod";
+import { standardSchemaResolver } from "@hookform/resolvers/standard-schema";
 import { PenBoxIcon, Plus } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
@@ -59,7 +59,7 @@ export function AddOrganization({ organizationId }: Props) {
 		authClient.useActiveOrganization();
 
 	const form = useForm<OrganizationFormValues>({
-		resolver: zodResolver(organizationSchema),
+		resolver: standardSchemaResolver(organizationSchema),
 		defaultValues: {
 			name: "",
 			logo: "",

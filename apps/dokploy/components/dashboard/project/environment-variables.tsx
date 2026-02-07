@@ -1,4 +1,4 @@
-import { zodResolver } from "@hookform/resolvers/zod";
+import { standardSchemaResolver } from "@hookform/resolvers/standard-schema";
 import { Terminal } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
@@ -56,7 +56,7 @@ export const EnvironmentVariables = ({ environmentId, children }: Props) => {
 		defaultValues: {
 			env: data?.env ?? "",
 		},
-		resolver: zodResolver(updateEnvironmentSchema),
+		resolver: standardSchemaResolver(updateEnvironmentSchema),
 	});
 
 	useEffect(() => {

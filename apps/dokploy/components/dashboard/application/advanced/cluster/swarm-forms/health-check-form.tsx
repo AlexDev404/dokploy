@@ -1,4 +1,4 @@
-import { zodResolver } from "@hookform/resolvers/zod";
+import { standardSchemaResolver } from "@hookform/resolvers/standard-schema";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
@@ -61,7 +61,7 @@ export const HealthCheckForm = ({ id, type }: HealthCheckFormProps) => {
 		: api.mongo.update.useMutation();
 
 	const form = useForm<any>({
-		resolver: zodResolver(healthCheckFormSchema),
+		resolver: standardSchemaResolver(healthCheckFormSchema),
 		defaultValues: {
 			Test: [],
 			Interval: undefined,

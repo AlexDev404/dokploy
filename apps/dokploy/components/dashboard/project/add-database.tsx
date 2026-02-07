@@ -1,4 +1,4 @@
-import { zodResolver } from "@hookform/resolvers/zod";
+import { standardSchemaResolver } from "@hookform/resolvers/standard-schema";
 import { AlertTriangle, Database, HelpCircle } from "lucide-react";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
@@ -208,7 +208,7 @@ export const AddDatabase = ({ environmentId, projectName }: Props) => {
 			databaseUser: "",
 			serverId: null,
 		},
-		resolver: zodResolver(mySchema),
+		resolver: standardSchemaResolver(mySchema),
 	});
 	const type = form.watch("type");
 	const activeMutation = {

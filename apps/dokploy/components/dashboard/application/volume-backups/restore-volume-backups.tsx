@@ -1,4 +1,4 @@
-import { zodResolver } from "@hookform/resolvers/zod";
+import { standardSchemaResolver } from "@hookform/resolvers/standard-schema";
 import copy from "copy-to-clipboard";
 import { debounce } from "lodash";
 import { CheckIcon, ChevronsUpDown, Copy, RotateCcw } from "lucide-react";
@@ -55,21 +55,21 @@ interface Props {
 const RestoreBackupSchema = z.object({
 	destinationId: z
 		.string({
-			required_error: "Please select a destination",
+			error: "Please select a destination",
 		})
 		.min(1, {
 			message: "Destination is required",
 		}),
 	backupFile: z
 		.string({
-			required_error: "Please select a backup file",
+			error: "Please select a backup file",
 		})
 		.min(1, {
 			message: "Backup file is required",
 		}),
 	volumeName: z
 		.string({
-			required_error: "Please enter a volume name",
+			error: "Please enter a volume name",
 		})
 		.min(1, {
 			message: "Volume name is required",
@@ -89,7 +89,7 @@ export const RestoreVolumeBackups = ({ id, type, serverId }: Props) => {
 			backupFile: "",
 			volumeName: "",
 		},
-		resolver: zodResolver(RestoreBackupSchema),
+		resolver: standardSchemaResolver(RestoreBackupSchema),
 	});
 
 	const destinationId = form.watch("destinationId");
