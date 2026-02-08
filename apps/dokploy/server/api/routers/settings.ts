@@ -616,7 +616,7 @@ export const settingsRouter = createTRPCRouter({
 		.input(apiServerSchema)
 		.query(async ({ input }) => {
 			const ports = await readPorts("dokploy-traefik", input?.serverId);
-			return ports.some((port) => port.targetPort === 8080);
+			return ports.some((port) => port.targetPort === 1088);
 		}),
 
 	readStatsLogs: protectedProcedure

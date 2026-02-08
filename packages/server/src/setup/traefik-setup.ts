@@ -57,12 +57,12 @@ export const initializeStandaloneTraefik = async ({
   };
 
   const enableDashboard = additionalPorts.some(
-    (port) => port.targetPort === 8080,
+    (port) => port.targetPort === 1088,
   );
 
   if (enableDashboard) {
     exposedPorts["8080/tcp"] = {};
-    portBindings["8080/tcp"] = [{ HostPort: "8080" }];
+    portBindings["8080/tcp"] = [{ HostPort: "1088" }];
   }
 
   for (const port of additionalPorts) {

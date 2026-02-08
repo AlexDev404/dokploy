@@ -186,7 +186,7 @@ export const ManageTraefikPorts = ({ children, serverId }: Props) => {
 																				);
 																			}}
 																			value={field.value || ""}
-																			placeholder="e.g. 8080"
+																			placeholder="e.g. 1088"
 																		/>
 																	</FormControl>
 																	<FormMessage />
