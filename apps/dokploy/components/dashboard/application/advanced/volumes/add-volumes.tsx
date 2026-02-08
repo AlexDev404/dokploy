@@ -87,7 +87,7 @@ export const AddVolumes = ({
 }: Props) => {
 	const [isOpen, setIsOpen] = useState(false);
 	const { mutateAsync } = api.mounts.create.useMutation();
-	const form = useForm<AddMount>({
+	const form = useForm({
 		defaultValues: {
 			type: serviceType === "compose" ? "file" : "bind",
 			hostPath: "",

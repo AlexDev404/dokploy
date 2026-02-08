@@ -78,7 +78,7 @@ export const DeleteService = ({ id, type }: Props) => {
 		? mutationMap[type]()
 		: api.mongo.remove.useMutation();
 	const { push } = useRouter();
-	const form = useForm<DeleteCompose>({
+	const form = useForm({
 		defaultValues: {
 			projectName: "",
 			deleteVolumes: false,

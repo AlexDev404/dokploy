@@ -52,7 +52,7 @@ export const UpdateServerIp = ({ children }: Props) => {
 	const { mutateAsync, isLoading, error, isError } =
 		api.settings.updateServerIp.useMutation();
 
-	const form = useForm<Schema>({
+	const form = useForm({
 		defaultValues: {
 			serverIp: data?.serverIp || "",
 		},

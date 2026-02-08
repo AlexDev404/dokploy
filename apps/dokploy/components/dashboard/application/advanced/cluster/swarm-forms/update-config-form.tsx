@@ -68,7 +68,7 @@ export const UpdateConfigForm = ({ id, type }: UpdateConfigFormProps) => {
 		? mutationMap[type]()
 		: api.mongo.update.useMutation();
 
-	const form = useForm<any>({
+	const form = useForm({
 		resolver: zodResolver(updateConfigFormSchema),
 		defaultValues: {
 			Parallelism: undefined,

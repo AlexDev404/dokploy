@@ -85,7 +85,7 @@ export const ShowPreviewSettings = ({ applicationId }: Props) => {
 
 	const { data, refetch } = api.application.one.useQuery({ applicationId });
 
-	const form = useForm<Schema>({
+	const form = useForm({
 		defaultValues: {
 			env: "",
 			wildcardDomain: "*.traefik.me",

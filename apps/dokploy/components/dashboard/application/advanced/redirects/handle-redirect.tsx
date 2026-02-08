@@ -104,7 +104,7 @@ export const HandleRedirect = ({
 		? api.redirects.update.useMutation()
 		: api.redirects.create.useMutation();
 
-	const form = useForm<AddRedirect>({
+	const form = useForm({
 		defaultValues: {
 			permanent: false,
 			regex: "",

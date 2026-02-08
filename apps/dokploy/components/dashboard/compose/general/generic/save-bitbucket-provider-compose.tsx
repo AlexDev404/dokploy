@@ -77,7 +77,7 @@ export const SaveBitbucketProviderCompose = ({ composeId }: Props) => {
 	const { mutateAsync, isLoading: isSavingBitbucketProvider } =
 		api.compose.update.useMutation();
 
-	const form = useForm<BitbucketProvider>({
+	const form = useForm({
 		defaultValues: {
 			composePath: "./docker-compose.yml",
 			repository: {

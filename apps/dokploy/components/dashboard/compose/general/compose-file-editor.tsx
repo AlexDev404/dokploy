@@ -37,7 +37,7 @@ export const ComposeFileEditor = ({ composeId }: Props) => {
 	const { mutateAsync, isLoading } = api.compose.update.useMutation();
 	const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
 
-	const form = useForm<AddComposeFile>({
+	const form = useForm({
 		defaultValues: {
 			composeFile: "",
 		},

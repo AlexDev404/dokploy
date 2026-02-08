@@ -77,7 +77,7 @@ export const SaveGitlabProviderCompose = ({ composeId }: Props) => {
 	const { mutateAsync, isLoading: isSavingGitlabProvider } =
 		api.compose.update.useMutation();
 
-	const form = useForm<GitlabProvider>({
+	const form = useForm({
 		defaultValues: {
 			composePath: "./docker-compose.yml",
 			repository: {

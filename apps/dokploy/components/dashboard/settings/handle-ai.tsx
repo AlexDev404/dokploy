@@ -73,7 +73,7 @@ export const HandleAi = ({ aiId }: Props) => {
 		? api.ai.update.useMutation()
 		: api.ai.create.useMutation();
 
-	const form = useForm<Schema>({
+	const form = useForm({
 		resolver: zodResolver(Schema),
 		defaultValues: {
 			name: "",

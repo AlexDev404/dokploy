@@ -52,7 +52,7 @@ export const ProjectEnvironment = ({ projectId, children }: Props) => {
 		},
 	);
 
-	const form = useForm<UpdateProject>({
+	const form = useForm({
 		defaultValues: {
 			env: data?.env ?? "",
 		},

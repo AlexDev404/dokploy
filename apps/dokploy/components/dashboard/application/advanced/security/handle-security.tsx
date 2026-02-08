@@ -59,7 +59,7 @@ export const HandleSecurity = ({
 		? api.security.update.useMutation()
 		: api.security.create.useMutation();
 
-	const form = useForm<AddSecurity>({
+	const form = useForm({
 		defaultValues: {
 			username: "",
 			password: "",

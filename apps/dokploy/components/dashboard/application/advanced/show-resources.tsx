@@ -101,7 +101,7 @@ export const ShowResources = ({ id, type }: Props) => {
 		? mutationMap[type]()
 		: api.mongo.update.useMutation();
 
-	const form = useForm<AddResources>({
+	const form = useForm({
 		defaultValues: {
 			cpuLimit: "",
 			cpuReservation: "",

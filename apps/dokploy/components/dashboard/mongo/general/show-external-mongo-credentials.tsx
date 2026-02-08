@@ -51,7 +51,7 @@ export const ShowExternalMongoCredentials = ({ mongoId }: Props) => {
 	const { mutateAsync, isLoading } = api.mongo.saveExternalPort.useMutation();
 	const [connectionUrl, setConnectionUrl] = useState("");
 	const getIp = data?.server?.ipAddress || ip;
-	const form = useForm<DockerProvider>({
+	const form = useForm({
 		defaultValues: {},
 		resolver: zodResolver(DockerProviderSchema),
 	});

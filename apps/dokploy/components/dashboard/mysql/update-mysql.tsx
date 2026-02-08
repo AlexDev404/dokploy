@@ -52,7 +52,7 @@ export const UpdateMysql = ({ mysqlId }: Props) => {
 			enabled: !!mysqlId,
 		},
 	);
-	const form = useForm<UpdateMysql>({
+	const form = useForm({
 		defaultValues: {
 			description: data?.description ?? "",
 			name: data?.name ?? "",

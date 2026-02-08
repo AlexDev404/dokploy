@@ -52,7 +52,7 @@ export const UpdateRedis = ({ redisId }: Props) => {
 			enabled: !!redisId,
 		},
 	);
-	const form = useForm<UpdateRedis>({
+	const form = useForm({
 		defaultValues: {
 			description: data?.description ?? "",
 			name: data?.name ?? "",

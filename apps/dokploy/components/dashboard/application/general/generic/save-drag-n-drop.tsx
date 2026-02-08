@@ -27,7 +27,7 @@ export const SaveDragNDrop = ({ applicationId }: Props) => {
 	const { mutateAsync, isLoading } =
 		api.application.dropDeployment.useMutation();
 
-	const form = useForm<UploadFile>({
+	const form = useForm({
 		defaultValues: {},
 		resolver: zodResolver(uploadFileSchema),
 	});

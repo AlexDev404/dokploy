@@ -58,7 +58,7 @@ export function AddOrganization({ organizationId }: Props) {
 	const { refetch: refetchActiveOrganization } =
 		authClient.useActiveOrganization();
 
-	const form = useForm<OrganizationFormValues>({
+	const form = useForm({
 		resolver: zodResolver(organizationSchema),
 		defaultValues: {
 			name: "",

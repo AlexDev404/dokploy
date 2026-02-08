@@ -92,7 +92,7 @@ const Invitation = ({
 		},
 	);
 
-	const form = useForm<Register>({
+	const form = useForm({
 		defaultValues: {
 			name: "",
 			lastName: "",

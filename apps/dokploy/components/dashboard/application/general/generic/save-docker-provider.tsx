@@ -34,7 +34,7 @@ export const SaveDockerProvider = ({ applicationId }: Props) => {
 	const { data, refetch } = api.application.one.useQuery({ applicationId });
 
 	const { mutateAsync } = api.application.saveDockerProvider.useMutation();
-	const form = useForm<DockerProvider>({
+	const form = useForm({
 		defaultValues: {
 			dockerImage: "",
 			password: "",

@@ -60,7 +60,7 @@ export const EditScript = ({ serverId }: Props) => {
 		},
 	);
 
-	const form = useForm<Schema>({
+	const form = useForm({
 		defaultValues: {
 			command: "",
 		},

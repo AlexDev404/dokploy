@@ -57,7 +57,7 @@ export const StopGracePeriodForm = ({ id, type }: StopGracePeriodFormProps) => {
 		? mutationMap[type]()
 		: api.mongo.update.useMutation();
 
-	const form = useForm<any>({
+	const form = useForm({
 		defaultValues: {
 			value: null as bigint | null,
 		},

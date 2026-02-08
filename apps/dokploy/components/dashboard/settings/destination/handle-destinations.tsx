@@ -80,7 +80,7 @@ export const HandleDestinations = ({ destinationId }: Props) => {
 		isError: isErrorConnection,
 	} = api.destination.testConnection.useMutation();
 
-	const form = useForm<AddDestination>({
+	const form = useForm({
 		defaultValues: {
 			provider: "",
 			accessKeyId: "",

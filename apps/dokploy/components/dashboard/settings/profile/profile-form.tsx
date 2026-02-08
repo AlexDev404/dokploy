@@ -84,7 +84,7 @@ export const ProfileForm = () => {
 		]);
 	}, [gravatarHash]);
 
-	const form = useForm<Profile>({
+	const form = useForm({
 		defaultValues: {
 			email: data?.user?.email || "",
 			password: "",

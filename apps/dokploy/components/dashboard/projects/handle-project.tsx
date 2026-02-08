@@ -75,7 +75,7 @@ export const HandleProject = ({ projectId }: Props) => {
 		},
 	);
 	const router = useRouter();
-	const form = useForm<AddProject>({
+	const form = useForm({
 		defaultValues: {
 			description: "",
 			name: "",
