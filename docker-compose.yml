@@ -7,8 +7,8 @@ services:
     ports:
       - "3000:3000"  # Web Interface
       - "3001:22"    # SSH for tunneling/maintenance/upgrades
-      - "8080:8080"  # IT Careers
-      - "8081:8081"  # Xibo
+      - "8080:8080"  # Traefik proxy
+      - "8081:8081"  # Traefik dashboard
       - "8082:8082"  # Unassigned
       - "8083:8083"  # Unassigned
     # For DinD mode: use privileged
