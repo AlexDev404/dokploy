@@ -52,7 +52,7 @@ export const AddCommand = ({ applicationId }: Props) => {
 
 	const { mutateAsync, isLoading } = api.application.update.useMutation();
 
-	const form = useForm<AddCommand>({
+	const form = useForm({
 		defaultValues: {
 			command: "",
 			args: [],

@@ -80,21 +80,21 @@ const RestoreBackupSchema = z
 	.object({
 		destinationId: z
 			.string({
-				required_error: "Please select a destination",
+				error: "Please select a destination",
 			})
 			.min(1, {
 				message: "Destination is required",
 			}),
 		backupFile: z
 			.string({
-				required_error: "Please select a backup file",
+				error: "Please select a backup file",
 			})
 			.min(1, {
 				message: "Backup file is required",
 			}),
 		databaseName: z
 			.string({
-				required_error: "Please enter a database name",
+				error: "Please enter a database name",
 			})
 			.min(1, {
 				message: "Database name is required",

@@ -76,7 +76,7 @@ export const ShowBuildServer = ({ applicationId }: Props) => {
 
 	const { mutateAsync, isLoading } = api.application.update.useMutation();
 
-	const form = useForm<Schema>({
+	const form = useForm({
 		defaultValues: {
 			buildServerId: data?.buildServerId || "",
 			buildRegistryId: data?.buildRegistryId || "",

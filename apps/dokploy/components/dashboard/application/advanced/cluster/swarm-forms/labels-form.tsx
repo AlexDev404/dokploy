@@ -63,7 +63,7 @@ export const LabelsForm = ({ id, type }: LabelsFormProps) => {
 		? mutationMap[type]()
 		: api.mongo.update.useMutation();
 
-	const form = useForm<any>({
+	const form = useForm({
 		resolver: zodResolver(labelsFormSchema),
 		defaultValues: {
 			labels: [],

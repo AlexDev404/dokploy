@@ -68,7 +68,7 @@ export const RollbackConfigForm = ({ id, type }: RollbackConfigFormProps) => {
 		? mutationMap[type]()
 		: api.mongo.update.useMutation();
 
-	const form = useForm<any>({
+	const form = useForm({
 		resolver: zodResolver(rollbackConfigFormSchema),
 		defaultValues: {
 			Parallelism: undefined,

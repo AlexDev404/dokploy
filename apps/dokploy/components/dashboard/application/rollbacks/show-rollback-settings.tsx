@@ -76,7 +76,7 @@ export const ShowRollbackSettings = ({ applicationId, children }: Props) => {
 
 	const { data: registries } = api.registry.all.useQuery();
 
-	const form = useForm<FormValues>({
+	const form = useForm({
 		resolver: zodResolver(formSchema),
 		defaultValues: {
 			rollbackActive: application?.rollbackActive ?? false,

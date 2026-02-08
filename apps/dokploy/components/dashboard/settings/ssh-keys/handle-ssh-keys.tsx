@@ -54,7 +54,7 @@ export const HandleSSHKeys = ({ sshKeyId }: Props) => {
 
 	const generateMutation = api.sshKey.generate.useMutation();
 
-	const form = useForm<SSHKey>({
+	const form = useForm({
 		resolver: zodResolver(sshKeyCreate),
 		defaultValues: {
 			name: "",

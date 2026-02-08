@@ -53,7 +53,7 @@ export const UpdateCompose = ({ composeId }: Props) => {
 			enabled: !!composeId,
 		},
 	);
-	const form = useForm<UpdateCompose>({
+	const form = useForm({
 		defaultValues: {
 			description: data?.description ?? "",
 			name: data?.name ?? "",

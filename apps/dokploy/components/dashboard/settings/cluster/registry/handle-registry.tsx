@@ -115,7 +115,7 @@ export const HandleRegistry = ({ registryId }: Props) => {
 		error: testRegistryByIdError,
 		isError: testRegistryByIdIsError,
 	} = api.registry.testRegistryById.useMutation();
-	const form = useForm<AddRegistry>({
+	const form = useForm({
 		defaultValues: {
 			username: "",
 			password: "",

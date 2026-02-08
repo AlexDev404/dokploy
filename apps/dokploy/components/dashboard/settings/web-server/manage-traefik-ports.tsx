@@ -58,7 +58,7 @@ export const ManageTraefikPorts = ({ children, serverId }: Props) => {
 	const { t } = useTranslation("settings");
 	const [open, setOpen] = useState(false);
 
-	const form = useForm<TraefikPortsForm>({
+	const form = useForm({
 		resolver: zodResolver(TraefikPortsSchema),
 		defaultValues: {
 			ports: [],

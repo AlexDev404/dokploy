@@ -43,7 +43,7 @@ export const ShowEnvironment = ({ applicationId }: Props) => {
 		},
 	);
 
-	const form = useForm<EnvironmentSchema>({
+	const form = useForm({
 		defaultValues: {
 			env: "",
 			buildArgs: "",

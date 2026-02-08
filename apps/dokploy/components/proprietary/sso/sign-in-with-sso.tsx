@@ -35,7 +35,7 @@ interface SignInWithSSOProps {
 export function SignInWithSSO({ children }: SignInWithSSOProps) {
 	const [expanded, setExpanded] = useState(false);
 
-	const form = useForm<SSOEmailForm>({
+	const form = useForm({
 		resolver: zodResolver(ssoEmailSchema),
 		defaultValues: { email: "" },
 	});

@@ -65,7 +65,7 @@ export const ShowCustomCommand = ({ id, type }: Props) => {
 		? mutationMap[type]()
 		: api.mongo.update.useMutation();
 
-	const form = useForm<AddDockerImage>({
+	const form = useForm({
 		defaultValues: {
 			dockerImage: "",
 			command: "",

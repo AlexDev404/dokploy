@@ -52,7 +52,7 @@ export const ChangeRole = ({ memberId, currentRole, userEmail }: Props) => {
 	const { mutateAsync, isError, error, isLoading } =
 		api.organization.updateMemberRole.useMutation();
 
-	const form = useForm<ChangeRoleSchema>({
+	const form = useForm({
 		defaultValues: {
 			role: currentRole,
 		},

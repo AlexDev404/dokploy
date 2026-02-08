@@ -75,7 +75,7 @@ export function RegisterOidcDialog({ children }: RegisterOidcDialogProps) {
 	const [open, setOpen] = useState(false);
 	const { mutateAsync, isLoading } = api.sso.register.useMutation();
 
-	const form = useForm<OidcProviderForm>({
+	const form = useForm({
 		resolver: zodResolver(oidcProviderSchema),
 		defaultValues: formDefaultValues,
 	});

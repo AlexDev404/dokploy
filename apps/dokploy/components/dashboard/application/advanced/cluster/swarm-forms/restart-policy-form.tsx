@@ -66,7 +66,7 @@ export const RestartPolicyForm = ({ id, type }: RestartPolicyFormProps) => {
 		? mutationMap[type]()
 		: api.mongo.update.useMutation();
 
-	const form = useForm<any>({
+	const form = useForm({
 		resolver: zodResolver(restartPolicyFormSchema),
 		defaultValues: {
 			Condition: undefined,

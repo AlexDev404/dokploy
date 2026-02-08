@@ -60,7 +60,7 @@ export const HealthCheckForm = ({ id, type }: HealthCheckFormProps) => {
 		? mutationMap[type]()
 		: api.mongo.update.useMutation();
 
-	const form = useForm<any>({
+	const form = useForm({
 		resolver: zodResolver(healthCheckFormSchema),
 		defaultValues: {
 			Test: [],

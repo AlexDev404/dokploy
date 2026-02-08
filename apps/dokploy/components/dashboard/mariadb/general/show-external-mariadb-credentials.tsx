@@ -51,7 +51,7 @@ export const ShowExternalMariadbCredentials = ({ mariadbId }: Props) => {
 	const { mutateAsync, isLoading } = api.mariadb.saveExternalPort.useMutation();
 	const [connectionUrl, setConnectionUrl] = useState("");
 	const getIp = data?.server?.ipAddress || ip;
-	const form = useForm<DockerProvider>({
+	const form = useForm({
 		defaultValues: {},
 		resolver: zodResolver(DockerProviderSchema),
 	});

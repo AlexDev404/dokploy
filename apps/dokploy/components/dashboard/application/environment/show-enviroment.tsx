@@ -64,7 +64,7 @@ export const ShowEnvironment = ({ id, type }: Props) => {
 		? mutationMap[type]()
 		: api.mongo.update.useMutation();
 
-	const form = useForm<EnvironmentSchema>({
+	const form = useForm({
 		defaultValues: {
 			environment: "",
 		},

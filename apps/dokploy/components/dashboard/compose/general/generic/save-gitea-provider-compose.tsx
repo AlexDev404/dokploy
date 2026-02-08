@@ -75,7 +75,7 @@ export const SaveGiteaProviderCompose = ({ composeId }: Props) => {
 	const { mutateAsync, isLoading: isSavingGiteaProvider } =
 		api.compose.update.useMutation();
 
-	const form = useForm<GiteaProvider>({
+	const form = useForm({
 		defaultValues: {
 			composePath: "./docker-compose.yml",
 			repository: {

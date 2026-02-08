@@ -53,7 +53,7 @@ export const UpdatePostgres = ({ postgresId }: Props) => {
 			enabled: !!postgresId,
 		},
 	);
-	const form = useForm<UpdatePostgres>({
+	const form = useForm({
 		defaultValues: {
 			description: data?.description ?? "",
 			name: data?.name ?? "",

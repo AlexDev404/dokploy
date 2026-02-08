@@ -55,7 +55,7 @@ export const EditGithubProvider = ({ githubId }: Props) => {
 	const { mutateAsync, error, isError } = api.github.update.useMutation();
 	const { mutateAsync: testConnection, isLoading } =
 		api.github.testConnection.useMutation();
-	const form = useForm<Schema>({
+	const form = useForm({
 		defaultValues: {
 			name: "",
 			appName: "",

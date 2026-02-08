@@ -53,7 +53,7 @@ export const ShowExternalPostgresCredentials = ({ postgresId }: Props) => {
 	const getIp = data?.server?.ipAddress || ip;
 	const [connectionUrl, setConnectionUrl] = useState("");
 
-	const form = useForm<DockerProvider>({
+	const form = useForm({
 		defaultValues: {},
 		resolver: zodResolver(DockerProviderSchema),
 	});

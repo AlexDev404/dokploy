@@ -99,7 +99,7 @@ export const AddApiKey = () => {
 		},
 	});
 
-	const form = useForm<FormValues>({
+	const form = useForm({
 		resolver: zodResolver(formSchema),
 		defaultValues: {
 			name: "",

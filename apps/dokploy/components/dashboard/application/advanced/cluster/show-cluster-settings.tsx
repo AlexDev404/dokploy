@@ -77,7 +77,7 @@ export const ShowClusterSettings = ({ id, type }: Props) => {
 		? mutationMap[type]()
 		: api.mongo.update.useMutation();
 
-	const form = useForm<AddCommand>({
+	const form = useForm({
 		defaultValues: {
 			...(type === "application" && data && "registryId" in data
 				? {

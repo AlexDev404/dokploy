@@ -57,7 +57,7 @@ export const AddInvitation = () => {
 	const [error, setError] = useState<string | null>(null);
 	const { data: activeOrganization } = authClient.useActiveOrganization();
 
-	const form = useForm<AddInvitation>({
+	const form = useForm({
 		defaultValues: {
 			email: "",
 			role: "member",

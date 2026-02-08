@@ -255,7 +255,7 @@ export const HandleNotifications = ({ notificationId }: Props) => {
 		? api.notification.updatePushover.useMutation()
 		: api.notification.createPushover.useMutation();
 
-	const form = useForm<NotificationSchema>({
+	const form = useForm({
 		defaultValues: {
 			type: "slack",
 			webhookUrl: "",

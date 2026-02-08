@@ -58,7 +58,7 @@ export const AddGitlabProvider = () => {
 	const { mutateAsync, error, isError } = api.gitlab.create.useMutation();
 	const webhookUrl = `${url}/api/providers/gitlab/callback`;
 
-	const form = useForm<Schema>({
+	const form = useForm({
 		defaultValues: {
 			applicationId: "",
 			applicationSecret: "",

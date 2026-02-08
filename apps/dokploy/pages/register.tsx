@@ -81,7 +81,7 @@ const Register = ({ isCloud }: Props) => {
 	const [error, setError] = useState<string | null>(null);
 	const [data, setData] = useState<any>(null);
 
-	const form = useForm<Register>({
+	const form = useForm({
 		defaultValues: {
 			name: "",
 			lastName: "",

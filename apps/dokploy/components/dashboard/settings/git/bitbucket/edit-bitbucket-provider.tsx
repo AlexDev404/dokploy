@@ -60,7 +60,7 @@ export const EditBitbucketProvider = ({ bitbucketId }: Props) => {
 	const { mutateAsync, error, isError } = api.bitbucket.update.useMutation();
 	const { mutateAsync: testConnection, isLoading } =
 		api.bitbucket.testConnection.useMutation();
-	const form = useForm<Schema>({
+	const form = useForm({
 		defaultValues: {
 			username: "",
 			email: "",

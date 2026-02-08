@@ -50,7 +50,7 @@ export const RandomizeCompose = ({ composeId }: Props) => {
 		{ enabled: !!composeId },
 	);
 
-	const form = useForm<Schema>({
+	const form = useForm({
 		defaultValues: {
 			suffix: "",
 			randomize: false,

@@ -82,7 +82,7 @@ export const AddPreviewDomain = ({
 	const { mutateAsync: generateDomain, isLoading: isLoadingGenerate } =
 		api.domain.generateDomain.useMutation();
 
-	const form = useForm<Domain>({
+	const form = useForm({
 		resolver: zodResolver(domain),
 	});
 

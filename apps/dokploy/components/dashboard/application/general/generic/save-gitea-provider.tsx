@@ -91,7 +91,7 @@ export const SaveGiteaProvider = ({ applicationId }: Props) => {
 	const { mutateAsync, isLoading: isSavingGiteaProvider } =
 		api.application.saveGiteaProvider.useMutation();
 
-	const form = useForm<GiteaProvider>({
+	const form = useForm({
 		defaultValues: {
 			buildPath: "/",
 			repository: {

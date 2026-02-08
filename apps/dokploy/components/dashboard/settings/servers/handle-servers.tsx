@@ -83,7 +83,7 @@ export const HandleServers = ({ serverId, asButton = false }: Props) => {
 	const { mutateAsync, error, isLoading, isError } = serverId
 		? api.server.update.useMutation()
 		: api.server.create.useMutation();
-	const form = useForm<Schema>({
+	const form = useForm({
 		defaultValues: {
 			description: "",
 			name: "",
