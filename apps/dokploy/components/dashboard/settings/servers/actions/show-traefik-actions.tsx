@@ -121,7 +121,7 @@ export const ShowTraefikActions = ({ serverId }: Props) => {
 								.catch((error) => {
 									const errorMessage =
 										error?.message ||
-										"Failed to toggle dashboard. Please check if port 8080 is available.";
+										"Failed to toggle dashboard. Please check if port 1088 is available.";
 									toast.error(errorMessage);
 								});
 						}}

@@ -7,7 +7,7 @@ services:
     ports:
       - "3000:3000"  # Web Interface
       - "3001:22"    # SSH for tunneling/maintenance/upgrades
-      - "8080:8080"  # IT Careers
+      - "1088:8080"  # Traefik Dashboard
       - "8081:8081"  # Xibo
       - "8082:8082"  # Unassigned
       - "8083:8083"  # Unassigned
