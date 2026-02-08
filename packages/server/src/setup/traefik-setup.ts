@@ -57,7 +57,7 @@ export const initializeStandaloneTraefik = async ({
   };
 
   const enableDashboard = additionalPorts.some(
-    (port) => port.targetPort === 1088,
+    (port) => port.targetPort === 8080,
   );
 
   if (enableDashboard) {
