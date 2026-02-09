@@ -53,6 +53,15 @@ cp -R "${PROJECT_ROOT}/apps/dokploy/public" "$STAGING/public"
 echo "  -> Copying database migrations..."
 cp -R "${PROJECT_ROOT}/apps/dokploy/drizzle" "$STAGING/drizzle"
 
+echo "  -> Copying @dokploy modules..."
+mkdir -p "$STAGING/node_modules/@dokploy"
+# Copy entire server package (all files including dist, src, configs, etc.)
+cp -R "${PROJECT_ROOT}/packages/server" "$STAGING/node_modules/@dokploy/"
+# Remove src directory for leaner build (only built dist needed)
+rm -rf "$STAGING/node_modules/@dokploy/server/src"
+# Copy external trpc-openapi package
+cp -R "${PROJECT_ROOT}/apps/dokploy/node_modules/@dokploy/trpc-openapi" "$STAGING/node_modules/@dokploy/" 2>/dev/null || echo "Warning: @dokploy/trpc-openapi not found in node_modules"
+
 # Create deployment metadata
 cat > "$STAGING/deployment-info.json" << EOF
 {
@@ -103,7 +112,7 @@ docker exec "$CONTAINER_NAME" sh -c '
   if [ -d /app/.next ]; then
     timestamp=$(date +%Y%m%d-%H%M%S)
     mkdir -p /app/backups
-    tar -czf /app/backups/backup-${timestamp}.tar.gz .next dist public || true
+    tar -czf /app/backups/backup-${timestamp}.tar.gz .next dist drizzle public components.json next.config.mjs package.json || true
     echo "Backup created: /app/backups/backup-${timestamp}.tar.gz"
   fi
 ' || echo "No previous deployment to backup"
@@ -115,8 +124,9 @@ echo "[3/4] Extracting and deploying..."
 docker exec "$CONTAINER_NAME" sh -c '
   cd /tmp
   tar -xzf app-update.tar.gz
-  rm -rf /app/.next /app/dist /app/public
+  rm -rf /app/.next /app/dist /app/public /app/node_modules/@dokploy
   cp -R app/.next app/dist app/public app/drizzle /app/
+  [ -d app/node_modules/@dokploy ] && cp -R app/node_modules/@dokploy /app/node_modules/
   [ -f app/next.config.mjs ] && cp app/next.config.mjs /app/
   [ -f app/components.json ] && cp app/components.json /app/
   rm -rf app app-update.tar.gz
