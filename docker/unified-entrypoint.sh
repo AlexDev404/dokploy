@@ -25,6 +25,12 @@ if command -v sshd > /dev/null 2>&1; then
     /usr/sbin/sshd 2>/dev/null || echo "[Dokploy-Init] SSH not critical, continuing..."
 fi
 
+# Start Cloudflared
+if command -v cloudflared > /dev/null 2>&1; then
+    echo "[Dokploy-Init] Starting cloudflared proxy..."
+    service cloudflared start 2>/dev/null || echo "[Dokploy-Init] Cloudflared not critical, continuing..."
+fi
+
 # DinD-specific initialization
 if [ "$MODE" = "dind" ]; then
     echo "[Dokploy-Init] Configuring Docker-in-Docker environment..."
