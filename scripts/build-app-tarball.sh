@@ -59,8 +59,23 @@ mkdir -p "$STAGING/node_modules/@dokploy"
 cp -R "${PROJECT_ROOT}/packages/server" "$STAGING/node_modules/@dokploy/"
 # Remove src directory for leaner build (only built dist needed)
 rm -rf "$STAGING/node_modules/@dokploy/server/src"
-# Copy external trpc-openapi package
-cp -R "${PROJECT_ROOT}/apps/dokploy/node_modules/@dokploy/trpc-openapi" "$STAGING/node_modules/@dokploy/" 2>/dev/null || echo "Warning: @dokploy/trpc-openapi not found in node_modules"
+# Copy external trpc-openapi package, resolving symlinks to copy actual folder
+TRPC_OPENAPI_SRC="$(readlink -f "${PROJECT_ROOT}/apps/dokploy/node_modules/@dokploy/trpc-openapi" 2>/dev/null || echo "")"
+if [ -d "$TRPC_OPENAPI_SRC" ]; then
+  cp -R "$TRPC_OPENAPI_SRC" "$STAGING/node_modules/@dokploy/"
+else
+  echo "Warning: @dokploy/trpc-openapi not found in node_modules"
+fi
+
+echo "  -> Installing dependencies for @dokploy/server package..."
+# Install only production dependencies for the server package
+cd "$STAGING/node_modules/@dokploy/server"
+npm install --only=prod --no-package-lock --no-save
+
+echo "  -> Installing dependencies for @dokploy/trpc-openapi package..."
+cd "$STAGING/node_modules/@dokploy/trpc-openapi"
+npm install --only=prod --no-package-lock --no-save
+cd "$PROJECT_ROOT"
 
 # Create deployment metadata
 cat > "$STAGING/deployment-info.json" << EOF
