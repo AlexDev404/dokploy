@@ -97,6 +97,9 @@ launch_application() {
 restart_application() {
     echo "[Dokploy-Init] Restarting application..."
     
+    # Kill the running process taking up the port we need
+    kill $(ss -tulpn | grep :3000 | grep -oP 'pid=\K\d+')
+
     if [ -n "$APP_PID" ] && kill -0 $APP_PID 2>/dev/null; then
         kill -TERM $APP_PID
         
