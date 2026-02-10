@@ -417,7 +417,7 @@ export const updateEmailNotification = async (
 };
 
 export const createResendNotification = async (
-	input: typeof apiCreateResend._type,
+	input: z.infer<typeof apiCreateResend>,
 	organizationId: string,
 ) => {
 	await db.transaction(async (tx) => {
@@ -468,7 +468,7 @@ export const createResendNotification = async (
 };
 
 export const updateResendNotification = async (
-	input: typeof apiUpdateResend._type,
+	input: z.infer<typeof apiUpdateResend>,
 ) => {
 	await db.transaction(async (tx) => {
 		const newDestination = await tx
