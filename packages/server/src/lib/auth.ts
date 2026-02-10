@@ -18,6 +18,7 @@ import { getHubSpotUTK, submitToHubSpot } from "../utils/tracking/hubspot";
 import { sendEmail } from "../verification/send-verification-email";
 import { getPublicIpWithFallback } from "../wss/utils";
 
+<<<<<<< HEAD
 // Define the configuration separately so it can be used for type inference
 const authConfig = {
   database: drizzleAdapter(db, {
@@ -78,6 +79,88 @@ const authConfig = {
           email: user.email,
           subject: "Verify your email",
           text: `
+=======
+const { handler, api } = betterAuth({
+	database: drizzleAdapter(db, {
+		provider: "pg",
+		schema: schema,
+	}),
+	disabledPaths: [
+		"/sso/register",
+		"/organization/create",
+		"/organization/update",
+		"/organization/delete",
+	],
+	secret: BETTER_AUTH_SECRET,
+	...(!IS_CLOUD
+		? {
+				advanced: {
+					useSecureCookies: false,
+					defaultCookieAttributes: {
+						sameSite: "lax",
+						secure: false,
+						httpOnly: true,
+						path: "/",
+					},
+				},
+			}
+		: {}),
+	...(IS_CLOUD
+		? {
+				account: {
+					accountLinking: {
+						enabled: true,
+						trustedProviders: ["github", "google"],
+						allowDifferentEmails: true,
+					},
+				},
+			}
+		: {}),
+	appName: "Dokploy",
+	socialProviders: {
+		github: {
+			clientId: process.env.GITHUB_CLIENT_ID as string,
+			clientSecret: process.env.GITHUB_CLIENT_SECRET as string,
+		},
+		google: {
+			clientId: process.env.GOOGLE_CLIENT_ID as string,
+			clientSecret: process.env.GOOGLE_CLIENT_SECRET as string,
+		},
+	},
+	logger: {
+		disabled: process.env.NODE_ENV === "production",
+	},
+	async trustedOrigins() {
+		const trustedOrigins = await getTrustedOrigins();
+		if (IS_CLOUD) {
+			return trustedOrigins;
+		}
+		const settings = await getWebServerSettings();
+		if (!settings) {
+			return [];
+		}
+		return [
+			...(settings?.serverIp ? [`http://${settings?.serverIp}:3000`] : []),
+			...(settings?.host ? [`https://${settings?.host}`] : []),
+			...(process.env.NODE_ENV === "development"
+				? [
+						"http://localhost:3000",
+						"https://absolutely-handy-falcon.ngrok-free.app",
+					]
+				: []),
+			...trustedOrigins,
+		];
+	},
+	emailVerification: {
+		sendOnSignUp: true,
+		autoSignInAfterVerification: true,
+		sendVerificationEmail: async ({ user, url }) => {
+			if (IS_CLOUD) {
+				await sendEmail({
+					email: user.email,
+					subject: "Verify your email",
+					text: `
+>>>>>>> canary
 				<p>Click the link to verify your email: <a href="${url}">Verify Email</a></p>
 				`,
         });

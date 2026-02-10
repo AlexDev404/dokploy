@@ -175,6 +175,10 @@ export const deployApplication = async ({
 }) => {
 	const application = await findApplicationById(applicationId);
 	const serverId = application.buildServerId || application.serverId;
+	const applicationEntity = {
+		...application,
+		serverId: serverId,
+	};
 
 	const buildLink = `${await getDokployUrl()}/dashboard/project/${application.environment.projectId}/environment/${application.environmentId}/services/application/${application.applicationId}?tab=deployments`;
 	const deployment = await createDeployment({
@@ -186,15 +190,15 @@ export const deployApplication = async ({
 	try {
 		let command = "set -e;";
 		if (application.sourceType === "github") {
-			command += await cloneGithubRepository(application);
+			command += await cloneGithubRepository(applicationEntity);
 		} else if (application.sourceType === "gitlab") {
-			command += await cloneGitlabRepository(application);
+			command += await cloneGitlabRepository(applicationEntity);
 		} else if (application.sourceType === "gitea") {
-			command += await cloneGiteaRepository(application);
+			command += await cloneGiteaRepository(applicationEntity);
 		} else if (application.sourceType === "bitbucket") {
-			command += await cloneBitbucketRepository(application);
+			command += await cloneBitbucketRepository(applicationEntity);
 		} else if (application.sourceType === "git") {
-			command += await cloneGitRepository(application);
+			command += await cloneGitRepository(applicationEntity);
 		} else if (application.sourceType === "docker") {
 			command += await buildRemoteDocker(application);
 		}
@@ -259,7 +263,6 @@ export const deployApplication = async ({
 				type: "application",
 				serverId: serverId,
 			});
-
 			if (commitInfo) {
 				await updateDeployment(deployment.deploymentId, {
 					title: commitInfo.message,
