@@ -47,3 +47,5 @@ yarn-error.log*
 
 # Development environment
 .devcontainer
+.env.production
+dist-tarball/
