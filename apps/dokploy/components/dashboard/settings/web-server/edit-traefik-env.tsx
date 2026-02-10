@@ -55,6 +55,15 @@ export const EditTraefikEnv = ({ children, serverId }: Props) => {
 		resolver: zodResolver(schema),
 	});
 
+	const {
+		execute: executeWithHealthCheck,
+		isExecuting: isHealthCheckExecuting,
+	} = useHealthCheckAfterMutation({
+		initialDelay: 5000,
+		pollInterval: 4000,
+		successMessage: "Traefik environment updated successfully",
+	});
+
 	useEffect(() => {
 		if (data) {
 			form.reset({
