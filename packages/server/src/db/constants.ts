@@ -52,6 +52,12 @@ const INTERNAL_DB_HOSTS = new Set([
   "127.0.0.1",
 ]);
 
+const INTERNAL_REDIS_HOSTS = new Set([
+  "dokploy-redis",
+  "localhost",
+  "127.0.0.1",
+]);
+
 /**
  * Returns true when Dokploy is configured to use an external PostgreSQL
  * instance (not the built-in Docker Swarm service or localhost dev).
@@ -70,10 +76,16 @@ export const isExternalDatabase = (): boolean => {
  * instance (not the built-in Docker Swarm service).
  */
 export const isExternalRedis = (): boolean => {
-  return !!(
-    process.env.REDIS_URL ||
-    (process.env.REDIS_HOST && process.env.REDIS_HOST !== "127.0.0.1")
-  );
+  try {
+    const url = new URL(process.env.REDIS_URL || "");
+    return !INTERNAL_REDIS_HOSTS.has(url.hostname);
+  } catch {
+    return !!(
+      process.env.REDIS_URL ||
+      (process.env.REDIS_HOST &&
+        !INTERNAL_REDIS_HOSTS.has(process.env.REDIS_HOST))
+    );
+  }
 };
 
 export interface PostgresCredentials {
