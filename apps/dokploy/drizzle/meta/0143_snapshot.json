@@ -1,5 +1,5 @@
 {
-  "id": "c03ebeca-bf0f-4d72-8b4f-9a4dccb9f143",
+  "id": "3c3f9c63-32c2-479a-aa45-9726bed6281e",
   "prevId": "fce8c149-40a8-4279-a432-cfa7538666c6",
   "version": "7",
   "dialect": "postgresql",
@@ -124,12 +124,8 @@
           "name": "account_user_id_user_id_fk",
           "tableFrom": "account",
           "tableTo": "user",
-          "columnsFrom": [
-            "user_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["user_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -277,12 +273,8 @@
           "name": "apikey_user_id_user_id_fk",
           "tableFrom": "apikey",
           "tableTo": "user",
-          "columnsFrom": [
-            "user_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["user_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -359,12 +351,8 @@
           "name": "invitation_organization_id_organization_id_fk",
           "tableFrom": "invitation",
           "tableTo": "organization",
-          "columnsFrom": [
-            "organization_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["organization_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         },
@@ -372,12 +360,8 @@
           "name": "invitation_inviter_id_user_id_fk",
           "tableFrom": "invitation",
           "tableTo": "user",
-          "columnsFrom": [
-            "inviter_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["inviter_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -540,12 +524,8 @@
           "name": "member_organization_id_organization_id_fk",
           "tableFrom": "member",
           "tableTo": "organization",
-          "columnsFrom": [
-            "organization_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["organization_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         },
@@ -553,12 +533,8 @@
           "name": "member_user_id_user_id_fk",
           "tableFrom": "member",
           "tableTo": "user",
-          "columnsFrom": [
-            "user_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["user_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -622,12 +598,8 @@
           "name": "organization_owner_id_user_id_fk",
           "tableFrom": "organization",
           "tableTo": "user",
-          "columnsFrom": [
-            "owner_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["owner_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -637,9 +609,7 @@
         "organization_slug_unique": {
           "name": "organization_slug_unique",
           "nullsNotDistinct": false,
-          "columns": [
-            "slug"
-          ]
+          "columns": ["slug"]
         }
       },
       "policies": {},
@@ -681,12 +651,8 @@
           "name": "two_factor_user_id_user_id_fk",
           "tableFrom": "two_factor",
           "tableTo": "user",
-          "columnsFrom": [
-            "user_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["user_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -806,12 +772,8 @@
           "name": "ai_organizationId_organization_id_fk",
           "tableFrom": "ai",
           "tableTo": "organization",
-          "columnsFrom": [
-            "organizationId"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["organizationId"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -1448,12 +1410,8 @@
           "name": "application_customGitSSHKeyId_ssh-key_sshKeyId_fk",
           "tableFrom": "application",
           "tableTo": "ssh-key",
-          "columnsFrom": [
-            "customGitSSHKeyId"
-          ],
-          "columnsTo": [
-            "sshKeyId"
-          ],
+          "columnsFrom": ["customGitSSHKeyId"],
+          "columnsTo": ["sshKeyId"],
           "onDelete": "set null",
           "onUpdate": "no action"
         },
@@ -1461,12 +1419,8 @@
           "name": "application_registryId_registry_registryId_fk",
           "tableFrom": "application",
           "tableTo": "registry",
-          "columnsFrom": [
-            "registryId"
-          ],
-          "columnsTo": [
-            "registryId"
-          ],
+          "columnsFrom": ["registryId"],
+          "columnsTo": ["registryId"],
           "onDelete": "set null",
           "onUpdate": "no action"
         },
@@ -1474,12 +1428,8 @@
           "name": "application_rollbackRegistryId_registry_registryId_fk",
           "tableFrom": "application",
           "tableTo": "registry",
-          "columnsFrom": [
-            "rollbackRegistryId"
-          ],
-          "columnsTo": [
-            "registryId"
-          ],
+          "columnsFrom": ["rollbackRegistryId"],
+          "columnsTo": ["registryId"],
           "onDelete": "set null",
           "onUpdate": "no action"
         },
@@ -1487,12 +1437,8 @@
           "name": "application_environmentId_environment_environmentId_fk",
           "tableFrom": "application",
           "tableTo": "environment",
-          "columnsFrom": [
-            "environmentId"
-          ],
-          "columnsTo": [
-            "environmentId"
-          ],
+          "columnsFrom": ["environmentId"],
+          "columnsTo": ["environmentId"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         },
@@ -1500,12 +1446,8 @@
           "name": "application_githubId_github_githubId_fk",
           "tableFrom": "application",
           "tableTo": "github",
-          "columnsFrom": [
-            "githubId"
-          ],
-          "columnsTo": [
-            "githubId"
-          ],
+          "columnsFrom": ["githubId"],
+          "columnsTo": ["githubId"],
           "onDelete": "set null",
           "onUpdate": "no action"
         },
@@ -1513,12 +1455,8 @@
           "name": "application_gitlabId_gitlab_gitlabId_fk",
           "tableFrom": "application",
           "tableTo": "gitlab",
-          "columnsFrom": [
-            "gitlabId"
-          ],
-          "columnsTo": [
-            "gitlabId"
-          ],
+          "columnsFrom": ["gitlabId"],
+          "columnsTo": ["gitlabId"],
           "onDelete": "set null",
           "onUpdate": "no action"
         },
@@ -1526,12 +1464,8 @@
           "name": "application_giteaId_gitea_giteaId_fk",
           "tableFrom": "application",
           "tableTo": "gitea",
-          "columnsFrom": [
-            "giteaId"
-          ],
-          "columnsTo": [
-            "giteaId"
-          ],
+          "columnsFrom": ["giteaId"],
+          "columnsTo": ["giteaId"],
           "onDelete": "set null",
           "onUpdate": "no action"
         },
@@ -1539,12 +1473,8 @@
           "name": "application_bitbucketId_bitbucket_bitbucketId_fk",
           "tableFrom": "application",
           "tableTo": "bitbucket",
-          "columnsFrom": [
-            "bitbucketId"
-          ],
-          "columnsTo": [
-            "bitbucketId"
-          ],
+          "columnsFrom": ["bitbucketId"],
+          "columnsTo": ["bitbucketId"],
           "onDelete": "set null",
           "onUpdate": "no action"
         },
@@ -1552,12 +1482,8 @@
           "name": "application_serverId_server_serverId_fk",
           "tableFrom": "application",
           "tableTo": "server",
-          "columnsFrom": [
-            "serverId"
-          ],
-          "columnsTo": [
-            "serverId"
-          ],
+          "columnsFrom": ["serverId"],
+          "columnsTo": ["serverId"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         },
@@ -1565,12 +1491,8 @@
           "name": "application_buildServerId_server_serverId_fk",
           "tableFrom": "application",
           "tableTo": "server",
-          "columnsFrom": [
-            "buildServerId"
-          ],
-          "columnsTo": [
-            "serverId"
-          ],
+          "columnsFrom": ["buildServerId"],
+          "columnsTo": ["serverId"],
           "onDelete": "set null",
           "onUpdate": "no action"
         },
@@ -1578,12 +1500,8 @@
           "name": "application_buildRegistryId_registry_registryId_fk",
           "tableFrom": "application",
           "tableTo": "registry",
-          "columnsFrom": [
-            "buildRegistryId"
-          ],
-          "columnsTo": [
-            "registryId"
-          ],
+          "columnsFrom": ["buildRegistryId"],
+          "columnsTo": ["registryId"],
           "onDelete": "set null",
           "onUpdate": "no action"
         }
@@ -1593,9 +1511,7 @@
         "application_appName_unique": {
           "name": "application_appName_unique",
           "nullsNotDistinct": false,
-          "columns": [
-            "appName"
-          ]
+          "columns": ["appName"]
         }
       },
       "policies": {},
@@ -1724,12 +1640,8 @@
           "name": "backup_destinationId_destination_destinationId_fk",
           "tableFrom": "backup",
           "tableTo": "destination",
-          "columnsFrom": [
-            "destinationId"
-          ],
-          "columnsTo": [
-            "destinationId"
-          ],
+          "columnsFrom": ["destinationId"],
+          "columnsTo": ["destinationId"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         },
@@ -1737,12 +1649,8 @@
           "name": "backup_composeId_compose_composeId_fk",
           "tableFrom": "backup",
           "tableTo": "compose",
-          "columnsFrom": [
-            "composeId"
-          ],
-          "columnsTo": [
-            "composeId"
-          ],
+          "columnsFrom": ["composeId"],
+          "columnsTo": ["composeId"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         },
@@ -1750,12 +1658,8 @@
           "name": "backup_postgresId_postgres_postgresId_fk",
           "tableFrom": "backup",
           "tableTo": "postgres",
-          "columnsFrom": [
-            "postgresId"
-          ],
-          "columnsTo": [
-            "postgresId"
-          ],
+          "columnsFrom": ["postgresId"],
+          "columnsTo": ["postgresId"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         },
@@ -1763,12 +1667,8 @@
           "name": "backup_mariadbId_mariadb_mariadbId_fk",
           "tableFrom": "backup",
           "tableTo": "mariadb",
-          "columnsFrom": [
-            "mariadbId"
-          ],
-          "columnsTo": [
-            "mariadbId"
-          ],
+          "columnsFrom": ["mariadbId"],
+          "columnsTo": ["mariadbId"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         },
@@ -1776,12 +1676,8 @@
           "name": "backup_mysqlId_mysql_mysqlId_fk",
           "tableFrom": "backup",
           "tableTo": "mysql",
-          "columnsFrom": [
-            "mysqlId"
-          ],
-          "columnsTo": [
-            "mysqlId"
-          ],
+          "columnsFrom": ["mysqlId"],
+          "columnsTo": ["mysqlId"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         },
@@ -1789,12 +1685,8 @@
           "name": "backup_mongoId_mongo_mongoId_fk",
           "tableFrom": "backup",
           "tableTo": "mongo",
-          "columnsFrom": [
-            "mongoId"
-          ],
-          "columnsTo": [
-            "mongoId"
-          ],
+          "columnsFrom": ["mongoId"],
+          "columnsTo": ["mongoId"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         },
@@ -1802,12 +1694,8 @@
           "name": "backup_userId_user_id_fk",
           "tableFrom": "backup",
           "tableTo": "user",
-          "columnsFrom": [
-            "userId"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["userId"],
+          "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         }
@@ -1817,9 +1705,7 @@
         "backup_appName_unique": {
           "name": "backup_appName_unique",
           "nullsNotDistinct": false,
-          "columns": [
-            "appName"
-          ]
+          "columns": ["appName"]
         }
       },
       "policies": {},
@@ -1879,12 +1765,8 @@
           "name": "bitbucket_gitProviderId_git_provider_gitProviderId_fk",
           "tableFrom": "bitbucket",
           "tableTo": "git_provider",
-          "columnsFrom": [
-            "gitProviderId"
-          ],
-          "columnsTo": [
-            "gitProviderId"
-          ],
+          "columnsFrom": ["gitProviderId"],
+          "columnsTo": ["gitProviderId"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -1954,12 +1836,8 @@
           "name": "certificate_organizationId_organization_id_fk",
           "tableFrom": "certificate",
           "tableTo": "organization",
-          "columnsFrom": [
-            "organizationId"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["organizationId"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         },
@@ -1967,12 +1845,8 @@
           "name": "certificate_serverId_server_serverId_fk",
           "tableFrom": "certificate",
           "tableTo": "server",
-          "columnsFrom": [
-            "serverId"
-          ],
-          "columnsTo": [
-            "serverId"
-          ],
+          "columnsFrom": ["serverId"],
+          "columnsTo": ["serverId"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -1982,9 +1856,7 @@
         "certificate_certificatePath_unique": {
           "name": "certificate_certificatePath_unique",
           "nullsNotDistinct": false,
-          "columns": [
-            "certificatePath"
-          ]
+          "columns": ["certificatePath"]
         }
       },
       "policies": {},
@@ -2288,12 +2160,8 @@
           "name": "compose_customGitSSHKeyId_ssh-key_sshKeyId_fk",
           "tableFrom": "compose",
           "tableTo": "ssh-key",
-          "columnsFrom": [
-            "customGitSSHKeyId"
-          ],
-          "columnsTo": [
-            "sshKeyId"
-          ],
+          "columnsFrom": ["customGitSSHKeyId"],
+          "columnsTo": ["sshKeyId"],
           "onDelete": "set null",
           "onUpdate": "no action"
         },
@@ -2301,12 +2169,8 @@
           "name": "compose_environmentId_environment_environmentId_fk",
           "tableFrom": "compose",
           "tableTo": "environment",
-          "columnsFrom": [
-            "environmentId"
-          ],
-          "columnsTo": [
-            "environmentId"
-          ],
+          "columnsFrom": ["environmentId"],
+          "columnsTo": ["environmentId"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         },
@@ -2314,12 +2178,8 @@
           "name": "compose_githubId_github_githubId_fk",
           "tableFrom": "compose",
           "tableTo": "github",
-          "columnsFrom": [
-            "githubId"
-          ],
-          "columnsTo": [
-            "githubId"
-          ],
+          "columnsFrom": ["githubId"],
+          "columnsTo": ["githubId"],
           "onDelete": "set null",
           "onUpdate": "no action"
         },
@@ -2327,12 +2187,8 @@
           "name": "compose_gitlabId_gitlab_gitlabId_fk",
           "tableFrom": "compose",
           "tableTo": "gitlab",
-          "columnsFrom": [
-            "gitlabId"
-          ],
-          "columnsTo": [
-            "gitlabId"
-          ],
+          "columnsFrom": ["gitlabId"],
+          "columnsTo": ["gitlabId"],
           "onDelete": "set null",
           "onUpdate": "no action"
         },
@@ -2340,12 +2196,8 @@
           "name": "compose_bitbucketId_bitbucket_bitbucketId_fk",
           "tableFrom": "compose",
           "tableTo": "bitbucket",
-          "columnsFrom": [
-            "bitbucketId"
-          ],
-          "columnsTo": [
-            "bitbucketId"
-          ],
+          "columnsFrom": ["bitbucketId"],
+          "columnsTo": ["bitbucketId"],
           "onDelete": "set null",
           "onUpdate": "no action"
         },
@@ -2353,12 +2205,8 @@
           "name": "compose_giteaId_gitea_giteaId_fk",
           "tableFrom": "compose",
           "tableTo": "gitea",
-          "columnsFrom": [
-            "giteaId"
-          ],
-          "columnsTo": [
-            "giteaId"
-          ],
+          "columnsFrom": ["giteaId"],
+          "columnsTo": ["giteaId"],
           "onDelete": "set null",
           "onUpdate": "no action"
         },
@@ -2366,12 +2214,8 @@
           "name": "compose_serverId_server_serverId_fk",
           "tableFrom": "compose",
           "tableTo": "server",
-          "columnsFrom": [
-            "serverId"
-          ],
-          "columnsTo": [
-            "serverId"
-          ],
+          "columnsFrom": ["serverId"],
+          "columnsTo": ["serverId"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -2516,12 +2360,8 @@
           "name": "deployment_applicationId_application_applicationId_fk",
           "tableFrom": "deployment",
           "tableTo": "application",
-          "columnsFrom": [
-            "applicationId"
-          ],
-          "columnsTo": [
-            "applicationId"
-          ],
+          "columnsFrom": ["applicationId"],
+          "columnsTo": ["applicationId"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         },
@@ -2529,12 +2369,8 @@
           "name": "deployment_composeId_compose_composeId_fk",
           "tableFrom": "deployment",
           "tableTo": "compose",
-          "columnsFrom": [
-            "composeId"
-          ],
-          "columnsTo": [
-            "composeId"
-          ],
+          "columnsFrom": ["composeId"],
+          "columnsTo": ["composeId"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         },
@@ -2542,12 +2378,8 @@
           "name": "deployment_serverId_server_serverId_fk",
           "tableFrom": "deployment",
           "tableTo": "server",
-          "columnsFrom": [
-            "serverId"
-          ],
-          "columnsTo": [
-            "serverId"
-          ],
+          "columnsFrom": ["serverId"],
+          "columnsTo": ["serverId"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         },
@@ -2555,12 +2387,8 @@
           "name": "deployment_previewDeploymentId_preview_deployments_previewDeploymentId_fk",
           "tableFrom": "deployment",
           "tableTo": "preview_deployments",
-          "columnsFrom": [
-            "previewDeploymentId"
-          ],
-          "columnsTo": [
-            "previewDeploymentId"
-          ],
+          "columnsFrom": ["previewDeploymentId"],
+          "columnsTo": ["previewDeploymentId"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         },
@@ -2568,12 +2396,8 @@
           "name": "deployment_scheduleId_schedule_scheduleId_fk",
           "tableFrom": "deployment",
           "tableTo": "schedule",
-          "columnsFrom": [
-            "scheduleId"
-          ],
-          "columnsTo": [
-            "scheduleId"
-          ],
+          "columnsFrom": ["scheduleId"],
+          "columnsTo": ["scheduleId"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         },
@@ -2581,12 +2405,8 @@
           "name": "deployment_backupId_backup_backupId_fk",
           "tableFrom": "deployment",
           "tableTo": "backup",
-          "columnsFrom": [
-            "backupId"
-          ],
-          "columnsTo": [
-            "backupId"
-          ],
+          "columnsFrom": ["backupId"],
+          "columnsTo": ["backupId"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         },
@@ -2594,12 +2414,8 @@
           "name": "deployment_rollbackId_rollback_rollbackId_fk",
           "tableFrom": "deployment",
           "tableTo": "rollback",
-          "columnsFrom": [
-            "rollbackId"
-          ],
-          "columnsTo": [
-            "rollbackId"
-          ],
+          "columnsFrom": ["rollbackId"],
+          "columnsTo": ["rollbackId"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         },
@@ -2607,12 +2423,8 @@
           "name": "deployment_volumeBackupId_volume_backup_volumeBackupId_fk",
           "tableFrom": "deployment",
           "tableTo": "volume_backup",
-          "columnsFrom": [
-            "volumeBackupId"
-          ],
-          "columnsTo": [
-            "volumeBackupId"
-          ],
+          "columnsFrom": ["volumeBackupId"],
+          "columnsTo": ["volumeBackupId"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         },
@@ -2620,12 +2432,8 @@
           "name": "deployment_buildServerId_server_serverId_fk",
           "tableFrom": "deployment",
           "tableTo": "server",
-          "columnsFrom": [
-            "buildServerId"
-          ],
-          "columnsTo": [
-            "serverId"
-          ],
+          "columnsFrom": ["buildServerId"],
+          "columnsTo": ["serverId"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -2708,12 +2516,8 @@
           "name": "destination_organizationId_organization_id_fk",
           "tableFrom": "destination",
           "tableTo": "organization",
-          "columnsFrom": [
-            "organizationId"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["organizationId"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -2840,12 +2644,8 @@
           "name": "domain_composeId_compose_composeId_fk",
           "tableFrom": "domain",
           "tableTo": "compose",
-          "columnsFrom": [
-            "composeId"
-          ],
-          "columnsTo": [
-            "composeId"
-          ],
+          "columnsFrom": ["composeId"],
+          "columnsTo": ["composeId"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         },
@@ -2853,12 +2653,8 @@
           "name": "domain_applicationId_application_applicationId_fk",
           "tableFrom": "domain",
           "tableTo": "application",
-          "columnsFrom": [
-            "applicationId"
-          ],
-          "columnsTo": [
-            "applicationId"
-          ],
+          "columnsFrom": ["applicationId"],
+          "columnsTo": ["applicationId"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         },
@@ -2866,12 +2662,8 @@
           "name": "domain_previewDeploymentId_preview_deployments_previewDeploymentId_fk",
           "tableFrom": "domain",
           "tableTo": "preview_deployments",
-          "columnsFrom": [
-            "previewDeploymentId"
-          ],
-          "columnsTo": [
-            "previewDeploymentId"
-          ],
+          "columnsFrom": ["previewDeploymentId"],
+          "columnsTo": ["previewDeploymentId"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -2937,12 +2729,8 @@
           "name": "environment_projectId_project_projectId_fk",
           "tableFrom": "environment",
           "tableTo": "project",
-          "columnsFrom": [
-            "projectId"
-          ],
-          "columnsTo": [
-            "projectId"
-          ],
+          "columnsFrom": ["projectId"],
+          "columnsTo": ["projectId"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -3002,12 +2790,8 @@
           "name": "git_provider_organizationId_organization_id_fk",
           "tableFrom": "git_provider",
           "tableTo": "organization",
-          "columnsFrom": [
-            "organizationId"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["organizationId"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         },
@@ -3015,12 +2799,8 @@
           "name": "git_provider_userId_user_id_fk",
           "tableFrom": "git_provider",
           "tableTo": "user",
-          "columnsFrom": [
-            "userId"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["userId"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -3116,12 +2896,8 @@
           "name": "gitea_gitProviderId_git_provider_gitProviderId_fk",
           "tableFrom": "gitea",
           "tableTo": "git_provider",
-          "columnsFrom": [
-            "gitProviderId"
-          ],
-          "columnsTo": [
-            "gitProviderId"
-          ],
+          "columnsFrom": ["gitProviderId"],
+          "columnsTo": ["gitProviderId"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -3197,12 +2973,8 @@
           "name": "github_gitProviderId_git_provider_gitProviderId_fk",
           "tableFrom": "github",
           "tableTo": "git_provider",
-          "columnsFrom": [
-            "gitProviderId"
-          ],
-          "columnsTo": [
-            "gitProviderId"
-          ],
+          "columnsFrom": ["gitProviderId"],
+          "columnsTo": ["gitProviderId"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -3291,12 +3063,8 @@
           "name": "gitlab_gitProviderId_git_provider_gitProviderId_fk",
           "tableFrom": "gitlab",
           "tableTo": "git_provider",
-          "columnsFrom": [
-            "gitProviderId"
-          ],
-          "columnsTo": [
-            "gitProviderId"
-          ],
+          "columnsFrom": ["gitProviderId"],
+          "columnsTo": ["gitProviderId"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -3519,12 +3287,8 @@
           "name": "mariadb_environmentId_environment_environmentId_fk",
           "tableFrom": "mariadb",
           "tableTo": "environment",
-          "columnsFrom": [
-            "environmentId"
-          ],
-          "columnsTo": [
-            "environmentId"
-          ],
+          "columnsFrom": ["environmentId"],
+          "columnsTo": ["environmentId"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         },
@@ -3532,12 +3296,8 @@
           "name": "mariadb_serverId_server_serverId_fk",
           "tableFrom": "mariadb",
           "tableTo": "server",
-          "columnsFrom": [
-            "serverId"
-          ],
-          "columnsTo": [
-            "serverId"
-          ],
+          "columnsFrom": ["serverId"],
+          "columnsTo": ["serverId"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -3547,9 +3307,7 @@
         "mariadb_appName_unique": {
           "name": "mariadb_appName_unique",
           "nullsNotDistinct": false,
-          "columns": [
-            "appName"
-          ]
+          "columns": ["appName"]
         }
       },
       "policies": {},
@@ -3763,12 +3521,8 @@
           "name": "mongo_environmentId_environment_environmentId_fk",
           "tableFrom": "mongo",
           "tableTo": "environment",
-          "columnsFrom": [
-            "environmentId"
-          ],
-          "columnsTo": [
-            "environmentId"
-          ],
+          "columnsFrom": ["environmentId"],
+          "columnsTo": ["environmentId"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         },
@@ -3776,12 +3530,8 @@
           "name": "mongo_serverId_server_serverId_fk",
           "tableFrom": "mongo",
           "tableTo": "server",
-          "columnsFrom": [
-            "serverId"
-          ],
-          "columnsTo": [
-            "serverId"
-          ],
+          "columnsFrom": ["serverId"],
+          "columnsTo": ["serverId"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -3791,9 +3541,7 @@
         "mongo_appName_unique": {
           "name": "mongo_appName_unique",
           "nullsNotDistinct": false,
-          "columns": [
-            "appName"
-          ]
+          "columns": ["appName"]
         }
       },
       "policies": {},
@@ -3904,12 +3652,8 @@
           "name": "mount_applicationId_application_applicationId_fk",
           "tableFrom": "mount",
           "tableTo": "application",
-          "columnsFrom": [
-            "applicationId"
-          ],
-          "columnsTo": [
-            "applicationId"
-          ],
+          "columnsFrom": ["applicationId"],
+          "columnsTo": ["applicationId"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         },
@@ -3917,12 +3661,8 @@
           "name": "mount_postgresId_postgres_postgresId_fk",
           "tableFrom": "mount",
           "tableTo": "postgres",
-          "columnsFrom": [
-            "postgresId"
-          ],
-          "columnsTo": [
-            "postgresId"
-          ],
+          "columnsFrom": ["postgresId"],
+          "columnsTo": ["postgresId"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         },
@@ -3930,12 +3670,8 @@
           "name": "mount_mariadbId_mariadb_mariadbId_fk",
           "tableFrom": "mount",
           "tableTo": "mariadb",
-          "columnsFrom": [
-            "mariadbId"
-          ],
-          "columnsTo": [
-            "mariadbId"
-          ],
+          "columnsFrom": ["mariadbId"],
+          "columnsTo": ["mariadbId"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         },
@@ -3943,12 +3679,8 @@
           "name": "mount_mongoId_mongo_mongoId_fk",
           "tableFrom": "mount",
           "tableTo": "mongo",
-          "columnsFrom": [
-            "mongoId"
-          ],
-          "columnsTo": [
-            "mongoId"
-          ],
+          "columnsFrom": ["mongoId"],
+          "columnsTo": ["mongoId"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         },
@@ -3956,12 +3688,8 @@
           "name": "mount_mysqlId_mysql_mysqlId_fk",
           "tableFrom": "mount",
           "tableTo": "mysql",
-          "columnsFrom": [
-            "mysqlId"
-          ],
-          "columnsTo": [
-            "mysqlId"
-          ],
+          "columnsFrom": ["mysqlId"],
+          "columnsTo": ["mysqlId"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         },
@@ -3969,12 +3697,8 @@
           "name": "mount_redisId_redis_redisId_fk",
           "tableFrom": "mount",
           "tableTo": "redis",
-          "columnsFrom": [
-            "redisId"
-          ],
-          "columnsTo": [
-            "redisId"
-          ],
+          "columnsFrom": ["redisId"],
+          "columnsTo": ["redisId"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         },
@@ -3982,12 +3706,8 @@
           "name": "mount_composeId_compose_composeId_fk",
           "tableFrom": "mount",
           "tableTo": "compose",
-          "columnsFrom": [
-            "composeId"
-          ],
-          "columnsTo": [
-            "composeId"
-          ],
+          "columnsFrom": ["composeId"],
+          "columnsTo": ["composeId"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -4210,12 +3930,8 @@
           "name": "mysql_environmentId_environment_environmentId_fk",
           "tableFrom": "mysql",
           "tableTo": "environment",
-          "columnsFrom": [
-            "environmentId"
-          ],
-          "columnsTo": [
-            "environmentId"
-          ],
+          "columnsFrom": ["environmentId"],
+          "columnsTo": ["environmentId"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         },
@@ -4223,12 +3939,8 @@
           "name": "mysql_serverId_server_serverId_fk",
           "tableFrom": "mysql",
           "tableTo": "server",
-          "columnsFrom": [
-            "serverId"
-          ],
-          "columnsTo": [
-            "serverId"
-          ],
+          "columnsFrom": ["serverId"],
+          "columnsTo": ["serverId"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -4238,9 +3950,7 @@
         "mysql_appName_unique": {
           "name": "mysql_appName_unique",
           "nullsNotDistinct": false,
-          "columns": [
-            "appName"
-          ]
+          "columns": ["appName"]
         }
       },
       "policies": {},
@@ -4584,12 +4294,8 @@
           "name": "notification_slackId_slack_slackId_fk",
           "tableFrom": "notification",
           "tableTo": "slack",
-          "columnsFrom": [
-            "slackId"
-          ],
-          "columnsTo": [
-            "slackId"
-          ],
+          "columnsFrom": ["slackId"],
+          "columnsTo": ["slackId"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         },
@@ -4597,12 +4303,8 @@
           "name": "notification_telegramId_telegram_telegramId_fk",
           "tableFrom": "notification",
           "tableTo": "telegram",
-          "columnsFrom": [
-            "telegramId"
-          ],
-          "columnsTo": [
-            "telegramId"
-          ],
+          "columnsFrom": ["telegramId"],
+          "columnsTo": ["telegramId"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         },
@@ -4610,12 +4312,8 @@
           "name": "notification_discordId_discord_discordId_fk",
           "tableFrom": "notification",
           "tableTo": "discord",
-          "columnsFrom": [
-            "discordId"
-          ],
-          "columnsTo": [
-            "discordId"
-          ],
+          "columnsFrom": ["discordId"],
+          "columnsTo": ["discordId"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         },
@@ -4623,12 +4321,8 @@
           "name": "notification_emailId_email_emailId_fk",
           "tableFrom": "notification",
           "tableTo": "email",
-          "columnsFrom": [
-            "emailId"
-          ],
-          "columnsTo": [
-            "emailId"
-          ],
+          "columnsFrom": ["emailId"],
+          "columnsTo": ["emailId"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         },
@@ -4636,12 +4330,8 @@
           "name": "notification_resendId_resend_resendId_fk",
           "tableFrom": "notification",
           "tableTo": "resend",
-          "columnsFrom": [
-            "resendId"
-          ],
-          "columnsTo": [
-            "resendId"
-          ],
+          "columnsFrom": ["resendId"],
+          "columnsTo": ["resendId"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         },
@@ -4649,12 +4339,8 @@
           "name": "notification_gotifyId_gotify_gotifyId_fk",
           "tableFrom": "notification",
           "tableTo": "gotify",
-          "columnsFrom": [
-            "gotifyId"
-          ],
-          "columnsTo": [
-            "gotifyId"
-          ],
+          "columnsFrom": ["gotifyId"],
+          "columnsTo": ["gotifyId"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         },
@@ -4662,12 +4348,8 @@
           "name": "notification_ntfyId_ntfy_ntfyId_fk",
           "tableFrom": "notification",
           "tableTo": "ntfy",
-          "columnsFrom": [
-            "ntfyId"
-          ],
-          "columnsTo": [
-            "ntfyId"
-          ],
+          "columnsFrom": ["ntfyId"],
+          "columnsTo": ["ntfyId"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         },
@@ -4675,12 +4357,8 @@
           "name": "notification_customId_custom_customId_fk",
           "tableFrom": "notification",
           "tableTo": "custom",
-          "columnsFrom": [
-            "customId"
-          ],
-          "columnsTo": [
-            "customId"
-          ],
+          "columnsFrom": ["customId"],
+          "columnsTo": ["customId"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         },
@@ -4688,12 +4366,8 @@
           "name": "notification_larkId_lark_larkId_fk",
           "tableFrom": "notification",
           "tableTo": "lark",
-          "columnsFrom": [
-            "larkId"
-          ],
-          "columnsTo": [
-            "larkId"
-          ],
+          "columnsFrom": ["larkId"],
+          "columnsTo": ["larkId"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         },
@@ -4701,12 +4375,8 @@
           "name": "notification_pushoverId_pushover_pushoverId_fk",
           "tableFrom": "notification",
           "tableTo": "pushover",
-          "columnsFrom": [
-            "pushoverId"
-          ],
-          "columnsTo": [
-            "pushoverId"
-          ],
+          "columnsFrom": ["pushoverId"],
+          "columnsTo": ["pushoverId"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         },
@@ -4714,12 +4384,8 @@
           "name": "notification_organizationId_organization_id_fk",
           "tableFrom": "notification",
           "tableTo": "organization",
-          "columnsFrom": [
-            "organizationId"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["organizationId"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -4929,6 +4595,98 @@
       "checkConstraints": {},
       "isRLSEnabled": false
     },
+    "public.patch": {
+      "name": "patch",
+      "schema": "",
+      "columns": {
+        "patchId": {
+          "name": "patchId",
+          "type": "text",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "filePath": {
+          "name": "filePath",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "enabled": {
+          "name": "enabled",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": true,
+          "default": true
+        },
+        "content": {
+          "name": "content",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "createdAt": {
+          "name": "createdAt",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "updatedAt": {
+          "name": "updatedAt",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "applicationId": {
+          "name": "applicationId",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "composeId": {
+          "name": "composeId",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "patch_applicationId_application_applicationId_fk": {
+          "name": "patch_applicationId_application_applicationId_fk",
+          "tableFrom": "patch",
+          "tableTo": "application",
+          "columnsFrom": ["applicationId"],
+          "columnsTo": ["applicationId"],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        },
+        "patch_composeId_compose_composeId_fk": {
+          "name": "patch_composeId_compose_composeId_fk",
+          "tableFrom": "patch",
+          "tableTo": "compose",
+          "columnsFrom": ["composeId"],
+          "columnsTo": ["composeId"],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {
+        "patch_filepath_application_unique": {
+          "name": "patch_filepath_application_unique",
+          "nullsNotDistinct": false,
+          "columns": ["filePath", "applicationId"]
+        },
+        "patch_filepath_compose_unique": {
+          "name": "patch_filepath_compose_unique",
+          "nullsNotDistinct": false,
+          "columns": ["filePath", "composeId"]
+        }
+      },
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
     "public.port": {
       "name": "port",
       "schema": "",
@@ -4979,12 +4737,8 @@
           "name": "port_applicationId_application_applicationId_fk",
           "tableFrom": "port",
           "tableTo": "application",
-          "columnsFrom": [
-            "applicationId"
-          ],
-          "columnsTo": [
-            "applicationId"
-          ],
+          "columnsFrom": ["applicationId"],
+          "columnsTo": ["applicationId"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -5201,12 +4955,8 @@
           "name": "postgres_environmentId_environment_environmentId_fk",
           "tableFrom": "postgres",
           "tableTo": "environment",
-          "columnsFrom": [
-            "environmentId"
-          ],
-          "columnsTo": [
-            "environmentId"
-          ],
+          "columnsFrom": ["environmentId"],
+          "columnsTo": ["environmentId"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         },
@@ -5214,12 +4964,8 @@
           "name": "postgres_serverId_server_serverId_fk",
           "tableFrom": "postgres",
           "tableTo": "server",
-          "columnsFrom": [
-            "serverId"
-          ],
-          "columnsTo": [
-            "serverId"
-          ],
+          "columnsFrom": ["serverId"],
+          "columnsTo": ["serverId"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -5229,9 +4975,7 @@
         "postgres_appName_unique": {
           "name": "postgres_appName_unique",
           "nullsNotDistinct": false,
-          "columns": [
-            "appName"
-          ]
+          "columns": ["appName"]
         }
       },
       "policies": {},
@@ -5329,12 +5073,8 @@
           "name": "preview_deployments_applicationId_application_applicationId_fk",
           "tableFrom": "preview_deployments",
           "tableTo": "application",
-          "columnsFrom": [
-            "applicationId"
-          ],
-          "columnsTo": [
-            "applicationId"
-          ],
+          "columnsFrom": ["applicationId"],
+          "columnsTo": ["applicationId"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         },
@@ -5342,12 +5082,8 @@
           "name": "preview_deployments_domainId_domain_domainId_fk",
           "tableFrom": "preview_deployments",
           "tableTo": "domain",
-          "columnsFrom": [
-            "domainId"
-          ],
-          "columnsTo": [
-            "domainId"
-          ],
+          "columnsFrom": ["domainId"],
+          "columnsTo": ["domainId"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -5357,9 +5093,7 @@
         "preview_deployments_appName_unique": {
           "name": "preview_deployments_appName_unique",
           "nullsNotDistinct": false,
-          "columns": [
-            "appName"
-          ]
+          "columns": ["appName"]
         }
       },
       "policies": {},
@@ -5414,12 +5148,8 @@
           "name": "project_organizationId_organization_id_fk",
           "tableFrom": "project",
           "tableTo": "organization",
-          "columnsFrom": [
-            "organizationId"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["organizationId"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -5484,12 +5214,8 @@
           "name": "redirect_applicationId_application_applicationId_fk",
           "tableFrom": "redirect",
           "tableTo": "application",
-          "columnsFrom": [
-            "applicationId"
-          ],
-          "columnsTo": [
-            "applicationId"
-          ],
+          "columnsFrom": ["applicationId"],
+          "columnsTo": ["applicationId"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -5694,12 +5420,8 @@
           "name": "redis_environmentId_environment_environmentId_fk",
           "tableFrom": "redis",
           "tableTo": "environment",
-          "columnsFrom": [
-            "environmentId"
-          ],
-          "columnsTo": [
-            "environmentId"
-          ],
+          "columnsFrom": ["environmentId"],
+          "columnsTo": ["environmentId"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         },
@@ -5707,12 +5429,8 @@
           "name": "redis_serverId_server_serverId_fk",
           "tableFrom": "redis",
           "tableTo": "server",
-          "columnsFrom": [
-            "serverId"
-          ],
-          "columnsTo": [
-            "serverId"
-          ],
+          "columnsFrom": ["serverId"],
+          "columnsTo": ["serverId"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -5722,9 +5440,7 @@
         "redis_appName_unique": {
           "name": "redis_appName_unique",
           "nullsNotDistinct": false,
-          "columns": [
-            "appName"
-          ]
+          "columns": ["appName"]
         }
       },
       "policies": {},
@@ -5799,12 +5515,8 @@
           "name": "registry_organizationId_organization_id_fk",
           "tableFrom": "registry",
           "tableTo": "organization",
-          "columnsFrom": [
-            "organizationId"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["organizationId"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -5862,12 +5574,8 @@
           "name": "rollback_deploymentId_deployment_deploymentId_fk",
           "tableFrom": "rollback",
           "tableTo": "deployment",
-          "columnsFrom": [
-            "deploymentId"
-          ],
-          "columnsTo": [
-            "deploymentId"
-          ],
+          "columnsFrom": ["deploymentId"],
+          "columnsTo": ["deploymentId"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -5990,12 +5698,8 @@
           "name": "schedule_applicationId_application_applicationId_fk",
           "tableFrom": "schedule",
           "tableTo": "application",
-          "columnsFrom": [
-            "applicationId"
-          ],
-          "columnsTo": [
-            "applicationId"
-          ],
+          "columnsFrom": ["applicationId"],
+          "columnsTo": ["applicationId"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         },
@@ -6003,12 +5707,8 @@
           "name": "schedule_composeId_compose_composeId_fk",
           "tableFrom": "schedule",
           "tableTo": "compose",
-          "columnsFrom": [
-            "composeId"
-          ],
-          "columnsTo": [
-            "composeId"
-          ],
+          "columnsFrom": ["composeId"],
+          "columnsTo": ["composeId"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         },
@@ -6016,12 +5716,8 @@
           "name": "schedule_serverId_server_serverId_fk",
           "tableFrom": "schedule",
           "tableTo": "server",
-          "columnsFrom": [
-            "serverId"
-          ],
-          "columnsTo": [
-            "serverId"
-          ],
+          "columnsFrom": ["serverId"],
+          "columnsTo": ["serverId"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         },
@@ -6029,12 +5725,8 @@
           "name": "schedule_userId_user_id_fk",
           "tableFrom": "schedule",
           "tableTo": "user",
-          "columnsFrom": [
-            "userId"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["userId"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -6086,12 +5778,8 @@
           "name": "security_applicationId_application_applicationId_fk",
           "tableFrom": "security",
           "tableTo": "application",
-          "columnsFrom": [
-            "applicationId"
-          ],
-          "columnsTo": [
-            "applicationId"
-          ],
+          "columnsFrom": ["applicationId"],
+          "columnsTo": ["applicationId"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -6101,10 +5789,7 @@
         "security_username_applicationId_unique": {
           "name": "security_username_applicationId_unique",
           "nullsNotDistinct": false,
-          "columns": [
-            "username",
-            "applicationId"
-          ]
+          "columns": ["username", "applicationId"]
         }
       },
       "policies": {},
@@ -6220,12 +5905,8 @@
           "name": "server_organizationId_organization_id_fk",
           "tableFrom": "server",
           "tableTo": "organization",
-          "columnsFrom": [
-            "organizationId"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["organizationId"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         },
@@ -6233,12 +5914,8 @@
           "name": "server_sshKeyId_ssh-key_sshKeyId_fk",
           "tableFrom": "server",
           "tableTo": "ssh-key",
-          "columnsFrom": [
-            "sshKeyId"
-          ],
-          "columnsTo": [
-            "sshKeyId"
-          ],
+          "columnsFrom": ["sshKeyId"],
+          "columnsTo": ["sshKeyId"],
           "onDelete": "set null",
           "onUpdate": "no action"
         }
@@ -6320,12 +5997,8 @@
           "name": "session_temp_user_id_user_id_fk",
           "tableFrom": "session_temp",
           "tableTo": "user",
-          "columnsFrom": [
-            "user_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["user_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -6335,9 +6008,7 @@
         "session_temp_token_unique": {
           "name": "session_temp_token_unique",
           "nullsNotDistinct": false,
-          "columns": [
-            "token"
-          ]
+          "columns": ["token"]
         }
       },
       "policies": {},
@@ -6404,12 +6075,8 @@
           "name": "ssh-key_organizationId_organization_id_fk",
           "tableFrom": "ssh-key",
           "tableTo": "organization",
-          "columnsFrom": [
-            "organizationId"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["organizationId"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -6471,13 +6138,6 @@
           "type": "text",
           "primaryKey": false,
           "notNull": true
-        },
-        "created_at": {
-          "name": "created_at",
-          "type": "timestamp",
-          "primaryKey": false,
-          "notNull": true,
-          "default": "now()"
         }
       },
       "indexes": {},
@@ -6486,12 +6146,8 @@
           "name": "sso_provider_user_id_user_id_fk",
           "tableFrom": "sso_provider",
           "tableTo": "user",
-          "columnsFrom": [
-            "user_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["user_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         },
@@ -6499,12 +6155,8 @@
           "name": "sso_provider_organization_id_organization_id_fk",
           "tableFrom": "sso_provider",
           "tableTo": "organization",
-          "columnsFrom": [
-            "organization_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["organization_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -6514,9 +6166,7 @@
         "sso_provider_provider_id_unique": {
           "name": "sso_provider_provider_id_unique",
           "nullsNotDistinct": false,
-          "columns": [
-            "provider_id"
-          ]
+          "columns": ["provider_id"]
         }
       },
       "policies": {},
@@ -6695,9 +6345,7 @@
         "user_email_unique": {
           "name": "user_email_unique",
           "nullsNotDistinct": false,
-          "columns": [
-            "email"
-          ]
+          "columns": ["email"]
         }
       },
       "policies": {},
@@ -6838,12 +6486,8 @@
           "name": "volume_backup_applicationId_application_applicationId_fk",
           "tableFrom": "volume_backup",
           "tableTo": "application",
-          "columnsFrom": [
-            "applicationId"
-          ],
-          "columnsTo": [
-            "applicationId"
-          ],
+          "columnsFrom": ["applicationId"],
+          "columnsTo": ["applicationId"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         },
@@ -6851,12 +6495,8 @@
           "name": "volume_backup_postgresId_postgres_postgresId_fk",
           "tableFrom": "volume_backup",
           "tableTo": "postgres",
-          "columnsFrom": [
-            "postgresId"
-          ],
-          "columnsTo": [
-            "postgresId"
-          ],
+          "columnsFrom": ["postgresId"],
+          "columnsTo": ["postgresId"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         },
@@ -6864,12 +6504,8 @@
           "name": "volume_backup_mariadbId_mariadb_mariadbId_fk",
           "tableFrom": "volume_backup",
           "tableTo": "mariadb",
-          "columnsFrom": [
-            "mariadbId"
-          ],
-          "columnsTo": [
-            "mariadbId"
-          ],
+          "columnsFrom": ["mariadbId"],
+          "columnsTo": ["mariadbId"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         },
@@ -6877,12 +6513,8 @@
           "name": "volume_backup_mongoId_mongo_mongoId_fk",
           "tableFrom": "volume_backup",
           "tableTo": "mongo",
-          "columnsFrom": [
-            "mongoId"
-          ],
-          "columnsTo": [
-            "mongoId"
-          ],
+          "columnsFrom": ["mongoId"],
+          "columnsTo": ["mongoId"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         },
@@ -6890,12 +6522,8 @@
           "name": "volume_backup_mysqlId_mysql_mysqlId_fk",
           "tableFrom": "volume_backup",
           "tableTo": "mysql",
-          "columnsFrom": [
-            "mysqlId"
-          ],
-          "columnsTo": [
-            "mysqlId"
-          ],
+          "columnsFrom": ["mysqlId"],
+          "columnsTo": ["mysqlId"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         },
@@ -6903,12 +6531,8 @@
           "name": "volume_backup_redisId_redis_redisId_fk",
           "tableFrom": "volume_backup",
           "tableTo": "redis",
-          "columnsFrom": [
-            "redisId"
-          ],
-          "columnsTo": [
-            "redisId"
-          ],
+          "columnsFrom": ["redisId"],
+          "columnsTo": ["redisId"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         },
@@ -6916,12 +6540,8 @@
           "name": "volume_backup_composeId_compose_composeId_fk",
           "tableFrom": "volume_backup",
           "tableTo": "compose",
-          "columnsFrom": [
-            "composeId"
-          ],
-          "columnsTo": [
-            "composeId"
-          ],
+          "columnsFrom": ["composeId"],
+          "columnsTo": ["composeId"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         },
@@ -6929,12 +6549,8 @@
           "name": "volume_backup_destinationId_destination_destinationId_fk",
           "tableFrom": "volume_backup",
           "tableTo": "destination",
-          "columnsFrom": [
-            "destinationId"
-          ],
-          "columnsTo": [
-            "destinationId"
-          ],
+          "columnsFrom": ["destinationId"],
+          "columnsTo": ["destinationId"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -7089,79 +6705,42 @@
     "public.backupType": {
       "name": "backupType",
       "schema": "public",
-      "values": [
-        "database",
-        "compose"
-      ]
+      "values": ["database", "compose"]
     },
     "public.databaseType": {
       "name": "databaseType",
       "schema": "public",
-      "values": [
-        "postgres",
-        "mariadb",
-        "mysql",
-        "mongo",
-        "web-server"
-      ]
+      "values": ["postgres", "mariadb", "mysql", "mongo", "web-server"]
     },
     "public.composeType": {
       "name": "composeType",
       "schema": "public",
-      "values": [
-        "docker-compose",
-        "stack"
-      ]
+      "values": ["docker-compose", "stack"]
     },
     "public.sourceTypeCompose": {
       "name": "sourceTypeCompose",
       "schema": "public",
-      "values": [
-        "git",
-        "github",
-        "gitlab",
-        "bitbucket",
-        "gitea",
-        "raw"
-      ]
+      "values": ["git", "github", "gitlab", "bitbucket", "gitea", "raw"]
     },
     "public.deploymentStatus": {
       "name": "deploymentStatus",
       "schema": "public",
-      "values": [
-        "running",
-        "done",
-        "error",
-        "cancelled"
-      ]
+      "values": ["running", "done", "error", "cancelled"]
     },
     "public.domainType": {
       "name": "domainType",
       "schema": "public",
-      "values": [
-        "compose",
-        "application",
-        "preview"
-      ]
+      "values": ["compose", "application", "preview"]
     },
     "public.gitProviderType": {
       "name": "gitProviderType",
       "schema": "public",
-      "values": [
-        "github",
-        "gitlab",
-        "bitbucket",
-        "gitea"
-      ]
+      "values": ["github", "gitlab", "bitbucket", "gitea"]
     },
     "public.mountType": {
       "name": "mountType",
       "schema": "public",
-      "values": [
-        "bind",
-        "volume",
-        "file"
-      ]
+      "values": ["bind", "volume", "file"]
     },
     "public.serviceType": {
       "name": "serviceType",
@@ -7195,87 +6774,52 @@
     "public.protocolType": {
       "name": "protocolType",
       "schema": "public",
-      "values": [
-        "tcp",
-        "udp"
-      ]
+      "values": ["tcp", "udp"]
     },
     "public.publishModeType": {
       "name": "publishModeType",
       "schema": "public",
-      "values": [
-        "ingress",
-        "host"
-      ]
+      "values": ["ingress", "host"]
     },
     "public.RegistryType": {
       "name": "RegistryType",
       "schema": "public",
-      "values": [
-        "selfHosted",
-        "cloud"
-      ]
+      "values": ["selfHosted", "cloud"]
     },
     "public.scheduleType": {
       "name": "scheduleType",
       "schema": "public",
-      "values": [
-        "application",
-        "compose",
-        "server",
-        "dokploy-server"
-      ]
+      "values": ["application", "compose", "server", "dokploy-server"]
     },
     "public.shellType": {
       "name": "shellType",
       "schema": "public",
-      "values": [
-        "bash",
-        "sh"
-      ]
+      "values": ["bash", "sh"]
     },
     "public.serverStatus": {
       "name": "serverStatus",
       "schema": "public",
-      "values": [
-        "active",
-        "inactive"
-      ]
+      "values": ["active", "inactive"]
     },
     "public.serverType": {
       "name": "serverType",
       "schema": "public",
-      "values": [
-        "deploy",
-        "build"
-      ]
+      "values": ["deploy", "build"]
     },
     "public.applicationStatus": {
       "name": "applicationStatus",
       "schema": "public",
-      "values": [
-        "idle",
-        "running",
-        "done",
-        "error"
-      ]
+      "values": ["idle", "running", "done", "error"]
     },
     "public.certificateType": {
       "name": "certificateType",
       "schema": "public",
-      "values": [
-        "letsencrypt",
-        "none",
-        "custom"
-      ]
+      "values": ["letsencrypt", "none", "custom"]
     },
     "public.triggerType": {
       "name": "triggerType",
       "schema": "public",
-      "values": [
-        "push",
-        "tag"
-      ]
+      "values": ["push", "tag"]
     }
   },
   "schemas": {},
