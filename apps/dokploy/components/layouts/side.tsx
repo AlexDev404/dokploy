@@ -66,6 +66,7 @@ import {
   Key,
   KeyRound,
   Loader2,
+  LogIn,
   type LucideIcon,
   Package,
   PieChart,
