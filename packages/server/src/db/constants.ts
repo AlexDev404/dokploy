@@ -72,7 +72,7 @@ export const isExternalDatabase = (): boolean => {
 export const isExternalRedis = (): boolean => {
   return !!(
     process.env.REDIS_URL ||
-    (process.env.REDIS_HOST && process.env.REDIS_HOST !== "dokploy-redis")
+    (process.env.REDIS_HOST && process.env.REDIS_HOST !== "127.0.0.1")
   );
 };
 
