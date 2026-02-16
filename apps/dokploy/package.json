@@ -1,6 +1,6 @@
 {
   "name": "dokploy",
-  "version": "v0.27.0",
+  "version": "v0.27.1",
   "private": true,
   "license": "Apache-2.0",
   "type": "module",
@@ -10,8 +10,8 @@
     "build-server": "tsx esbuild.config.ts",
     "build-next": "next build --webpack",
     "setup": "tsx -r dotenv/config setup.ts && sleep 5 && pnpm run migration:run",
-	"wait-for-postgres": "node -r dotenv/config dist/wait-for-postgres.mjs",
-	"wait-for-postgres-dev": "tsx -r dotenv/config wait-for-postgres.ts",
+    "wait-for-postgres": "node -r dotenv/config dist/wait-for-postgres.mjs",
+    "wait-for-postgres-dev": "tsx -r dotenv/config wait-for-postgres.ts",
     "reset-password": "node -r dotenv/config dist/reset-password.mjs",
     "reset-2fa": "node -r dotenv/config dist/reset-2fa.mjs",
     "dev": "tsx -r dotenv/config ./server/server.ts  --project tsconfig.server.json ",
@@ -39,7 +39,7 @@
     "generate:openapi": "tsx -r dotenv/config scripts/generate-openapi.ts"
   },
   "dependencies": {
-	"resend": "^6.0.2",
+    "resend": "^6.0.2",
     "@better-auth/sso": "1.4.18",
     "@ai-sdk/anthropic": "^2.0.53",
     "@ai-sdk/azure": "^2.0.91",
@@ -101,7 +101,7 @@
     "better-auth": "1.4.18",
     "bl": "6.0.11",
     "boxen": "^7.1.1",
-	"bullmq": "5.67.3",
+    "bullmq": "5.67.3",
     "shell-quote": "^1.8.1",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",

@@ -1,5 +1,6 @@
 import { docker } from "@dokploy/server/constants";
 import type { CreateServiceOptions } from "dockerode";
+import { isExternalRedis } from "../db/constants";
 import { pullImage } from "../utils/docker/utils";
 import { ServiceOrchestrator } from "./service-orchestrator";
 
@@ -35,6 +36,10 @@ const redisHealthCheck = async (): Promise<boolean> => {
 };
 
 export const initializeRedis = async () => {
+  if (isExternalRedis()) {
+    console.log("Using external Redis — skipping built-in Redis service ✅");
+    return;
+  }
   const imageName = "redis:7";
   const containerName = "dokploy-redis";
 

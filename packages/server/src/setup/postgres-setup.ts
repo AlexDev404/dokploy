@@ -1,5 +1,6 @@
 import { docker } from "@dokploy/server/constants";
 import type { CreateServiceOptions } from "dockerode";
+import { isExternalDatabase } from "../db/constants";
 import { pullImage } from "../utils/docker/utils";
 import { ServiceOrchestrator } from "./service-orchestrator";
 
@@ -35,6 +36,12 @@ const postgresHealthCheck = async (): Promise<boolean> => {
 };
 
 export const initializePostgres = async () => {
+  if (isExternalDatabase()) {
+    console.log(
+      "Using external PostgreSQL — skipping built-in Postgres service ✅",
+    );
+    return;
+  }
   const imageName = "postgres:16";
   const containerName = "dokploy-postgres";
 
