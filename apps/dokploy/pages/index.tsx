@@ -1,5 +1,6 @@
 import { IS_CLOUD, isAdminPresent } from "@dokploy/server";
 import { validateRequest } from "@dokploy/server/lib/auth";
+import { getWebServerSettings } from "@dokploy/server";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { REGEXP_ONLY_DIGITS } from "input-otp";
 import type { GetServerSidePropsContext } from "next";
@@ -56,7 +57,40 @@ type LoginForm = z.infer<typeof LoginSchema>;
 interface Props {
 	IS_CLOUD: boolean;
 }
-export default function Home({ IS_CLOUD }: Props) {
+
+interface LoginHeaderProps {
+	logoUrl?: string | null;
+}
+
+const LoginHeader = ({ logoUrl }: LoginHeaderProps) => {
+	return (
+		<div className="flex flex-col space-y-2 text-center">
+			<h1 className="text-2xl font-semibold tracking-tight">
+				<div className="flex flex-row items-center justify-center gap-2">
+					<Logo className="size-12" logoUrl={logoUrl || undefined} />
+					Sign in
+				</div>
+			</h1>
+			<p className="text-sm text-muted-foreground">
+				Enter your email and password to sign in
+			</p>
+		</div>
+	);
+};
+
+interface HomeProps {
+	IS_CLOUD: boolean;
+	whitelabelLogoUrl?: string | null;
+	whitelabelBrandName?: string | null;
+	whitelabelTagline?: string | null;
+}
+
+export default function Home({
+	IS_CLOUD,
+	whitelabelLogoUrl,
+	whitelabelBrandName,
+	whitelabelTagline,
+}: HomeProps) {
 	const router = useRouter();
 	const { data: showSignInWithSSO } = api.sso.showSignInWithSSO.useQuery();
 	const [isLoginLoading, setIsLoginLoading] = useState(false);
@@ -214,17 +248,7 @@ export default function Home({ IS_CLOUD }: Props) {
 
 	return (
 		<>
-			<div className="flex flex-col space-y-2 text-center">
-				<h1 className="text-2xl font-semibold tracking-tight">
-					<div className="flex flex-row items-center justify-center gap-2">
-						<Logo className="size-12" />
-						Sign in
-					</div>
-				</h1>
-				<p className="text-sm text-muted-foreground">
-					Enter your email and password to sign in
-				</p>
-			</div>
+			<LoginHeader logoUrl={whitelabelLogoUrl} />
 			{error && (
 				<AlertBlock type="error" className="my-2">
 					<span>{error}</span>
@@ -390,8 +414,23 @@ export default function Home({ IS_CLOUD }: Props) {
 	);
 }
 
-Home.getLayout = (page: ReactElement) => {
-	return <OnboardingLayout>{page}</OnboardingLayout>;
+Home.getLayout = (
+	page: ReactElement,
+	whitelabelProps?: {
+		whitelabelLogoUrl?: string | null;
+		whitelabelBrandName?: string | null;
+		whitelabelTagline?: string | null;
+	},
+) => {
+	return (
+		<OnboardingLayout
+			whitelabelLogoUrl={whitelabelProps?.whitelabelLogoUrl}
+			whitelabelBrandName={whitelabelProps?.whitelabelBrandName}
+			whitelabelTagline={whitelabelProps?.whitelabelTagline}
+		>
+			{page}
+		</OnboardingLayout>
+	);
 };
 export async function getServerSideProps(context: GetServerSidePropsContext) {
 	if (IS_CLOUD) {
@@ -435,9 +474,17 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
 		};
 	}
 
+	const whitelabelSettings = !IS_CLOUD
+		? await getWebServerSettings()
+		: null;
+
 	return {
 		props: {
 			hasAdmin,
+			IS_CLOUD,
+			whitelabelLogoUrl: whitelabelSettings?.whitelabelLogoUrl || null,
+			whitelabelBrandName: whitelabelSettings?.whitelabelBrandName || null,
+			whitelabelTagline: whitelabelSettings?.whitelabelTagline || null,
 		},
 	};
 }
