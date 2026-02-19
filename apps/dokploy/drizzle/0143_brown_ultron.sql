@@ -1,1 +1,1 @@
-ALTER TABLE "sso_provider" ADD COLUMN "created_at" timestamp DEFAULT now() NOT NULL;
+ALTER TABLE "sso_provider" ADD COLUMN "created_at" timestamp DEFAULT now() NOT NULL;--> statement-breakpoint
