@@ -1,9 +1,9 @@
 import { db } from "@dokploy/server/db";
 import {
-	type apiCreatePreviewDeployment,
-	deployments,
-	organization,
-	previewDeployments,
+  type apiCreatePreviewDeployment,
+  deployments,
+  organization,
+  previewDeployments,
 } from "@dokploy/server/db/schema";
 import { TRPCError } from "@trpc/server";
 import { and, desc, eq } from "drizzle-orm";
@@ -19,252 +19,251 @@ import { removeDeploymentsByPreviewDeploymentId } from "./deployment";
 import { createDomain } from "./domain";
 import { type Github, getIssueComment } from "./github";
 import { getWebServerSettings } from "./web-server-settings";
-import { z } from "zod";
 
 export type PreviewDeployment = typeof previewDeployments.$inferSelect;
 
 export const findPreviewDeploymentById = async (
-	previewDeploymentId: string,
+  previewDeploymentId: string,
 ) => {
-	const application = await db.query.previewDeployments.findFirst({
-		where: eq(previewDeployments.previewDeploymentId, previewDeploymentId),
-		with: {
-			domain: true,
-			application: {
-				with: {
-					server: true,
-					environment: {
-						with: {
-							project: true,
-						},
-					},
-				},
-			},
-		},
-	});
-	if (!application) {
-		throw new TRPCError({
-			code: "NOT_FOUND",
-			message: "Preview Deployment not found",
-		});
-	}
-	return application;
+  const application = await db.query.previewDeployments.findFirst({
+    where: eq(previewDeployments.previewDeploymentId, previewDeploymentId),
+    with: {
+      domain: true,
+      application: {
+        with: {
+          server: true,
+          environment: {
+            with: {
+              project: true,
+            },
+          },
+        },
+      },
+    },
+  });
+  if (!application) {
+    throw new TRPCError({
+      code: "NOT_FOUND",
+      message: "Preview Deployment not found",
+    });
+  }
+  return application;
 };
 
 export const removePreviewDeployment = async (previewDeploymentId: string) => {
-	try {
-		const previewDeployment =
-			await findPreviewDeploymentById(previewDeploymentId);
-		const application = await findApplicationById(
-			previewDeployment.applicationId,
-		);
+  try {
+    const previewDeployment =
+      await findPreviewDeploymentById(previewDeploymentId);
+    const application = await findApplicationById(
+      previewDeployment.applicationId,
+    );
 
-		application.appName = previewDeployment.appName;
-		const cleanupOperations = [
-			async () =>
-				await removeService(application?.appName, application?.serverId),
-			async () =>
-				await removeDeploymentsByPreviewDeploymentId(
-					previewDeployment,
-					application?.serverId,
-				),
-			async () =>
-				await removeDirectoryCode(application?.appName, application?.serverId),
-			async () =>
-				await removeTraefikConfig(application?.appName, application?.serverId),
-			async () =>
-				await db
-					.delete(previewDeployments)
-					.where(
-						eq(previewDeployments.previewDeploymentId, previewDeploymentId),
-					)
-					.returning(),
-		];
-		for (const operation of cleanupOperations) {
-			try {
-				await operation();
-			} catch (error) {
-				console.error(error);
-			}
-		}
-		return previewDeployment;
-	} catch (error) {
-		const message =
-			error instanceof Error
-				? error.message
-				: "Error deleting this preview deployment";
-		throw new TRPCError({
-			code: "BAD_REQUEST",
-			message,
-		});
-	}
+    application.appName = previewDeployment.appName;
+    const cleanupOperations = [
+      async () =>
+        await removeService(application?.appName, application?.serverId),
+      async () =>
+        await removeDeploymentsByPreviewDeploymentId(
+          previewDeployment,
+          application?.serverId,
+        ),
+      async () =>
+        await removeDirectoryCode(application?.appName, application?.serverId),
+      async () =>
+        await removeTraefikConfig(application?.appName, application?.serverId),
+      async () =>
+        await db
+          .delete(previewDeployments)
+          .where(
+            eq(previewDeployments.previewDeploymentId, previewDeploymentId),
+          )
+          .returning(),
+    ];
+    for (const operation of cleanupOperations) {
+      try {
+        await operation();
+      } catch (error) {
+        console.error(error);
+      }
+    }
+    return previewDeployment;
+  } catch (error) {
+    const message =
+      error instanceof Error
+        ? error.message
+        : "Error deleting this preview deployment";
+    throw new TRPCError({
+      code: "BAD_REQUEST",
+      message,
+    });
+  }
 };
 // testing-tesoitnmg-ddq0ul-preview-ihl44o
 export const updatePreviewDeployment = async (
-	previewDeploymentId: string,
-	previewDeploymentData: Partial<PreviewDeployment>,
+  previewDeploymentId: string,
+  previewDeploymentData: Partial<PreviewDeployment>,
 ) => {
-	const application = await db
-		.update(previewDeployments)
-		.set({
-			...previewDeploymentData,
-		})
-		.where(eq(previewDeployments.previewDeploymentId, previewDeploymentId))
-		.returning();
+  const application = await db
+    .update(previewDeployments)
+    .set({
+      ...previewDeploymentData,
+    })
+    .where(eq(previewDeployments.previewDeploymentId, previewDeploymentId))
+    .returning();
 
-	return application;
+  return application;
 };
 
 export const findPreviewDeploymentsByApplicationId = async (
-	applicationId: string,
+  applicationId: string,
 ) => {
-	const deploymentsList = await db.query.previewDeployments.findMany({
-		where: eq(previewDeployments.applicationId, applicationId),
-		orderBy: desc(previewDeployments.createdAt),
-		with: {
-			deployments: {
-				orderBy: desc(deployments.createdAt),
-			},
-			domain: true,
-		},
-	});
-	return deploymentsList;
+  const deploymentsList = await db.query.previewDeployments.findMany({
+    where: eq(previewDeployments.applicationId, applicationId),
+    orderBy: desc(previewDeployments.createdAt),
+    with: {
+      deployments: {
+        orderBy: desc(deployments.createdAt),
+      },
+      domain: true,
+    },
+  });
+  return deploymentsList;
 };
 
 export const createPreviewDeployment = async (
-	schema: z.infer<typeof apiCreatePreviewDeployment>,
+  schema: z.infer<typeof apiCreatePreviewDeployment>,
 ) => {
-	const application = await findApplicationById(schema.applicationId);
-	const appName = `preview-${application.appName}-${generatePassword(6)}`;
+  const application = await findApplicationById(schema.applicationId);
+  const appName = `preview-${application.appName}-${generatePassword(6)}`;
 
-	const org = await db.query.organization.findFirst({
-		where: eq(organization.id, application.environment.project.organizationId),
-	});
-	const generateDomain = await generateWildcardDomain(
-		application.previewWildcard || "*.traefik.me",
-		appName,
-		application.server?.ipAddress || "",
-		org?.ownerId || "",
-	);
+  const org = await db.query.organization.findFirst({
+    where: eq(organization.id, application.environment.project.organizationId),
+  });
+  const generateDomain = await generateWildcardDomain(
+    application.previewWildcard || "*.traefik.me",
+    appName,
+    application.server?.ipAddress || "",
+    org?.ownerId || "",
+  );
 
-	const octokit = authGithub(application?.github as Github);
+  const octokit = authGithub(application?.github as Github);
 
-	const runningComment = getIssueComment(
-		application.name,
-		"initializing",
-		`${application.previewHttps ? "https" : "http"}://${generateDomain}`,
-	);
+  const runningComment = getIssueComment(
+    application.name,
+    "initializing",
+    `${application.previewHttps ? "https" : "http"}://${generateDomain}`,
+  );
 
-	const issue = await octokit.rest.issues.createComment({
-		owner: application?.owner || "",
-		repo: application?.repository || "",
-		issue_number: Number.parseInt(schema.pullRequestNumber),
-		body: `### Dokploy Preview Deployment\n\n${runningComment}`,
-	});
+  const issue = await octokit.rest.issues.createComment({
+    owner: application?.owner || "",
+    repo: application?.repository || "",
+    issue_number: Number.parseInt(schema.pullRequestNumber),
+    body: `### Dokploy Preview Deployment\n\n${runningComment}`,
+  });
 
-	const previewDeployment = await db
-		.insert(previewDeployments)
-		.values({
-			...schema,
-			appName: appName,
-			pullRequestCommentId: `${issue.data.id}`,
-		})
-		.returning()
-		.then((value) => value[0]);
+  const previewDeployment = await db
+    .insert(previewDeployments)
+    .values({
+      ...schema,
+      appName: appName,
+      pullRequestCommentId: `${issue.data.id}`,
+    })
+    .returning()
+    .then((value) => value[0]);
 
-	if (!previewDeployment) {
-		throw new TRPCError({
-			code: "BAD_REQUEST",
-			message: "Error creating the preview deployment",
-		});
-	}
+  if (!previewDeployment) {
+    throw new TRPCError({
+      code: "BAD_REQUEST",
+      message: "Error creating the preview deployment",
+    });
+  }
 
-	const newDomain = await createDomain({
-		host: generateDomain,
-		path: application.previewPath ?? undefined,
-		port: application.previewPort ?? undefined,
-		https: application.previewHttps ?? undefined,
-		certificateType: application.previewCertificateType ?? undefined,
-		customCertResolver: application.previewCustomCertResolver ?? "",
-		domainType: "preview",
-		previewDeploymentId: previewDeployment.previewDeploymentId,
-	});
+  const newDomain = await createDomain({
+    host: generateDomain,
+    path: application.previewPath ?? undefined,
+    port: application.previewPort ?? undefined,
+    https: application.previewHttps ?? undefined,
+    certificateType: application.previewCertificateType ?? undefined,
+    customCertResolver: application.previewCustomCertResolver ?? "",
+    domainType: "preview",
+    previewDeploymentId: previewDeployment.previewDeploymentId,
+  });
 
-	application.appName = appName;
+  application.appName = appName;
 
-	await manageDomain(application, newDomain);
+  await manageDomain(application, newDomain);
 
-	await db
-		.update(previewDeployments)
-		.set({
-			domainId: newDomain.domainId,
-		})
-		.where(
-			eq(
-				previewDeployments.previewDeploymentId,
-				previewDeployment.previewDeploymentId,
-			),
-		);
+  await db
+    .update(previewDeployments)
+    .set({
+      domainId: newDomain.domainId,
+    })
+    .where(
+      eq(
+        previewDeployments.previewDeploymentId,
+        previewDeployment.previewDeploymentId,
+      ),
+    );
 
-	return previewDeployment;
+  return previewDeployment;
 };
 
 export const findPreviewDeploymentsByPullRequestId = async (
-	pullRequestId: string,
+  pullRequestId: string,
 ) => {
-	const previewDeploymentResult = await db.query.previewDeployments.findMany({
-		where: eq(previewDeployments.pullRequestId, pullRequestId),
-	});
+  const previewDeploymentResult = await db.query.previewDeployments.findMany({
+    where: eq(previewDeployments.pullRequestId, pullRequestId),
+  });
 
-	return previewDeploymentResult;
+  return previewDeploymentResult;
 };
 
 export const findPreviewDeploymentByApplicationId = async (
-	applicationId: string,
-	pullRequestId: string,
+  applicationId: string,
+  pullRequestId: string,
 ) => {
-	const previewDeploymentResult = await db.query.previewDeployments.findFirst({
-		where: and(
-			eq(previewDeployments.applicationId, applicationId),
-			eq(previewDeployments.pullRequestId, pullRequestId),
-		),
-	});
+  const previewDeploymentResult = await db.query.previewDeployments.findFirst({
+    where: and(
+      eq(previewDeployments.applicationId, applicationId),
+      eq(previewDeployments.pullRequestId, pullRequestId),
+    ),
+  });
 
-	return previewDeploymentResult;
+  return previewDeploymentResult;
 };
 
 const generateWildcardDomain = async (
-	baseDomain: string,
-	appName: string,
-	serverIp: string,
-	userId: string,
+  baseDomain: string,
+  appName: string,
+  serverIp: string,
+  userId: string,
 ): Promise<string> => {
-	if (!baseDomain.startsWith("*.")) {
-		throw new Error('The base domain must start with "*."');
-	}
-	const hash = `${appName}`;
-	if (baseDomain.includes("traefik.me")) {
-		let ip = "";
+  if (!baseDomain.startsWith("*.")) {
+    throw new Error('The base domain must start with "*."');
+  }
+  const hash = `${appName}`;
+  if (baseDomain.includes("traefik.me")) {
+    let ip = "";
 
-		if (process.env.NODE_ENV === "development") {
-			ip = "127.0.0.1";
-		}
+    if (process.env.NODE_ENV === "development") {
+      ip = "127.0.0.1";
+    }
 
-		if (serverIp) {
-			ip = serverIp;
-		}
+    if (serverIp) {
+      ip = serverIp;
+    }
 
-		if (!ip) {
-			const settings = await getWebServerSettings();
-			ip = settings?.serverIp || "";
-		}
+    if (!ip) {
+      const settings = await getWebServerSettings();
+      ip = settings?.serverIp || "";
+    }
 
-		const slugIp = ip.replaceAll(".", "-");
-		return baseDomain.replace(
-			"*",
-			`${hash}${slugIp === "" ? "" : `-${slugIp}`}`,
-		);
-	}
+    const slugIp = ip.replaceAll(".", "-");
+    return baseDomain.replace(
+      "*",
+      `${hash}${slugIp === "" ? "" : `-${slugIp}`}`,
+    );
+  }
 
-	return baseDomain.replace("*", hash);
+  return baseDomain.replace("*", hash);
 };

@@ -3,6 +3,7 @@ import { db } from "@dokploy/server/db";
 import { type apiCreatePatch, patch } from "@dokploy/server/db/schema";
 import { TRPCError } from "@trpc/server";
 import { and, eq } from "drizzle-orm";
+import { join } from "node:path";
 import type { z } from "zod";
 import { encodeBase64 } from "../utils/docker/utils";
 import { findApplicationById } from "./application";
