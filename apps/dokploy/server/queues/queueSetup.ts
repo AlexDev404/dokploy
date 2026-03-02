@@ -8,6 +8,7 @@ import { Queue } from "bullmq";
 import { deploymentWorker } from "./deployments-queue";
 import { redisConfig } from "./redis-connection";
 
+/** No-op queue when Redis is disabled (e.g. IS_CLOUD). Avoids BullMQ connection errors. */
 const createNoopQueue = () => ({
   getJobs: () => Promise.resolve([] as Job[]),
   add: () =>
