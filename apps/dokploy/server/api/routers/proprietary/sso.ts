@@ -59,7 +59,6 @@ export const ssoRouter = createTRPCRouter({
         organizationId: true,
       },
       orderBy: [asc(ssoProvider.createdAt)],
-      orderBy: [asc(ssoProvider.createdAt)],
     });
     return providers;
   }),
