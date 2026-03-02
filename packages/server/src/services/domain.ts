@@ -6,6 +6,7 @@ import { generateRandomDomain } from "@dokploy/server/templates";
 import { manageDomain } from "@dokploy/server/utils/traefik/domain";
 import { TRPCError } from "@trpc/server";
 import { eq } from "drizzle-orm";
+import type { z } from "zod";
 import { type apiCreateDomain, domains } from "../db/schema";
 import { findApplicationById } from "./application";
 import { detectCDNProvider } from "./cdn";

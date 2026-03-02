@@ -1,3 +1,4 @@
+import { standardSchemaResolver as zodResolver } from "@hookform/resolvers/standard-schema";
 import { AlertBlock } from "@/components/shared/alert-block";
 import { CodeEditor } from "@/components/shared/code-editor";
 import { Button } from "@/components/ui/button";
@@ -20,7 +21,6 @@ import {
 } from "@/components/ui/form";
 import { useHealthCheckAfterMutation } from "@/hooks/use-health-check-after-mutation";
 import { api } from "@/utils/api";
-import { zodResolver } from "@hookform/resolvers/zod";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
@@ -44,8 +44,8 @@ export const EditTraefikEnv = ({ children, serverId }: Props) => {
     serverId,
   });
 
-  const { mutateAsync, isLoading, error, isError } =
-    api.settings.writeTraefikEnv.useMutation();
+	const { mutateAsync, isPending, error, isError } =
+		api.settings.writeTraefikEnv.useMutation();
 
   const form = useForm({
     defaultValues: {
@@ -85,20 +85,20 @@ export const EditTraefikEnv = ({ children, serverId }: Props) => {
     }
   };
 
-  // Add keyboard shortcut for Ctrl+S/Cmd+S
-  useEffect(() => {
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if ((e.ctrlKey || e.metaKey) && e.key === "s" && !isLoading && !canEdit) {
-        e.preventDefault();
-        form.handleSubmit(onSubmit)();
-      }
-    };
+	// Add keyboard shortcut for Ctrl+S/Cmd+S
+	useEffect(() => {
+		const handleKeyDown = (e: KeyboardEvent) => {
+			if ((e.ctrlKey || e.metaKey) && e.key === "s" && !isPending && !canEdit) {
+				e.preventDefault();
+				form.handleSubmit(onSubmit)();
+			}
+		};
 
-    document.addEventListener("keydown", handleKeyDown);
-    return () => {
-      document.removeEventListener("keydown", handleKeyDown);
-    };
-  }, [form, onSubmit, isLoading, canEdit]);
+		document.addEventListener("keydown", handleKeyDown);
+		return () => {
+			document.removeEventListener("keydown", handleKeyDown);
+		};
+	}, [form, onSubmit, isPending, canEdit]);
 
   return (
     <Dialog>
@@ -162,18 +162,18 @@ TRAEFIK_CERTIFICATESRESOLVERS_LETSENCRYPT_HTTP_CHALLENGE_DNS_PROVIDER=cloudflare
             </div>
           </form>
 
-          <DialogFooter>
-            <Button
-              isLoading={isLoading || isHealthCheckExecuting}
-              disabled={canEdit || isLoading || isHealthCheckExecuting}
-              form="hook-form-update-server-traefik-config"
-              type="submit"
-            >
-              Update
-            </Button>
-          </DialogFooter>
-        </Form>
-      </DialogContent>
-    </Dialog>
-  );
+					<DialogFooter>
+						<Button
+							isLoading={isPending || isHealthCheckExecuting}
+							disabled={canEdit || isPending || isHealthCheckExecuting}
+							form="hook-form-update-server-traefik-config"
+							type="submit"
+						>
+							Update
+						</Button>
+					</DialogFooter>
+				</Form>
+			</DialogContent>
+		</Dialog>
+	);
 };

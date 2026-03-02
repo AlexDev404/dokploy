@@ -1,9 +1,10 @@
 import { dbUrl } from "@dokploy/server/db/constants";
 import { sanitizeDbUrl } from "@dokploy/server/db/utils";
+import { and, eq } from "drizzle-orm";
 import { drizzle, type PostgresJsDatabase } from "drizzle-orm/postgres-js";
 import postgres from "postgres";
-import * as schema from "./schema";
 
+export { and, eq };
 declare global {
   var db: PostgresJsDatabase<typeof schema> | undefined;
 }

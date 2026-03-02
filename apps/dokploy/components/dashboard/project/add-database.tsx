@@ -1,4 +1,4 @@
-import { zodResolver } from "@hookform/resolvers/zod";
+import { standardSchemaResolver as zodResolver } from "@hookform/resolvers/standard-schema";
 import { AlertTriangle, Database, HelpCircle } from "lucide-react";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
@@ -52,7 +52,7 @@ import {
 import { slugify } from "@/lib/slug";
 import { api } from "@/utils/api";
 
-type DbType = typeof mySchema._type.type;
+type DbType = z.infer<typeof mySchema>["type"];
 
 const dockerImageDefaultPlaceholder: Record<DbType, string> = {
 	mongo: "mongo:7",

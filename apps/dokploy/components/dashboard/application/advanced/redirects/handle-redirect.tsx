@@ -1,4 +1,4 @@
-import { zodResolver } from "@hookform/resolvers/zod";
+import { standardSchemaResolver as zodResolver } from "@hookform/resolvers/standard-schema";
 import { PenBoxIcon, PlusIcon } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
@@ -100,7 +100,7 @@ export const HandleRedirect = ({
 
 	const utils = api.useUtils();
 
-	const { mutateAsync, isLoading, error, isError } = redirectId
+	const { mutateAsync, isPending, error, isError } = redirectId
 		? api.redirects.update.useMutation()
 		: api.redirects.create.useMutation();
 
@@ -268,7 +268,7 @@ export const HandleRedirect = ({
 
 					<DialogFooter>
 						<Button
-							isLoading={isLoading}
+							isLoading={isPending}
 							form="hook-form-add-redirect"
 							type="submit"
 						>

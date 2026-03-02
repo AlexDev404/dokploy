@@ -7,7 +7,7 @@ import {
 } from "@dokploy/server/db/schema";
 import { TRPCError } from "@trpc/server";
 import { eq } from "drizzle-orm";
-import { z } from "zod";
+import type { z } from "zod";
 
 export type Bitbucket = typeof bitbucket.$inferSelect;
 

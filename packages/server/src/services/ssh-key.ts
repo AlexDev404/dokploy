@@ -8,7 +8,7 @@ import {
 } from "@dokploy/server/db/schema";
 import { TRPCError } from "@trpc/server";
 import { eq } from "drizzle-orm";
-import { z } from "zod";
+import type { z } from "zod";
 
 export const createSshKey = async (input: z.infer<typeof apiCreateSshKey>) => {
 	await db.transaction(async (tx) => {
@@ -30,7 +30,7 @@ export const createSshKey = async (input: z.infer<typeof apiCreateSshKey>) => {
 };
 
 export const removeSSHKeyById = async (
-	sshKeyId: (z.infer<typeof apiRemoveSshKey>)["sshKeyId"],
+	sshKeyId: z.infer<typeof apiRemoveSshKey>["sshKeyId"],
 ) => {
 	const result = await db
 		.delete(sshKeys)
@@ -54,7 +54,7 @@ export const updateSSHKeyById = async ({
 };
 
 export const findSSHKeyById = async (
-	sshKeyId: (z.infer<typeof apiFindOneSshKey>)["sshKeyId"],
+	sshKeyId: z.infer<typeof apiFindOneSshKey>["sshKeyId"],
 ) => {
 	const sshKey = await db.query.sshKeys.findFirst({
 		where: eq(sshKeys.sshKeyId, sshKeyId),

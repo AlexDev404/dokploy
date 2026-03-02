@@ -2,7 +2,7 @@ import { db } from "@dokploy/server/db";
 import { type apiCreatePort, ports } from "@dokploy/server/db/schema";
 import { TRPCError } from "@trpc/server";
 import { eq } from "drizzle-orm";
-import { z } from "zod";
+import type { z } from "zod";
 
 export type Port = typeof ports.$inferSelect;
 

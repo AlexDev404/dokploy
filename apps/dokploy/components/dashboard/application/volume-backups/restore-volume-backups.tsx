@@ -1,6 +1,6 @@
-import { zodResolver } from "@hookform/resolvers/zod";
+import { standardSchemaResolver as zodResolver } from "@hookform/resolvers/standard-schema";
 import copy from "copy-to-clipboard";
-import { debounce } from "lodash";
+import debounce from "lodash/debounce";
 import { CheckIcon, ChevronsUpDown, Copy, RotateCcw } from "lucide-react";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
@@ -83,7 +83,7 @@ export const RestoreVolumeBackups = ({ id, type, serverId }: Props) => {
 
 	const { data: destinations = [] } = api.destination.all.useQuery();
 
-	const form = useForm<z.infer<typeof RestoreBackupSchema>>({
+	const form = useForm({
 		defaultValues: {
 			destinationId: "",
 			backupFile: "",
@@ -105,7 +105,7 @@ export const RestoreVolumeBackups = ({ id, type, serverId }: Props) => {
 		debouncedSetSearch(value);
 	};
 
-	const { data: files = [], isLoading } = api.backup.listBackupFiles.useQuery(
+	const { data: files = [], isPending } = api.backup.listBackupFiles.useQuery(
 		{
 			destinationId: destinationId,
 			search: debouncedSearchTerm,
@@ -294,7 +294,7 @@ export const RestoreVolumeBackups = ({ id, type, serverId }: Props) => {
 													onValueChange={handleSearchChange}
 													className="h-9"
 												/>
-												{isLoading ? (
+												{isPending ? (
 													<div className="py-6 text-center text-sm">
 														Loading backup files...
 													</div>

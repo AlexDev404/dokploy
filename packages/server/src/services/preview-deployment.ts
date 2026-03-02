@@ -7,6 +7,7 @@ import {
 } from "@dokploy/server/db/schema";
 import { TRPCError } from "@trpc/server";
 import { and, desc, eq } from "drizzle-orm";
+import type { z } from "zod";
 import { generatePassword } from "../templates";
 import { removeService } from "../utils/docker/utils";
 import { removeDirectoryCode } from "../utils/filesystem/directory";

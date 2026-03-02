@@ -18,7 +18,10 @@ export const createSchedule = async (
 	input: z.infer<typeof createScheduleSchema>,
 ) => {
 	const { scheduleId, ...rest } = input;
-	const [newSchedule] = await db.insert(schedules).values(rest as typeof schedules.$inferInsert).returning();
+	const [newSchedule] = await db
+		.insert(schedules)
+		.values(rest as typeof schedules.$inferInsert)
+		.returning();
 
 	if (
 		newSchedule &&

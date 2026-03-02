@@ -29,7 +29,7 @@ import { cloneGitlabRepository } from "@dokploy/server/utils/providers/gitlab";
 import { createTraefikConfig } from "@dokploy/server/utils/traefik/application";
 import { TRPCError } from "@trpc/server";
 import { eq } from "drizzle-orm";
-import { z } from "zod";
+import type { z } from "zod";
 import { encodeBase64 } from "../utils/docker/utils";
 import { getDokployUrl } from "./admin";
 import {
@@ -45,6 +45,7 @@ import {
 	issueCommentExists,
 	updateIssueComment,
 } from "./github";
+import { generateApplyPatchesCommand } from "./patch";
 import {
 	findPreviewDeploymentById,
 	updatePreviewDeployment,
@@ -201,6 +202,14 @@ export const deployApplication = async ({
 			command += await cloneGitRepository(applicationEntity);
 		} else if (application.sourceType === "docker") {
 			command += await buildRemoteDocker(application);
+		}
+
+		if (application.sourceType !== "docker") {
+			command += await generateApplyPatchesCommand({
+				id: application.applicationId,
+				type: "application",
+				serverId,
+			});
 		}
 
 		command += await getBuildCommand(application);

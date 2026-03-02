@@ -1,3 +1,4 @@
+import { and, eq } from "drizzle-orm";
 import { drizzle, type PostgresJsDatabase } from "drizzle-orm/postgres-js";
 import postgres from "postgres";
 import { dbUrl } from "./constants";
@@ -46,5 +47,7 @@ export const db = new Proxy({} as PostgresJsDatabase<typeof schema>, {
     return getDbInstance()[prop as keyof PostgresJsDatabase<typeof schema>];
   },
 });
+export { and, eq };
+export * from "./schema";
 
 export { dbUrl };

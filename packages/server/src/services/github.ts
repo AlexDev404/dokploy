@@ -6,6 +6,7 @@ import {
 } from "@dokploy/server/db/schema";
 import { TRPCError } from "@trpc/server";
 import { eq } from "drizzle-orm";
+import type { z } from "zod";
 import { authGithub } from "../utils/providers/github";
 import { updatePreviewDeployment } from "./preview-deployment";
 import { z } from "zod";

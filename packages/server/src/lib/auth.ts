@@ -9,7 +9,11 @@ import type { IncomingMessage } from "node:http";
 import { BETTER_AUTH_SECRET, IS_CLOUD } from "../constants";
 import { db } from "../db";
 import * as schema from "../db/schema";
-import { getTrustedOrigins, getUserByToken } from "../services/admin";
+import {
+	getTrustedOrigins,
+	getTrustedProviders,
+	getUserByToken,
+} from "../services/admin";
 import {
   getWebServerSettings,
   updateWebServerSettings,
@@ -31,6 +35,30 @@ const authConfig = {
 		"/organization/delete",
 	],
 	secret: BETTER_AUTH_SECRET,
+	...(!IS_CLOUD
+		? {
+				advanced: {
+					useSecureCookies: false,
+					defaultCookieAttributes: {
+						sameSite: "lax",
+						secure: false,
+						httpOnly: true,
+						path: "/",
+					},
+				},
+			}
+		: {}),
+
+	account: {
+		accountLinking: {
+			enabled: true,
+			async trustedProviders() {
+				const fromDb = await getTrustedProviders();
+				return ["github", "google", ...fromDb];
+			},
+			allowDifferentEmails: true,
+		},
+	},
 	appName: "Dokploy",
 	socialProviders: {
 		github: {
@@ -46,20 +74,25 @@ const authConfig = {
 		disabled: process.env.NODE_ENV === "production",
 	},
 	async trustedOrigins() {
-		const trustedOrigins = await getTrustedOrigins();
 		if (IS_CLOUD) {
-			return trustedOrigins;
+			return getTrustedOrigins();
 		}
-		const settings = await getWebServerSettings();
-		if (!settings) {
-			return [];
-		}
+		const [trustedOrigins, settings] = await Promise.all([
+			getTrustedOrigins(),
+			getWebServerSettings(),
+		]);
+		if (!settings) return [];
+		const devOrigins =
+			process.env.NODE_ENV === "development"
+				? [
+						"http://localhost:3000",
+						"https://absolutely-handy-falcon.ngrok-free.app",
+					]
+				: [];
 		return [
 			...(settings?.serverIp ? [`http://${settings?.serverIp}:3000`] : []),
 			...(settings?.host ? [`https://${settings?.host}`] : []),
-			...(process.env.NODE_ENV === "development"
-				? ["http://localhost:3000"]
-				: []),
+			...devOrigins,
 			...trustedOrigins,
 		];
 	},
@@ -377,6 +410,9 @@ export const auth = {
 	get registerSSOProvider() {
 		return getAuthInstance().api.registerSSOProvider;
 	},
+	get updateSSOProvider() {
+		return getAuthInstance().api.updateSSOProvider;
+	}
 } as const;
 
 // Export the api for use in validateRequest
@@ -501,12 +537,17 @@ export const validateRequest = async (request: IncomingMessage) => {
 			const member = await db.query.member.findFirst({
 				where: and(
 					eq(schema.member.userId, session.user.id),
-					eq(
-						schema.member.organizationId,
-						(session.session as any).activeOrganizationId || "",
-					),
-				),
-				with: {
+					...(session.session.activeOrganizationId
+					? [
+							eq(
+									schema.member.organizationId,
+									(session.session as any).activeOrganizationId || "",
+								),
+							]
+					: []),
+			),
+				orderBy: [desc(schema.member.isDefault), desc(schema.member.createdAt)],
+			with: {
 					organization: true,
 					user: true,
 				},
@@ -519,7 +560,8 @@ export const validateRequest = async (request: IncomingMessage) => {
 				member?.user?.isValidEnterpriseLicense || false;
 			(session.user as any).allowImpersonation =
 				member?.user?.allowImpersonation || false;
-			if (member?.organization?.ownerId) {
+			session.session.activeOrganizationId = member?.organization.id || "";
+		if (member?.organization?.ownerId) {
 				(session.user as any).ownerId = member.organization.ownerId;
 			} else {
 				(session.user as any).ownerId = session.user.id;

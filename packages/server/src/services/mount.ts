@@ -18,7 +18,7 @@ import {
 } from "@dokploy/server/utils/process/execAsync";
 import { TRPCError } from "@trpc/server";
 import { eq, type SQL, sql } from "drizzle-orm";
-import { z } from "zod";
+import type { z } from "zod";
 
 export type Mount = typeof mounts.$inferSelect;
 
@@ -262,6 +262,9 @@ export const findMountsByApplicationId = async (
 			break;
 		case "redis":
 			sqlChunks.push(eq(mounts.redisId, serviceId));
+			break;
+		case "compose":
+			sqlChunks.push(eq(mounts.composeId, serviceId));
 			break;
 		default:
 			throw new Error(`Unknown service type: ${serviceType}`);

@@ -11,12 +11,15 @@ import { pullImage } from "@dokploy/server/utils/docker/utils";
 import { execAsyncRemote } from "@dokploy/server/utils/process/execAsync";
 import { TRPCError } from "@trpc/server";
 import { eq, getTableColumns } from "drizzle-orm";
+import type { z } from "zod";
 import { validUniqueServerAppName } from "./project";
 import { z } from "zod";
 
 export type Mariadb = typeof mariadb.$inferSelect;
 
-export const createMariadb = async (input: z.infer<typeof apiCreateMariaDB>) => {
+export const createMariadb = async (
+	input: z.infer<typeof apiCreateMariaDB>,
+) => {
 	const appName = buildAppName("mariadb", input.appName);
 
 	const valid = await validUniqueServerAppName(appName);

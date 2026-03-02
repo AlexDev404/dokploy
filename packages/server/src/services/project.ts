@@ -11,6 +11,7 @@ import {
 } from "@dokploy/server/db/schema";
 import { TRPCError } from "@trpc/server";
 import { eq } from "drizzle-orm";
+import type { z } from "zod";
 import { createProductionEnvironment } from "./environment";
 import { z } from "zod";
 
