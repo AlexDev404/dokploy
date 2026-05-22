@@ -1,5 +1,6 @@
 import { IS_CLOUD } from "@dokploy/server/constants";
 import { validateRequest } from "@dokploy/server/lib/auth";
+import { hasPermission } from "@dokploy/server/services/permission";
 import { Loader2 } from "lucide-react";
 import type { GetServerSidePropsContext } from "next";
 import type { ReactElement } from "react";
@@ -94,17 +95,34 @@ export async function getServerSideProps(
 	if (IS_CLOUD) {
 		return {
 			redirect: {
-				permanent: true,
-				destination: "/dashboard/projects",
+				permanent: false,
+				destination: "/dashboard/home",
 			},
 		};
 	}
-	const { user } = await validateRequest(ctx.req);
+	const { user, session } = await validateRequest(ctx.req);
 	if (!user) {
 		return {
 			redirect: {
-				permanent: true,
+				permanent: false,
 				destination: "/",
+			},
+		};
+	}
+
+	const canView = await hasPermission(
+		{
+			user: { id: user.id },
+			session: { activeOrganizationId: session?.activeOrganizationId || "" },
+		},
+		{ monitoring: ["read"] },
+	);
+
+	if (!canView) {
+		return {
+			redirect: {
+				permanent: false,
+				destination: "/dashboard/home",
 			},
 		};
 	}
