@@ -63,7 +63,9 @@ export const loadDockerCompose = async (
 
 	if (existsSync(path)) {
 		const yamlStr = readFileSync(path, "utf8");
-		const parsedConfig = parse(yamlStr) as ComposeSpecification;
+		const parsedConfig = parse(yamlStr, {
+			maxAliasCount: 10000,
+		}) as ComposeSpecification;
 		return parsedConfig;
 	}
 	return null;
@@ -86,7 +88,9 @@ export const loadDockerComposeRemote = async (
 			return null;
 		}
 		if (!stdout) return null;
-		const parsedConfig = parse(stdout) as ComposeSpecification;
+		const parsedConfig = parse(stdout, {
+			maxAliasCount: 10000,
+		}) as ComposeSpecification;
 		return parsedConfig;
 	} catch {
 		return null;
@@ -168,8 +172,12 @@ export const addDomainToCompose = async (
 			);
 		}
 
-		const httpLabels = createDomainLabels(appName, domain, "web");
-		if (https) {
+		const httpLabels = createDomainLabels(
+			appName,
+			domain,
+			domain.customEntrypoint || "web",
+		);
+		if (!domain.customEntrypoint && https) {
 			const httpsLabels = createDomainLabels(appName, domain, "websecure");
 			httpLabels.push(...httpsLabels);
 		}
@@ -247,11 +255,12 @@ export const writeComposeFile = async (
 export const createDomainLabels = (
 	appName: string,
 	domain: Domain,
-	entrypoint: "web" | "websecure",
+	entrypoint: string,
 ) => {
 	const {
 		host,
 		port,
+		customEntrypoint,
 		https,
 		uniqueConfigKey,
 		certificateType,
@@ -270,34 +279,45 @@ export const createDomainLabels = (
 
 	// Collect middlewares for this router
 	const middlewares: string[] = [];
+	const isRedirectRouter = entrypoint === "web" && https && !customEntrypoint;
 
-	// Add HTTPS redirect for web entrypoint (must be first)
-	if (entrypoint === "web" && https) {
+	// Web router with HTTPS only needs redirect — all other middlewares
+	// run on the websecure router where the request actually lands.
+	if (isRedirectRouter) {
 		middlewares.push("redirect-to-https@file");
 	}
 
 	// Add stripPath middleware if needed
 	if (stripPath && path && path !== "/") {
 		const middlewareName = `stripprefix-${appName}-${uniqueConfigKey}`;
-		// Only define middleware once (on web entrypoint)
-		if (entrypoint === "web") {
+		// Define middleware on web (or custom) entrypoint so Traefik registers it
+		if (entrypoint === "web" || customEntrypoint) {
 			labels.push(
 				`traefik.http.middlewares.${middlewareName}.stripprefix.prefixes=${path}`,
 			);
 		}
-		middlewares.push(middlewareName);
+		if (!isRedirectRouter) {
+			middlewares.push(middlewareName);
+		}
 	}
 
 	// Add internalPath middleware if needed
 	if (internalPath && internalPath !== "/" && internalPath.startsWith("/")) {
 		const middlewareName = `addprefix-${appName}-${uniqueConfigKey}`;
-		// Only define middleware once (on web entrypoint)
-		if (entrypoint === "web") {
+		// Define middleware on web (or custom) entrypoint so Traefik registers it
+		if (entrypoint === "web" || customEntrypoint) {
 			labels.push(
 				`traefik.http.middlewares.${middlewareName}.addprefix.prefix=${internalPath}`,
 			);
 		}
-		middlewares.push(middlewareName);
+		if (!isRedirectRouter) {
+			middlewares.push(middlewareName);
+		}
+	}
+
+	// Add custom middlewares (skip for redirect-only router)
+	if (!isRedirectRouter && domain.middlewares?.length) {
+		middlewares.push(...domain.middlewares);
 	}
 
 	// Apply middlewares to router if any exist
@@ -308,7 +328,7 @@ export const createDomainLabels = (
 	}
 
 	// Add TLS configuration for websecure
-	if (entrypoint === "websecure") {
+	if (entrypoint === "websecure" || (customEntrypoint && https)) {
 		if (certificateType === "letsencrypt") {
 			labels.push(
 				`traefik.http.routers.${routerName}.tls.certresolver=letsencrypt`,
